@@ -22,3 +22,6 @@ public class Dato {
 	}
 
 }
+
+
+//settere, gettere og constructor. og se om det mangler i forhold til databasen. 

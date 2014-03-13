@@ -3,9 +3,14 @@ public class Person {
 
         private String navn;
         private int personId;
+        private String username;
         
         public Person() {
-                
+        	
+        }
+        
+        public Person(String username){
+        	this.username = username;
         }
         
         public Person(int personId, String navn) {
@@ -26,6 +31,10 @@ public class Person {
         
         public void setPersonId(int personId){
                 this.personId = personId;
+        }
+        
+        public String getUsername(){
+        	return username;
         }
         
 }

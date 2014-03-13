@@ -33,7 +33,7 @@ public class Person {
                 this.personId = personId;
         }
         
-        public String getUsername(){
+        public String getBrukernavn(){
         	return username;
         }
         

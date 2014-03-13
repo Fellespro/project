@@ -1,3 +1,4 @@
+package modell;
 public class Person {
 
         private String navn;

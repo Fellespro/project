@@ -39,6 +39,14 @@ public class Avtale {
 		status = Respons.kanskje;
 		deltakere = new Vector<Entry<Person,Respons>>();
 	}
+
+
+Avtale(boolean tomAvtale){
+//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
+if(tomAvtale){
+}
+}
+}
 	
 	Avtale (Time start, Time slutt)
 	{
@@ -67,6 +75,10 @@ public class Avtale {
 	{
 		return this.avtaleID;
 	}
+
+public void settAvtaleID(int id){
+avtaleID = id;
+}
 	
 	public String hentAvtaleNavn()
 	{

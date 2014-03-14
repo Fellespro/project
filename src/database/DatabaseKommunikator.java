@@ -5,10 +5,7 @@ import java.util.Properties;
 
 import utilities.Utilities;
 
-import modell.Dato;
-import modell.Moterom;
-import modell.Person;
-import modell.Tid;
+import modell.*;
 
 /*
  * Klassen kobler seg til en mySQL-database på NTNUs server
@@ -129,24 +126,30 @@ public class DatabaseKommunikator {
 		//MERK: AvtaleID har autoincrement
 		String query = "INSERT INTO Avtale VALUES " + 
 				"(0, "+avtaledato.toString()+", "+starttid.toString()+", "+sluttid.toString()+", "+
-				altstart.toString()+", '"+beskrivelse+"', "+Utilities.getCurrentDateTime()+", "+
-				antallDeltagere+", '"+admin.getBrukernavn()+"', "+rom.getRomID()+")";
+				altstart.toString()+", '"+beskrivelse+"', '"+Utilities.getCurrentDateTime()+"', "+
+				antallDeltagere+", '"+admin.getBrukernavn()+"', "+rom.hentRomID()+")";
 		
 		makeSingleUpdate(query);
+	}
+	public void leggInnAvtale(Avtale avtale){
+		String query = "INSERT INTO Avtale VALUES " +
+					"(0, '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
+					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
+					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
+					", '" + avtale.hentOpprettetav() + "', " + avtale.hentRom().hentRomID() + ")";
 		
-		
-		//TODO: lag en insertAppointment(Avtale a) som er tilsvarende denne..
-		
+		makeSingleUpdate(query);
 	}
 	
 	/**
 	 * Krav 3: Legge til deltager til avtale
 	 * @param ansatt
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void inviterTilAvtale(Person ansatt, Avtale avtale){
+	public void inviterTilAvtale(Person ansatt, Avtale avtale) throws SQLException{
 		String query = "INSERT INTO Inviterte VALUES "+
-				"('"+ansatt.getBrukernavn()+"', "+avtale.getAvtaleID()+")";
+				"('"+ansatt.getBrukernavn()+"', "+avtale.hentAvtaleID()+")";
 
 		makeSingleUpdate(query);
 	}
@@ -155,10 +158,11 @@ public class DatabaseKommunikator {
 	 * Krav 3: Fjern deltager fra avtale
 	 * @param ansatt
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void fjernFraAvtale(Person ansatt, Avtale avtale){
+	public void fjernFraAvtale(Person ansatt, Avtale avtale) throws SQLException{
 		String query = "DELETE FROM Inviterte " +
-				"WHERE brukernavn='"+ansatt.getBrukernavn()+"' AND avtaleid="+avtale.getAvtaleID();
+				"WHERE brukernavn='"+ansatt.getBrukernavn()+"' AND avtaleid="+avtale.hentAvtaleID();
 
 		makeSingleUpdate(query);
 	}
@@ -170,19 +174,27 @@ public class DatabaseKommunikator {
 	 * Slår opp på avtelen sin id og oppdaterer alle felt
 	 */
 	public void endreAvtale(Avtale avtale){
-		//TODO: Blir mye klipp og lim fra opprett avtale, så fullfør den først!
-		//UPDATE table_name
-		//SET column1=value1,column2=value2,...
-		//WHERE some_column=some_value;
+		String query = "UPDATE Avtale SET " +
+					" dato='"+avtale.hentAvtaleDato().toString() +"', starttidspunkt='"+
+				avtale.hentStarttid().toString()+"', sluttidspunkt='"+
+					avtale.hentSluttid().toString() +"', alternativtid='"+
+					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
+					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRom().hentRomID()
+				+" WHERE avtaleid="+avtale.hentAvtaleID();
+		
+		makeSingleUpdate(query);
 	}
 	
 	/**
 	 * Krav 5: Slett avtale
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void slettAvtale(Avtale avtale){
+	public void slettAvtale(Avtale avtale) throws SQLException{
 		String query = "DELETE FROM Avtale " +
-				"WHERE avtaleid="+avtale.getAvtaleID();
+				"WHERE avtaleid="+avtale.hentAvtaleID();
+		makeSingleUpdate(query);
 	}
 	
 	/**
@@ -190,10 +202,17 @@ public class DatabaseKommunikator {
 	 * Denne er ikke støttet av databasen...
 	 */
 	public void reserverMøterom(){
-		System.out.println("Hold your horses! Reservasjon av møterom er ikke implementert...");
+		System.out.println("Hold your horses! Reservasjon av møterom er ikke implementert i databasen...");
 	}
 	
-	public ResultSet hentAvtaler(Ansatt ansatt){
+	/**
+	 * Krav 7: Hent alle avtaler relatert til en gitt person
+	 * Henter unionen av alle avtaler som Person er invitert til og har opprettet.
+	 * @param ansatt
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet hentAvtaler(Person ansatt) throws SQLException{
 		String query = "select Avtale.* " + 
 				"from Avtale "+
 				"inner join inviterte on (Inviterte.brukernavn='"+ansatt.getBrukernavn()+"' and Avtale.avtaleid = Inviterte.avtaleid) "+
@@ -201,6 +220,20 @@ public class DatabaseKommunikator {
 				"select Avtale.* " + 
 				"from Avtale "+
 				"where admin='"+ansatt.getBrukernavn()+"'";
+		
+		return makeSingleQuery(query);
+	}
+	
+	/**
+	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt møte
+	 * @param avtale
+	 * @return
+	 * @throws SQLException
+	 */
+	public ResultSet hentStatusForDeltakelse(Avtale avtale) throws SQLException{
+		String query = "select * " +
+				"from Inviterte " +
+				"where avtaleid="+avtale.hentAvtaleID();
 		
 		return makeSingleQuery(query);
 	}

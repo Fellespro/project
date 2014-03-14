@@ -20,7 +20,7 @@ public class Utilities {
 	public static String getCurrentDateTime(){
 		Date date = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "'"+df.format(date)+"'";
+		return df.format(date);
 	}
 
 }

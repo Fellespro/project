@@ -476,17 +476,17 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                 avtaleRadio.doClick();
         }
         
-        public void setOppforing(Oppforing oppforing){
-                if (oppdatering) this.oppforing = oppforing;
+        public void setAvtale(Avtale avtale){
+                if (oppdatering) this.avtale = avtale;
                 if(oppforing instanceof Mote){
-                        datoText.setText(oppforing.getDato());
-                        starttidText.setText(oppforing.getStarttid());
-                        sluttidText.setText(oppforing.getSluttid());
-                        tittelText.setText(oppforing.getTittel());
-                        stedText.setText(oppforing.getSted());
-                        antallAndreText.setText(""+((Mote)oppforing).getAntallAndre());
-                        totaltText.setText(""+((Mote)oppforing).getTotaltAntall());
-                        beskrivelseText.setText(oppforing.getBeskrivelse());
+                        datoText.setText(avtale.getDato());
+                        starttidText.setText(avtale.getStarttid());
+                        sluttidText.setText(avtale.getSluttid());
+                        tittelText.setText(avtale.getTittel());
+                        stedText.setText(avtale.getSted());
+                        antallAndreText.setText(""+((Mote)avtale).getAntallAndre());
+                        totaltText.setText(""+((Mote)avtale).getTotaltAntall());
+                        beskrivelseText.setText(avtale.getBeskrivelse());
                         moteRadio.doClick();
                 }
                 else if(oppforing instanceof Avtale){
@@ -518,17 +518,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                                 Feilmelding.visFeilmelding(this, "Dato, Starttid eller Sluttid er feil utfylt", Feilmelding.FEIL_UGYLDIG_UTFYLLING);
                         }
                 }
-                else if(e.getSource() == avtaleRadio){
-                        if(avtaleRadio.isSelected()){
-                                moteromList.setVisible(false);
-                                oppdaterMoterom.setEnabled(false);
-                                antallAndreText.setText("");
-                                antallAndreText.setEditable(false);
-                        }
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
+          
                 else if(e.getSource() == moteRadio){
                         if(moteRadio.isSelected()){
                                 if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
@@ -552,7 +542,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                                         oppforing = new Avtale();
                                 }
                         }
-                //Lagrer verdier i objektet oppforing
+                //Lagrer verdier i objektet avtale
                         lagre();
                         
                         if (feilmelding.equals("")){

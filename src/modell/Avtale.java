@@ -41,12 +41,11 @@ public class Avtale {
 	}
 
 
-Avtale(boolean tomAvtale){
-//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
-if(tomAvtale){
-}
-}
-}
+	Avtale(boolean tomAvtale){
+	//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
+		if(tomAvtale){
+		}
+	}
 	
 	Avtale (Time start, Time slutt)
 	{
@@ -76,9 +75,9 @@ if(tomAvtale){
 		return this.avtaleID;
 	}
 
-public void settAvtaleID(int id){
-avtaleID = id;
-}
+	public void settAvtaleID(int id){
+		avtaleID = id;
+	}
 	
 	public String hentAvtaleNavn()
 	{
@@ -240,6 +239,10 @@ avtaleID = id;
 	public int hentAntallDeltakere()
 	{
 		return antallDeltakere;
+	}
+	
+	public void settAntallDeltakere(int a){
+		antallDeltakere = a;
 	}
 	
 	public String hentStatus()

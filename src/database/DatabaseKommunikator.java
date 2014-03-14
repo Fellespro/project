@@ -194,8 +194,15 @@ public class DatabaseKommunikator {
 	}
 	
 	public ResultSet hentAvtaler(Ansatt ansatt){
-		String query = "SELECT * FROM Avtale " +
-				"WHERE admin='"+ansatt.getBrukernavn()+"'";
+		String query = "select Avtale.* " + 
+				"from Avtale "+
+				"inner join inviterte on (Inviterte.brukernavn='"+ansatt.getBrukernavn()+"' and Avtale.avtaleid = Inviterte.avtaleid) "+
+				"union "+
+				"select Avtale.* " + 
+				"from Avtale "+
+				"where admin='"+ansatt.getBrukernavn()+"'";
+		
+		return makeSingleQuery(query);
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException{		

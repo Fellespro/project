@@ -28,6 +28,7 @@ public class Avtale {
 	private int antallDeltakere;
 	private Respons status;
 	private String sted;
+	private Moterom rom;
 	
 	Avtale () 
 	{
@@ -251,12 +252,11 @@ public class Avtale {
 	}
 	
 	public int hentRomID(){
-		//Sjekker om sted er en int og dermed et møterom.
-		//Returnerer passende int
-		if(isInteger(sted)){
-			return Integer.parseInt(s);
-		}
-		else return -1;
+		return rom.hentRomID();
+	}
+	
+	public void settRom(Moterom rom){
+		this.rom = rom;
 	}
 	
 	public void print()

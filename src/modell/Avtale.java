@@ -14,19 +14,20 @@ public class Avtale {
 	
 	private static int antall_avtaler = 0;
 	
-	protected final int avtaleID;
-	protected String avtaleNavn;
-	protected String opprettetAv;
+	private final int avtaleID;
+	private String avtaleNavn;
+	private String opprettetAv;
 	/*protected Date avtaleDato;*/
-	protected Calendar avtaleDato;
-	protected Time starttid;
-	protected Time sluttid;
-	protected Time alternativStarttid;
-	protected String beskrivelse;
-	protected String sistEndret;
-	protected List<Entry<Person, Respons>> deltakere;
-	protected int antallDeltakere;
-	protected Respons status;
+	private Calendar avtaleDato;
+	private Time starttid;
+	private Time sluttid;
+	private Time alternativStarttid;
+	private String beskrivelse;
+	private String sistEndret;
+	private List<Entry<Person, Respons>> deltakere;
+	private int antallDeltakere;
+	private Respons status;
+	private String sted;
 	
 	Avtale () 
 	{
@@ -142,6 +143,14 @@ public class Avtale {
 	{
 		alternativStarttid = tid;
 	}
+	
+	public String getSted(){
+                return sted;
+        }
+        
+        public void setSted(String sted){
+                this.sted = sted;
+        }
 	
 	public Time hentVarighet()
 	{

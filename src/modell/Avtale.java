@@ -21,6 +21,7 @@ public class Avtale {
 	protected Calendar avtaleDato;
 	protected Time starttid;
 	protected Time sluttid;
+	protected Time alternativStarttid;
 	protected String beskrivelse;
 	protected String sistEndret;
 	protected List<Entry<Person, Respons>> deltakere;
@@ -114,9 +115,9 @@ public class Avtale {
 			return new Time(0,0,0);
 	}
 	
-	public void settStarttid(Time start)
+	public void settStarttid(Time tid)
 	{
-		starttid = start;
+		starttid = tid;
 	}
 	
 	public Time hentSluttid()
@@ -127,9 +128,19 @@ public class Avtale {
 			return new Time(0,0,0);
 	}
 	
-	public void settSluttid(Time slutt)
+	public void settSluttid(Time tid)
 	{
-		sluttid = slutt;
+		sluttid = tid;
+	}
+	
+	public Time hentAlternativStarttid()
+	{
+		return alternativStarttid;
+	}
+	
+	public void settAlternativStarttid(Time tid)
+	{
+		alternativStarttid = tid;
 	}
 	
 	public Time hentVarighet()
@@ -246,6 +257,8 @@ public class Avtale {
 		System.out.println(this.hentStarttid());
 		System.out.print("Sluttid:");
 		System.out.println(this.hentSluttid());
+		System.out.print("Alternativ starttid:");
+		System.out.print(this.hentAlternativStarttid());
 		System.out.print("Varighet:");
 		System.out.println(this.hentVarighet());
 		System.out.print("Beskivelse: ");

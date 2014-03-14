@@ -250,6 +250,15 @@ public class Avtale {
 		status = r;
 	}
 	
+	public int hentRomID(){
+		//Sjekker om sted er en int og dermed et møterom.
+		//Returnerer passende int
+		if(isInteger(sted)){
+			return Integer.parseInt(s);
+		}
+		else return -1;
+	}
+	
 	public void print()
 	{
 		System.out.print("AvtaleID:");

@@ -28,7 +28,7 @@ import javax.swing.event.ListSelectionListener;
 
 import modell.*;
 
-public class NyHendelse extends JPanel implements ActionListener, ListSelesctionListener, DocumentListener{
+public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener{
   
   //Opprette alle knappene som trengs
   private JButton hjemButton;
@@ -64,7 +64,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
         private JButton lagreButton;
         private JButton avbrytButton;
         
-        private Oppforing oppforing;
+        private Avtale avtale;
         
         private List<ActionListener> actionListeners;
         
@@ -161,8 +161,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                 
                 c.fill = GridBagConstraints.VERTICAL;
                 
-                hjemButton = new JButton(iconHome);
-                hjemButton.setName("hjem");
+                hjemButton = new JButton("Hjem");
                 hjemButton.addActionListener(this);
                 
                 c.gridx = 3;
@@ -298,7 +297,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                 
         //Lagre og avbrytbuttons
                 c.weighty = 0;
-                lagreButton = new JButton("Lagre", iconSave);
+                lagreButton = new JButton("Lagre");
                 lagreButton.setName("lagre");
                 lagreButton.addActionListener(this);
                 c.gridx = 3;
@@ -307,7 +306,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
 //              c.gridwidth = 1;
                 this.add(lagreButton,c);
                 
-                avbrytButton = new JButton("Avbryt", iconBack);
+                avbrytButton = new JButton("Avbryt");
                 avbrytButton.setName("avbryt");
                 avbrytButton.addActionListener(this);
                 c.gridx = 4;
@@ -346,6 +345,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                 this.antallAnsatte = antallAnsatte;
                 setTotaltText();
         }
+        public void setTotaltText(){
+                totaltAntall = antallAnsatte + antallAndre + 1;
+                totaltText.setText(""+totaltAntall);
+        }
         
         public Person getPerson(){
                 return this.person;
@@ -356,25 +359,25 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                         Person p = (Person)inviterte.getModel().getElementAt(i);
                         pListe.addPerson(p);
                 }
-                if(oppforing instanceof Mote){
-                        ((Mote)oppforing).setInviterte(pListe);
+                if(avtale instanceof Mote){
+                        ((Mote)avtale).setInviterte(pListe);
                 }
         }
         public PersonListe getInviterte(){
-                if(oppforing instanceof Mote){
-                        return ((Mote)oppforing).getInviterte();
+                if(avtale instanceof Mote){
+                        return ((Mote)avtale).getInviterte();
                 }
                 return null;
         }
         
         public void lagre(){
                 feilmelding = "";
-                oppforing.setLagetAv(person);
+                avtale.setLagetAv(person);
                 
 //              if(datoText.getText() != null){
                         try{
                                 Dato datoen = new Dato(datoText.getText());
-                                oppforing.setDato(datoText.getText());
+                                avtale.setDato(datoText.getText());
                         }
                         catch(Exception e){
                                 //TODO: lag dialog
@@ -388,7 +391,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                                 int time = Integer.parseInt(starttidTabell[0]);
                                 int min = Integer.parseInt(starttidTabell[1]);
                                 Time tid = new Time(time, min);
-                                oppforing.setStarttid(tid.toString());
+                                avtale.setStarttid(tid.toString());
                         }
                         catch(Exception e){
                                 feilmelding += "Starttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
@@ -400,36 +403,36 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                                 int time = Integer.parseInt(sluttidTabell[0]);
                                 int min = Integer.parseInt(sluttidTabell[1]);
                                 Time tid = new Time(time, min);
-                                oppforing.setSluttid(tid.toString());
+                                avtale.setSluttid(tid.toString());
                         }
                         catch(Exception e){
                                 feilmelding += "Sluttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
                         }
                         
                 try {
-                        if (!Time.checkTimes(oppforing.getStarttid(), oppforing.getSluttid()))
+                        if (!Time.checkTimes(avtale.getStarttid(), avtale.getSluttid()))
                                 feilmelding += "Klokkeslett: Sluttid skjer før starttid";
                 } catch (Exception e) {
                 }       
                         
 //              }
                 if(!tittelText.getText().equals("")){
-                        oppforing.setTittel(tittelText.getText());
+                        avtale.setTittel(tittelText.getText());
                 } 
                 else{
                         feilmelding += "Tittel: Mangler tittel \n";
                 }
                 if(!stedText.getText().equals("")){
-                        oppforing.setSted(stedText.getText());
-                        if(oppforing instanceof Mote && !moteromList.isSelectionEmpty()){
-                                ((Mote)oppforing).setMoterom((Moterom)moteromList.getSelectedValue());
+                        avtale.setSted(stedText.getText());
+                        if(avtale instanceof Mote && !moteromList.isSelectionEmpty()){
+                                ((Mote)avtale).setMoterom((Moterom)moteromList.getSelectedValue());
                         }
                 }
                 else{
                         feilmelding += "Sted: Mangler sted \n";
                 }
                 if(!beskrivelseText.getText().equals(null)){
-                        oppforing.setBeskrivelse(beskrivelseText.getText());
+                        avtale.setBeskrivelse(beskrivelseText.getText());
                 } 
                 
                 
@@ -437,7 +440,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                         if(oppforing instanceof Mote){
                                 try{
                                 if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
-                                ((Mote) oppforing).setAntallAndre(Integer.parseInt(antallAndreText.getText()));
+                                ((Mote) avtale).setAntallAndre(Integer.parseInt(antallAndreText.getText()));
                                 }
                                 catch (Exception e){
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
@@ -451,10 +454,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                         if (!oppdatering) {
                                 oppforing.setLagetAv(getPerson());
                                 int id = database.addOppforing(oppforing);
-                                if (oppforing instanceof Mote) ((Mote)oppforing).setMoteId(id);
+                                if (avtale instanceof Mote) ((Mote)oppforing).setMoteId(id);
                                 else ((Avtale)oppforing).setAvtaleId(id);
                         } else {
-                                database.updateOppforing(getPerson(), oppforing);
+                                database.updateOppforing(getPerson(), avtale);
                         }
                         
                 } catch (SQLException e) {
@@ -462,8 +465,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                         Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                 }
         }
-        public Oppforing getOppforing(){
-                return oppforing;
+        public Avtale getAvtale(){
+                return avtale;
         }
         
         public void nullstillFelt(){
@@ -478,7 +481,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
         
         public void setAvtale(Avtale avtale){
                 if (oppdatering) this.avtale = avtale;
-                if(oppforing instanceof Mote){
+                if(avtale instanceof Mote){
                         datoText.setText(avtale.getDato());
                         starttidText.setText(avtale.getStarttid());
                         sluttidText.setText(avtale.getSluttid());
@@ -489,16 +492,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                         beskrivelseText.setText(avtale.getBeskrivelse());
                         moteRadio.doClick();
                 }
-                else if(oppforing instanceof Avtale){
-                        datoText.setText(oppforing.getDato());
-                        starttidText.setText(oppforing.getStarttid());
-                        sluttidText.setText(oppforing.getSluttid());
-                        tittelText.setText(oppforing.getTittel());
-                        stedText.setText(oppforing.getSted());
-                        beskrivelseText.setText("");
-                        avtaleRadio.doClick();
-                }
-        }
         
         public void addActionListener(ActionListener listener) {
                 this.actionListeners.add(listener);
@@ -538,9 +531,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelesction
                                 if(moteRadio.isSelected()){
                                         oppforing = new Mote();
                                 }
-                                else if(avtaleRadio.isSelected()){
-                                        oppforing = new Avtale();
-                                }
+                                
                         }
                 //Lagrer verdier i objektet avtale
                         lagre();

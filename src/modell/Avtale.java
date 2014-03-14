@@ -28,7 +28,7 @@ public class Avtale {
 	private int antallDeltakere;
 	private Respons status;
 	private String sted;
-	private Moterom rom;
+	private int rom;
 	
 	Avtale () 
 	{
@@ -267,11 +267,11 @@ public class Avtale {
 	}
 	
 	public int hentRomID(){
-		return rom.hentRomID();
+		return rom;
 	}
 	
-	public void settRom(Moterom rom){
-		this.rom = rom;
+	public void settRomID(int r){
+		this.rom = r;
 	}
 	
 	public void print()

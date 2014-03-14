@@ -364,8 +364,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
         }
         public PersonListe getInviterte(){
-                if(avtale instanceof Mote){
-                        return ((Mote)avtale).getInviterte();
+                if(avtale instanceof Avtale){
+                        return ((Avtale)avtale).getInviterte();
                 }
                 return null;
         }
@@ -424,8 +424,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
                 if(!stedText.getText().equals("")){
                         avtale.setSted(stedText.getText());
-                        if(avtale instanceof Mote && !moteromList.isSelectionEmpty()){
-                                ((Mote)avtale).setMoterom((Moterom)moteromList.getSelectedValue());
+                        if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
+                                ((Avtale)avtale).setMoterom((Moterom)moteromList.getSelectedValue());
                         }
                 }
                 else{
@@ -437,10 +437,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 
 //              if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
-                        if(oppforing instanceof Mote){
+                        if(oppforing instanceof Avtale){
                                 try{
                                 if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
-                                ((Mote) avtale).setAntallAndre(Integer.parseInt(antallAndreText.getText()));
+                                ((Avtale) avtale).setAntallAndre(Integer.parseInt(antallAndreText.getText()));
                                 }
                                 catch (Exception e){
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
@@ -454,7 +454,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         if (!oppdatering) {
                                 oppforing.setLagetAv(getPerson());
                                 int id = database.addOppforing(oppforing);
-                                if (avtale instanceof Mote) ((Mote)oppforing).setMoteId(id);
+                                if (avtale instanceof Avtale) ((Avtale)oppforing).setMoteId(id);
                                 else ((Avtale)oppforing).setAvtaleId(id);
                         } else {
                                 database.updateOppforing(getPerson(), avtale);
@@ -481,7 +481,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         public void setAvtale(Avtale avtale){
                 if (oppdatering) this.avtale = avtale;
-                if(avtale instanceof Mote){
+                if(avtale instanceof Avtale){
                         datoText.setText(avtale.getDato());
                         starttidText.setText(avtale.getStarttid());
                         sluttidText.setText(avtale.getSluttid());
@@ -529,7 +529,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 else if(e.getSource() == lagreButton){
                         if (!oppdatering) {
                                 if(moteRadio.isSelected()){
-                                        oppforing = new Mote();
+                                        avtale = new Avtale();
                                 }
                                 
                         }

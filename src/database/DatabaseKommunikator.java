@@ -9,23 +9,22 @@ import utilities.Utilities;
 import modell.*;
 
 /*
- * Klassen kobler seg til en mySQL-database på NTNUs server
+ * Klassen kobler seg til en mySQL-database pï¿½ NTNUs server
  * jdbcDriver=com.mysql.jdbc.Driver
  * url=jdbc:mysql://localhost/testDB
  * user=olestes_fp
  * password=swag
  * 
  * Hvordan bruke:
- * Opprett et DatabaseCommunicator-objekt
- * DC.initialize();
- * Nå kan du bruke DC.get/set for å hente ut/sette det du vil.
- * 
- * Husk å avslutte med:
- * DC.close()!
+ *  - Opprett et DatabaseCommunicator-objekt
+ *  - DC.initialize();
+ *  - Do stuff
+ * Avslutt med:
+ *  - DC.close()!
  * 
  * OBS! OBS!
  * DatabaseCommunicator er veldig dum. Den sjekker ikke om avtaler o.l. som skal legges
- * inn i databasen har gyldige data. Går utifra at modellen garanterer at alt er korrekt!
+ * inn i databasen har gyldige data. Gï¿½r utifra at modellen garanterer at alt er korrekt!
  * 
  * 
  */
@@ -39,7 +38,7 @@ public class DatabaseKommunikator {
 	private Connection conn;
 	
 	
-	//Tilkoblingsinfo blir satt her. Hardkodet foreløbig
+	//Tilkoblingsinfo blir satt her. Hardkodet forelï¿½big
 	public DatabaseKommunikator(){
 		jdbcDriver = "com.mysql.jdbc.Driver"; // String containing the driver Class name
 		url = "jdbc:mysql://mysql.stud.ntnu.no/olestes_fpdb"; // Address to the database
@@ -61,7 +60,7 @@ public class DatabaseKommunikator {
 			conn = DriverManager.getConnection(url, bruker, passord);
 			System.out.println("Tilkobling opprettet");
 		} catch (SQLException e) {
-			System.out.println("Nicht Güt! SQLException! Kunne ikke koble til...");
+			System.out.println("Nicht Gï¿½t! SQLException! Kunne ikke koble til...");
 			e.printStackTrace();
 		}
 		
@@ -104,19 +103,19 @@ public class DatabaseKommunikator {
 		st.executeUpdate(sql);
 	}
 	
-	//Krav 1 - Logge på
-	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilhørende
+	//Krav 1 - Logge pï¿½
+	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilhï¿½rende
 	//passord i databasen.
 	public boolean erGyldigInnlogging(String brukernavn, String passord) throws SQLException{
 		String query="Select * from Ansatt where brukernavn='"+brukernavn+"' and passord='"+passord+"'";
-		ResultSet rs = this.makeSingleQuery(query); //Utfør spørring og motta resultat
+		ResultSet rs = this.makeSingleQuery(query); //Utfï¿½r spï¿½rring og motta resultat
 		return Fabrikk.inneholderMatch(rs, brukernavn, passord);
 	}
 	
 	/**
 	 *Krav 2 - Legge inn avtale
-	 *Om det ikke skal brukes et møterom: sett møteromid til -1, og legg inn sted i beskrivelse!
-	 *For å automatisk generere en gyldig avtaleID, sett den til 0.
+	 *Om det ikke skal brukes et mï¿½terom: sett mï¿½teromid til -1, og legg inn sted i beskrivelse!
+	 *For ï¿½ automatisk generere en gyldig avtaleID, sett den til 0.
 	 * @param avtale
 	 */
 	public void leggInnAvtale(Avtale avtale){
@@ -159,7 +158,7 @@ public class DatabaseKommunikator {
 	 * Krav 4: Endre avtale
 	 * @param avtale
 	 * 
-	 * Slår opp på avtelen sin id og oppdaterer alle felt
+	 * Slï¿½r opp pï¿½ avtelen sin id og oppdaterer alle felt
 	 */
 	public void endreAvtale(Avtale avtale){
 		String query = "UPDATE Avtale SET " +
@@ -188,12 +187,12 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 6: Reservere møterom
-	 * Denne er ikke støttet av databasen...
+	 * Krav 6: Reservere mï¿½terom
+	 * Denne er ikke stï¿½ttet av databasen...
 	 */
-	public void reserverMøterom(){
-		System.out.println("Hold your horses! Reservasjon av møterom er ikke implementert i databasen...");
-		System.out.println("Legg inn møteromID som verdi for 'sted' i en Avtale for å reservere");
+	public void reserverMï¿½terom(){
+		System.out.println("Hold your horses! Reservasjon av mï¿½terom er ikke implementert i databasen...");
+		System.out.println("Legg inn mï¿½teromID som verdi for 'sted' i en Avtale for ï¿½ reservere");
 	}
 	
 	/**
@@ -217,11 +216,11 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt møte
-	 * Status for deltagelse er en 2-bits-verdi, der verdiene betyr som følger:
+	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt mï¿½te
+	 * Status for deltagelse er en 2-bits-verdi, der verdiene betyr som fï¿½lger:
 	 * 0=Ikke svart, 1=Deltar, 2=Deltar ikke, 3=Deltar ikke og ikke synlig
 	 * 
-	 * Hax i ArrayListen: De første 6 bokstavene utgjør brukernavnet, den siste(7.) utgjør status for deltagelse
+	 * Hax i ArrayListen: De fï¿½rste 6 bokstavene utgjï¿½r brukernavnet, den siste(7.) utgjï¿½r status for deltagelse
 	 * @param avtale
 	 * @return
 	 * @throws SQLException
@@ -237,9 +236,9 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 9: Melde avbud for møte
-	 * Metoden gjør litt mer enn det som er spurt om i dette kravet.
-	 * Metoden tar inn en person, en avtale, en bolsk variabel for svar på innkalling, og en
+	 * Krav 9: Melde avbud for mï¿½te
+	 * Metoden gjï¿½r litt mer enn det som er spurt om i dette kravet.
+	 * Metoden tar inn en person, en avtale, en bolsk variabel for svar pï¿½ innkalling, og en
 	 * bolsk variabel som sier om avtalen skal skjules i denne personens personlige kalender
 	 * Bruk av de bolske variablene (deltar, synlig)	(X=likegyldig)
 	 *  - Person takker ja til invitasjon = (true, X)
@@ -266,10 +265,10 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 10: Reservere møterom
-	 * Resrevasjonen ligger i Avtale-klassen. Slettes en avtale, forsvinner reservasjonen også, ettersom
+	 * Krav 10: Reservere mï¿½terom
+	 * Resrevasjonen ligger i Avtale-klassen. Slettes en avtale, forsvinner reservasjonen ogsï¿½, ettersom
 	 * den er en del av avtalen.
-	 * Denne metoden henter alle møterom slik at modellen kan sjekke hva som er ledig på et gitt tidspunkt.
+	 * Denne metoden henter alle mï¿½terom slik at modellen kan sjekke hva som er ledig pï¿½ et gitt tidspunkt.
 	 * @throws SQLException 
 	 */
 	public ResultSet hentMoterom() throws SQLException{
@@ -284,7 +283,7 @@ public class DatabaseKommunikator {
 	 */
 	
 	/**
-	 * Krav 12: Spore møteinnkallinger
+	 * Krav 12: Spore mï¿½teinnkallinger
 	 * 
 	 * @param a
 	 * @return

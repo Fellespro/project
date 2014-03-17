@@ -14,10 +14,11 @@ public class Avtale {
 	
 	private static int antall_avtaler = 0;
 	
-	protected final int avtaleID;
-	protected String avtaleNavn;
-	protected String opprettetAv;
+	private final int avtaleID;
+	private String avtaleNavn;
+	private String opprettetAv;
 	/*protected Date avtaleDato;*/
+<<<<<<< HEAD
 	protected Calendar avtaleDato;
 	protected Time starttid;
 	protected Time sluttid;
@@ -27,6 +28,19 @@ public class Avtale {
 	protected List<Entry<Person, Respons>> deltakere;
 	protected int antallDeltakere;
 	protected Respons status;
+=======
+	private Calendar avtaleDato;
+	private Time starttid;
+	private Time sluttid;
+	private Time alternativStarttid;
+	private String beskrivelse;
+	private String sistEndret;
+	private List<Entry<Person, Respons>> deltakere;
+	private int antallDeltakere;
+	private Respons status;
+	private String sted;
+	private int rom;
+>>>>>>> 0b41dad8b25f35ee9f35645b761e388f6d3e2f76
 	
 	Avtale () 
 	{
@@ -36,6 +50,13 @@ public class Avtale {
 		antallDeltakere = 0;
 		status = Respons.kanskje;
 		deltakere = new Vector<Entry<Person,Respons>>();
+	}
+
+
+	Avtale(boolean tomAvtale){
+	//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
+		if(tomAvtale){
+		}
 	}
 	
 	Avtale (Time start, Time slutt)
@@ -64,6 +85,10 @@ public class Avtale {
 	public int hentAvtaleID()
 	{
 		return this.avtaleID;
+	}
+
+	public void settAvtaleID(int id){
+		avtaleID = id;
 	}
 	
 	public String hentAvtaleNavn()
@@ -136,12 +161,28 @@ public class Avtale {
 	public Time hentAlternativStarttid()
 	{
 		return alternativStarttid;
+<<<<<<< HEAD
+	}
+	
+	public void settAlternativStarttid(Time tid)
+	{
+		alternativStarttid = tid;
+=======
+>>>>>>> 0b41dad8b25f35ee9f35645b761e388f6d3e2f76
 	}
 	
 	public void settAlternativStarttid(Time tid)
 	{
 		alternativStarttid = tid;
 	}
+	
+	public String getSted(){
+                return sted;
+        }
+        
+        public void setSted(String sted){
+                this.sted = sted;
+        }
 	
 	public Time hentVarighet()
 	{
@@ -220,6 +261,10 @@ public class Avtale {
 		return antallDeltakere;
 	}
 	
+	public void settAntallDeltakere(int a){
+		antallDeltakere = a;
+	}
+	
 	public String hentStatus()
 	{
 		if(this.status == Respons.ja)
@@ -239,6 +284,14 @@ public class Avtale {
 	public void settStatus(Respons r)
 	{
 		status = r;
+	}
+	
+	public int hentRomID(){
+		return rom;
+	}
+	
+	public void settRomID(int r){
+		this.rom = r;
 	}
 	
 	public void print()

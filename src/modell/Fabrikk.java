@@ -51,6 +51,20 @@ public class Fabrikk {
 		}
 		return liste;
 	}
+
+	public static Person prosesserPerson(ResultSet rs) {
+		Person p;
+		try {
+			while(rs.next()){
+				p = new Person(rs.getString(1));
+				p.setNavn(rs.getString(3));
+				return p;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	
 	

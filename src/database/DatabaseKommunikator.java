@@ -29,7 +29,7 @@ import modell.*;
  */
 public class DatabaseKommunikator {
 	
-	private static String jdbcDriver; // String containing the driver Class name
+	private String jdbcDriver; // String containing the driver Class name
 	private String url; // Address to the database
 	private String bruker;
 	private String passord;
@@ -105,10 +105,20 @@ public class DatabaseKommunikator {
 	//Krav 1 - Logge p�
 	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilh�rende
 	//passord i databasen.
-	public boolean erGyldigInnlogging(String brukernavn, String passord) throws SQLException{
+	public boolean erGyldigInnlogging(String brukernavn, String passord){
 		String query="Select * from Ansatt where brukernavn='"+brukernavn+"' and passord='"+passord+"'";
-		ResultSet rs = this.makeSingleQuery(query); //Utf�r sp�rring og motta resultat
-		return Fabrikk.inneholderMatch(rs, brukernavn, passord);
+		ResultSet rs = null;
+		try {
+			rs = this.makeSingleQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //Utf�r sp�rring og motta resultat
+		try {
+			return Fabrikk.inneholderMatch(rs, brukernavn, passord);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**
@@ -297,6 +307,21 @@ public class DatabaseKommunikator {
 		
 		return makeSingleQuery(query);
 	}
+
+	public Person hentPerson(String bruker2) {
+		String query = "SELECT * " +
+				"FROM Ansatt " +
+				"WHERE brukernavn='"+bruker2+"'";
+		try {
+			ResultSet rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPerson(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
 	
 	
 	
@@ -310,23 +335,24 @@ public class DatabaseKommunikator {
 	 * @throws IllegalAccessException
 	 */
 	
+	/*
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException{		
 		DatabaseKommunikator dc = new DatabaseKommunikator();
 		dc.kobleOpp();
 		System.out.println(dc.erGyldigInnlogging("abdull", "abcd"));
 		
-		/* Opprett avtale test:
+		//Opprett avtale test:
 		Dato d = new Dato();
 		Tid t = new Tid();
 		Tid v = new Tid(2,0,0);
 		Moterom r = new Moterom();
 		Person p = new Person("abdull");
 		dc.insertAppointment(d, t, t, t, v, "random avtale", r, p, 5);
-		*/
 		
 		
 		
 		dc.lukk();
 		
 	}
+	*/
 }

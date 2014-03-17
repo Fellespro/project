@@ -14,18 +14,21 @@ public class Avtale {
 	
 	private static int antall_avtaler = 0;
 	
-	protected final int avtaleID;
-	protected String avtaleNavn;
-	protected String opprettetAv;
+	private final int avtaleID;
+	private String avtaleNavn;
+	private String opprettetAv;
 	/*protected Date avtaleDato;*/
-	protected Calendar avtaleDato;
-	protected Time starttid;
-	protected Time sluttid;
-	protected String beskrivelse;
-	protected String sistEndret;
-	protected List<Entry<Person, Respons>> deltakere;
-	protected int antallDeltakere;
-	protected Respons status;
+	private Calendar avtaleDato;
+	private Time starttid;
+	private Time sluttid;
+	private Time alternativStarttid;
+	private String beskrivelse;
+	private String sistEndret;
+	private List<Entry<Person, Respons>> deltakere;
+	private int antallDeltakere;
+	private Respons status;
+	private String sted;
+	private int rom;
 	
 	Avtale () 
 	{
@@ -35,6 +38,13 @@ public class Avtale {
 		antallDeltakere = 0;
 		status = Respons.kanskje;
 		deltakere = new Vector<Entry<Person,Respons>>();
+	}
+
+
+	Avtale(boolean tomAvtale){
+	//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
+		if(tomAvtale){
+		}
 	}
 	
 	Avtale (Time start, Time slutt)
@@ -63,6 +73,10 @@ public class Avtale {
 	public int hentAvtaleID()
 	{
 		return this.avtaleID;
+	}
+
+	public void settAvtaleID(int id){
+		avtaleID = id;
 	}
 	
 	public String hentAvtaleNavn()
@@ -114,9 +128,9 @@ public class Avtale {
 			return new Time(0,0,0);
 	}
 	
-	public void settStarttid(Time start)
+	public void settStarttid(Time tid)
 	{
-		starttid = start;
+		starttid = tid;
 	}
 	
 	public Time hentSluttid()
@@ -127,10 +141,28 @@ public class Avtale {
 			return new Time(0,0,0);
 	}
 	
-	public void settSluttid(Time slutt)
+	public void settSluttid(Time tid)
 	{
-		sluttid = slutt;
+		sluttid = tid;
 	}
+	
+	public Time hentAlternativStarttid()
+	{
+		return alternativStarttid;
+	}
+	
+	public void settAlternativStarttid(Time tid)
+	{
+		alternativStarttid = tid;
+	}
+	
+	public String getSted(){
+                return sted;
+        }
+        
+        public void setSted(String sted){
+                this.sted = sted;
+        }
 	
 	public Time hentVarighet()
 	{
@@ -209,6 +241,10 @@ public class Avtale {
 		return antallDeltakere;
 	}
 	
+	public void settAntallDeltakere(int a){
+		antallDeltakere = a;
+	}
+	
 	public String hentStatus()
 	{
 		if(this.status == Respons.ja)
@@ -230,6 +266,14 @@ public class Avtale {
 		status = r;
 	}
 	
+	public int hentRomID(){
+		return rom;
+	}
+	
+	public void settRomID(int r){
+		this.rom = r;
+	}
+	
 	public void print()
 	{
 		System.out.print("AvtaleID:");
@@ -246,6 +290,8 @@ public class Avtale {
 		System.out.println(this.hentStarttid());
 		System.out.print("Sluttid:");
 		System.out.println(this.hentSluttid());
+		System.out.print("Alternativ starttid:");
+		System.out.print(this.hentAlternativStarttid());
 		System.out.print("Varighet:");
 		System.out.println(this.hentVarighet());
 		System.out.print("Beskivelse: ");

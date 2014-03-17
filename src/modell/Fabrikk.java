@@ -51,6 +51,15 @@ public class Fabrikk {
 		}
 		return liste;
 	}
+
+	public static ArrayList<Moterom> prosesserMoterom(ResultSet rs) throws SQLException {
+		ArrayList<Moterom> liste = new ArrayList<Moterom>();
+		while(rs.next()){
+			Moterom m = new Moterom(rs.getInt(1), rs.getInt(2), "navn ikke i database");
+			liste.add(m);
+		}
+		return liste;
+	}
 	
 	
 	

@@ -117,8 +117,9 @@ public class DatabaseKommunikator {
 	 *Om det ikke skal brukes et m�terom: sett m�teromid til -1, og legg inn sted i beskrivelse!
 	 *For � automatisk generere en gyldig avtaleID, sett den til 0.
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void leggInnAvtale(Avtale avtale){
+	public void leggInnAvtale(Avtale avtale) throws SQLException{
 		String query = "INSERT INTO Avtale VALUES " +
 					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
 					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
@@ -159,8 +160,9 @@ public class DatabaseKommunikator {
 	 * @param avtale
 	 * 
 	 * Sl�r opp p� avtelen sin id og oppdaterer alle felt
+	 * @throws SQLException 
 	 */
-	public void endreAvtale(Avtale avtale){
+	public void endreAvtale(Avtale avtale) throws SQLException{
 		String query = "UPDATE Avtale SET " +
 					" tittel='"+avtale.hentAvtaleNavn() +
 					"', dato='"+avtale.hentAvtaleDato().toString() +"', starttidspunkt='"+
@@ -168,7 +170,7 @@ public class DatabaseKommunikator {
 					avtale.hentSluttid().toString() +"', alternativtid='"+
 					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
 					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
-					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRom().hentRomID() +
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRomID() +
 					", sted='"+avtale.getSted()+"' "
 				+" WHERE avtaleid="+avtale.hentAvtaleID();
 		
@@ -190,7 +192,7 @@ public class DatabaseKommunikator {
 	 * Krav 6: Reservere m�terom
 	 * Denne er ikke st�ttet av databasen...
 	 */
-	public void reserverM�terom(){
+	public void reserverMoterom(){
 		System.out.println("Hold your horses! Reservasjon av m�terom er ikke implementert i databasen...");
 		System.out.println("Legg inn m�teromID som verdi for 'sted' i en Avtale for � reservere");
 	}
@@ -271,33 +273,17 @@ public class DatabaseKommunikator {
 	 * Denne metoden henter alle m�terom slik at modellen kan sjekke hva som er ledig p� et gitt tidspunkt.
 	 * @throws SQLException 
 	 */
-	public ResultSet hentMoterom() throws SQLException{
+	public ArrayList<Moterom> hentMoterom() throws SQLException{
 		String query = "SELECT * FROM Moterom";
-		return makeSingleQuery(query);
+		ResultSet rs = makeSingleQuery(query);
+		return Fabrikk.prosesserMoterom(rs);
 	}
 	
 	
 	/**
 	 * Krav 11: Visning. 
 	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
-	 */
-	
-	/**
-	 * Krav 12: Spore m�teinnkallinger
-	 * 
-	 * @param a
-	 * @return
-	 * @throws SQLException 
-	 */
-	public ResultSet hentSvar (Avtale a) throws SQLException{
-		String query = "SELECT brukernavn, deltagelse " +
-				"FROM Inviterte " +
-				"WHERE avtaleid="+a.hentAvtaleID();
-		
-		return makeSingleQuery(query);
-	}
-	
-	
+	 */	
 	
 	
 	/**

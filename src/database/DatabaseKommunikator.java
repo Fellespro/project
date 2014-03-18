@@ -2,14 +2,13 @@ package database;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import utilities.Utilities;
 
 import modell.*;
 
 /*
- * Klassen kobler seg til en mySQL-database p� NTNUs server
+ * Klassen kobler seg til en mySQL-database pï¿½ NTNUs server
  * jdbcDriver=com.mysql.jdbc.Driver
  * url=jdbc:mysql://localhost/testDB
  * user=olestes_fp
@@ -24,13 +23,13 @@ import modell.*;
  * 
  * OBS! OBS!
  * DatabaseCommunicator er veldig dum. Den sjekker ikke om avtaler o.l. som skal legges
- * inn i databasen har gyldige data. G�r utifra at modellen garanterer at alt er korrekt!
+ * inn i databasen har gyldige data. Gï¿½r utifra at modellen garanterer at alt er korrekt!
  * 
  * 
  */
 public class DatabaseKommunikator {
 	
-	private static String jdbcDriver; // String containing the driver Class name
+	private String jdbcDriver; // String containing the driver Class name
 	private String url; // Address to the database
 	private String bruker;
 	private String passord;
@@ -38,7 +37,7 @@ public class DatabaseKommunikator {
 	private Connection conn;
 	
 	
-	//Tilkoblingsinfo blir satt her. Hardkodet forel�big
+	//Tilkoblingsinfo blir satt her. Hardkodet forelï¿½big
 	public DatabaseKommunikator(){
 		jdbcDriver = "com.mysql.jdbc.Driver"; // String containing the driver Class name
 		url = "jdbc:mysql://mysql.stud.ntnu.no/olestes_fpdb"; // Address to the database
@@ -60,7 +59,7 @@ public class DatabaseKommunikator {
 			conn = DriverManager.getConnection(url, bruker, passord);
 			System.out.println("Tilkobling opprettet");
 		} catch (SQLException e) {
-			System.out.println("Nicht G�t! SQLException! Kunne ikke koble til...");
+			System.out.println("Nicht Gï¿½t! SQLException! Kunne ikke koble til...");
 			e.printStackTrace();
 		}
 		
@@ -103,19 +102,29 @@ public class DatabaseKommunikator {
 		st.executeUpdate(sql);
 	}
 	
-	//Krav 1 - Logge p�
-	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilh�rende
+	//Krav 1 - Logge pï¿½
+	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilhï¿½rende
 	//passord i databasen.
-	public boolean erGyldigInnlogging(String brukernavn, String passord) throws SQLException{
+	public boolean erGyldigInnlogging(String brukernavn, String passord){
 		String query="Select * from Ansatt where brukernavn='"+brukernavn+"' and passord='"+passord+"'";
-		ResultSet rs = this.makeSingleQuery(query); //Utf�r sp�rring og motta resultat
-		return Fabrikk.inneholderMatch(rs, brukernavn, passord);
+		ResultSet rs = null;
+		try {
+			rs = this.makeSingleQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //Utfï¿½r spï¿½rring og motta resultat
+		try {
+			return Fabrikk.inneholderMatch(rs, brukernavn, passord);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**
 	 *Krav 2 - Legge inn avtale
-	 *Om det ikke skal brukes et m�terom: sett m�teromid til -1, og legg inn sted i beskrivelse!
-	 *For � automatisk generere en gyldig avtaleID, sett den til 0.
+	 *Om det ikke skal brukes et mï¿½terom: sett mï¿½teromid til -1, og legg inn sted i beskrivelse!
+	 *For ï¿½ automatisk generere en gyldig avtaleID, sett den til 0.
 	 * @param avtale
 	 * @throws SQLException 
 	 */
@@ -159,7 +168,7 @@ public class DatabaseKommunikator {
 	 * Krav 4: Endre avtale
 	 * @param avtale
 	 * 
-	 * Sl�r opp p� avtelen sin id og oppdaterer alle felt
+	 * Slï¿½r opp pï¿½ avtelen sin id og oppdaterer alle felt
 	 * @throws SQLException 
 	 */
 	public void endreAvtale(Avtale avtale) throws SQLException{
@@ -189,12 +198,12 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 6: Reservere m�terom
-	 * Denne er ikke st�ttet av databasen...
+	 * Krav 6: Reservere mï¿½terom
+	 * Denne er ikke stï¿½ttet av databasen...
 	 */
 	public void reserverMoterom(){
-		System.out.println("Hold your horses! Reservasjon av m�terom er ikke implementert i databasen...");
-		System.out.println("Legg inn m�teromID som verdi for 'sted' i en Avtale for � reservere");
+		System.out.println("Hold your horses! Reservasjon av mï¿½terom er ikke implementert i databasen...");
+		System.out.println("Legg inn mï¿½teromID som verdi for 'sted' i en Avtale for ï¿½ reservere");
 	}
 	
 	/**
@@ -218,11 +227,11 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt m�te
-	 * Status for deltagelse er en 2-bits-verdi, der verdiene betyr som f�lger:
+	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt mï¿½te
+	 * Status for deltagelse er en 2-bits-verdi, der verdiene betyr som fï¿½lger:
 	 * 0=Ikke svart, 1=Deltar, 2=Deltar ikke, 3=Deltar ikke og ikke synlig
 	 * 
-	 * Hax i ArrayListen: De f�rste 6 bokstavene utgj�r brukernavnet, den siste(7.) utgj�r status for deltagelse
+	 * Hax i ArrayListen: De fï¿½rste 6 bokstavene utgjï¿½r brukernavnet, den siste(7.) utgjï¿½r status for deltagelse
 	 * @param avtale
 	 * @return
 	 * @throws SQLException
@@ -238,9 +247,9 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 9: Melde avbud for m�te
-	 * Metoden gj�r litt mer enn det som er spurt om i dette kravet.
-	 * Metoden tar inn en person, en avtale, en bolsk variabel for svar p� innkalling, og en
+	 * Krav 9: Melde avbud for mï¿½te
+	 * Metoden gjï¿½r litt mer enn det som er spurt om i dette kravet.
+	 * Metoden tar inn en person, en avtale, en bolsk variabel for svar pï¿½ innkalling, og en
 	 * bolsk variabel som sier om avtalen skal skjules i denne personens personlige kalender
 	 * Bruk av de bolske variablene (deltar, synlig)	(X=likegyldig)
 	 *  - Person takker ja til invitasjon = (true, X)
@@ -267,23 +276,54 @@ public class DatabaseKommunikator {
 	}
 	
 	/**
-	 * Krav 10: Reservere m�terom
-	 * Resrevasjonen ligger i Avtale-klassen. Slettes en avtale, forsvinner reservasjonen ogs�, ettersom
+	 * Krav 10: Reservere mï¿½terom
+	 * Resrevasjonen ligger i Avtale-klassen. Slettes en avtale, forsvinner reservasjonen ogsï¿½, ettersom
 	 * den er en del av avtalen.
-	 * Denne metoden henter alle m�terom slik at modellen kan sjekke hva som er ledig p� et gitt tidspunkt.
+	 * Denne metoden henter alle mï¿½terom slik at modellen kan sjekke hva som er ledig pï¿½ et gitt tidspunkt.
 	 * @throws SQLException 
 	 */
-	public ArrayList<Moterom> hentMoterom() throws SQLException{
+	public ResultSet hentMoterom() throws SQLException{
 		String query = "SELECT * FROM Moterom";
-		ResultSet rs = makeSingleQuery(query);
-		return Fabrikk.prosesserMoterom(rs);
+		return makeSingleQuery(query);
 	}
 	
 	
 	/**
 	 * Krav 11: Visning. 
 	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
-	 */	
+	 */
+	
+	/**
+	 * Krav 12: Spore mï¿½teinnkallinger
+	 * 
+	 * @param a
+	 * @return
+	 * @throws SQLException 
+	 */
+	public ResultSet hentSvar (Avtale a) throws SQLException{
+		String query = "SELECT brukernavn, deltagelse " +
+				"FROM Inviterte " +
+				"WHERE avtaleid="+a.hentAvtaleID();
+		
+		return makeSingleQuery(query);
+	}
+
+	public Person hentPerson(String bruker2) {
+		String query = "SELECT * " +
+				"FROM Ansatt " +
+				"WHERE brukernavn='"+bruker2+"'";
+		try {
+			ResultSet rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPerson(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
+	
+	
 	
 	
 	/**
@@ -295,23 +335,24 @@ public class DatabaseKommunikator {
 	 * @throws IllegalAccessException
 	 */
 	
+	/*
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException{		
 		DatabaseKommunikator dc = new DatabaseKommunikator();
 		dc.kobleOpp();
 		System.out.println(dc.erGyldigInnlogging("abdull", "abcd"));
 		
-		/* Opprett avtale test:
+		//Opprett avtale test:
 		Dato d = new Dato();
 		Tid t = new Tid();
 		Tid v = new Tid(2,0,0);
 		Moterom r = new Moterom();
 		Person p = new Person("abdull");
 		dc.insertAppointment(d, t, t, t, v, "random avtale", r, p, 5);
-		*/
 		
 		
 		
 		dc.lukk();
 		
 	}
+	*/
 }

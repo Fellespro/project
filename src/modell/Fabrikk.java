@@ -5,15 +5,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+<<<<<<< HEAD
  * 
  * Denne klassen brukes til ï¿½ prosessere ResultSet fra databasespï¿½rringer og 
+=======
+ *
+ * Denne klassen brukes til å prosessere ResultSet fra databasespørringer og
+>>>>>>> 4cdd02a47e8441122c19306c8a406e6b8ad7eedc
  * lage objekt-instanser av dem.
  * Fabrikk blir antageligvis kun brukt av DatabaseKommunikator. Andre klasser mï¿½ dermed kommunisere
  * med DatabaseKommunikator.
  */
 
 public class Fabrikk {
-	
+
 	public static boolean inneholderMatch (ResultSet rs, String brukernavn, String passord) throws SQLException{
 		boolean match = false; //Inntil motbevist
 		while(rs.next()){//Sjekk resultet av spï¿½rringen
@@ -22,7 +27,7 @@ public class Fabrikk {
 		}
 		return match;
 	}
-	
+
 	public static ArrayList<Avtale> prosesserAvtaler(ResultSet rs) throws SQLException{
 		ArrayList<Avtale> liste = new ArrayList<Avtale>();
 		while(rs.next()){
@@ -41,7 +46,7 @@ public class Fabrikk {
 			a.setSted(rs.getString(12));
 			liste.add(a);
 		}
-		return liste;	
+		return liste;
 	}
 
 	public static ArrayList<String> prosesserStatusForDeltagelse(ResultSet rs) throws SQLException {
@@ -52,15 +57,50 @@ public class Fabrikk {
 		return liste;
 	}
 
-	public static ArrayList<Moterom> prosesserMoterom(ResultSet rs) throws SQLException {
-		ArrayList<Moterom> liste = new ArrayList<Moterom>();
-		while(rs.next()){
-			Moterom m = new Moterom(rs.getInt(1), rs.getInt(2), "navn ikke i database");
-			liste.add(m);
+	public static Person prosesserPerson(ResultSet rs) {
+		Person p;
+		try {
+			while(rs.next()){
+				p = new Person(rs.getString(1));
+				p.setNavn(rs.getString(3));
+				return p;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static ArrayList<Person> prosesserPersoner(ResultSet rs) {
+		ArrayList<Person> liste = new ArrayList<Person>();
+		try {
+			while(rs.next()){
+				Person p;
+				p = new Person(rs.getString(1));
+				p.setNavn(rs.getString(3));
+				liste.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return liste;
 	}
-	
-	
-	
+
+	public static ArrayList<Moterom> prosesserMoterom(ResultSet rs) {
+		ArrayList<Moterom> liste = new ArrayList<Moterom>();
+		try {
+			while(rs.next()){
+				Moterom m;
+				m = new Moterom(rs.getInt(1), rs.getInt(2), "...");
+				liste.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return liste;
+	}
+
+
+
 }

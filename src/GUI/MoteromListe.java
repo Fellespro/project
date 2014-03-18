@@ -1,6 +1,7 @@
 package GUI;
 
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class MoteromListe extends JList implements ListSelectionListener{
         //private JList moteListe;
         
         private DefaultListModel moteListeModel;
-        private Database database;
+        private DatabaseKommunikator database;
         private List<ListSelectionListener> listSelectionListeners;
         private Moterom moterom;
         
-        public MoteromListe(Dato dato, Time starttid, Time sluttid, int kapasitet, Database database){
+        public MoteromListe(Dato dato, Time starttid, Time sluttid, int kapasitet, DatabaseKommunikator database){
                 listSelectionListeners = new ArrayList<ListSelectionListener>();
                 super.addListSelectionListener(this);
                 
@@ -33,7 +34,7 @@ public class MoteromListe extends JList implements ListSelectionListener{
                 this.setCellRenderer(new MoteromCellRenderer());
                 hentMoterom(dato, starttid, sluttid, kapasitet);
         }
-        public MoteromListe(Database database){
+        public MoteromListe(DatabaseKommunikator database){
                 listSelectionListeners = new ArrayList<ListSelectionListener>();
                 super.addListSelectionListener(this);
                 

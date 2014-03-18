@@ -110,9 +110,6 @@ public class DatabaseKommunikator {
 		ResultSet rs = null;
 		try {
 			rs = this.makeSingleQuery(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		try {
 			return Fabrikk.inneholderMatch(rs, brukernavn, passord);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -132,7 +129,7 @@ public class DatabaseKommunikator {
 					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
 					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
 					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
-					", '" + avtale.hentOpprettetav() + "', " + avtale.hentRomID() +",'"+avtale.getSted()+"')";
+					", '" + avtale.hentOpprettetAv() + "', " + avtale.hentRom().hentRomID() +",'')";
 		
 		makeSingleUpdate(query);
 	}
@@ -177,8 +174,8 @@ public class DatabaseKommunikator {
 					avtale.hentSluttid().toString() +"', alternativtid='"+
 					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
 					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
-					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRomID() +
-					", sted='"+avtale.getSted()+"' "
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRom().hentRomID() +
+					", sted='' "
 				+" WHERE avtaleid="+avtale.hentAvtaleID();
 		
 		makeSingleUpdate(query);
@@ -324,24 +321,7 @@ public class DatabaseKommunikator {
 		
 		return null;
 	}
-
-	public Person hentPerson(String bruker2) {
-		String query = "SELECT * " +
-				"FROM Ansatt " +
-				"WHERE brukernavn='"+bruker2+"'";
-		try {
-			ResultSet rs = makeSingleQuery(query);
-			return Fabrikk.prosesserPerson(rs);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
-		return null;
-		
-	}
-	
-	
-	
 	
 	/**
 	 * main metode brukt til testing

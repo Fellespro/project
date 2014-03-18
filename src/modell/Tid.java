@@ -1,4 +1,4 @@
-
+package modell;
 
 public class Tid {
 	private int hour;
@@ -15,6 +15,10 @@ public class Tid {
 		hour = h;
 		minute = m;
 		second = s;
+	}
+	
+	public Tid(String tid){
+		
 	}
 	
 	public String toString(){

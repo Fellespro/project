@@ -41,4 +41,8 @@ public class Person {
         	return username;
         }
         
+        public String toString(){
+        	return navn;
+        }
+        
 }

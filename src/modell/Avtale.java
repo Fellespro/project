@@ -34,6 +34,50 @@ public class Avtale {
 	private List<PersonListeElement> interneDeltakere;
 	private int antallEksterneDeltakere;
 	private List<String> eksterneDeltakere;
+	
+	/*
+	Avtale (Person oppretter, Dato dato, Time start, Time slutt)
+	Avtale (int id, String navn, Person oppretter, Dato dato, Time start, Time slutt, Time alt_start, Moterom rom,
+			String beskr, String sist_endret, Respons resp, Vector<PersonListeElement> interne, int int_dltkr,
+			Vector<String> eksterne, int ekst_dltkr)
+	
+	public boolean avtaleKrasj(double start_a, double slutt_a)
+	public boolean avtaleOverlapp(Avtale a)
+	public boolean avtaleIUke(int ukenr, int aar)
+	public void leggTilDeltaker(String email)
+	public void fjernDeltaker(Person person)
+	public void leggTilDeltaker(Person person
+	public String hentEmail(int pos)
+	public Person hentPerson(int pos)
+	public void settAntallEksterne(int ant)
+	public int hentAntallEksterne()
+	public void settAntallInterne(int ant)
+	public int hentAntallInterne()
+	public int hentAntallDeltakere()
+	public void settStatus(Respons r)
+	public String hentStatus()
+	public void settSistEndret(String endret)
+	public String hentSistEndret()
+	public void settBeskrivelse(String b)
+	public String hentBeskrivelse()
+	public void settVarighet(Time varighet)
+	public Time hentVarighet()
+	public void settRom(Moterom rom)
+	public Moterom hentRom()
+	public void settAlternativStarttid(Time tid)
+	public Time hentAlternativStarttid()
+	public void settSluttid(Time tid)
+	public Time hentSluttid()
+	public void settStarttid(Time tid)
+	public Time hentStarttid()
+	public void settAvtaleDato(Dato dato)
+	public Dato hentAvtaleDato()
+	public void settOpprettetAv(Person oppretter)
+	public Person hentOpprettetAv()
+	public void settAvtaleNavn(String navn)
+	public String hentAvtaleNavn()
+	public int hentAvtaleID()
+	 */
 
 
 	Avtale (int id, String navn, Person oppretter, Dato dato, Time start, Time slutt, Time alt_start, Moterom rom,
@@ -345,7 +389,7 @@ public class Avtale {
 		antallEksterneDeltakere ++;
 		settSistEndret(null);
 	}
-
+	
 	public void fjernDeltaker(String email)
 	{
 		for(int i = 0;i < antallEksterneDeltakere;i++)
@@ -358,7 +402,7 @@ public class Avtale {
 		}
 		settSistEndret(null);
 	}
-
+	
 	public boolean avtaleIUke(int ukenr, int aar)
 	{
 		if((avtaleDato.getAar() == aar) && (ukenr == avtaleDato.getUkenr()))
@@ -367,7 +411,7 @@ public class Avtale {
 		}
 		return false;
 	}
-
+	
 	public boolean avtaleOverlapp(Avtale a)
 	{
 		//starttidspunkt for avtale a

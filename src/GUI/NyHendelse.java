@@ -360,17 +360,23 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 PersonListe pListe = new PersonListe();
                 for(int i=0; i<inviterte.getModel().getSize();i++){
                         Person p = (Person)inviterte.getModel().getElementAt(i);
-                        pListe.addPerson(p);
+                        pListe.leggTilPerson(p);
                 }
-                if(avtale instanceof Mote){
-                        ((Mote)avtale).setInviterte(pListe);
-                }
+                for(int i = 0;i < pListe.antallPersoner();i++)
+           		{
+           				avtale.leggTilDeltaker(pListe.hentPerson(i));
+           		}
         }
         public PersonListe getInviterte(){
-                if(avtale instanceof Avtale){
-                        return ((Avtale)avtale).getInviterte();
-                }
-                return null;
+        		PersonListe personListe = new PersonListe();
+        		if(avtale instanceof Avtale){
+        				for(int i = 0;i < avtale.hentAntallInterne();i++)
+        				{
+        					personListe.leggTilPerson(avtale.hentPerson(i));
+        				}
+        				return personListe;
+        		}
+        		return null;
         }
         
         public void lagre(){
@@ -380,7 +386,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 //              if(datoText.getText() != null){
                         try{
                                 Dato datoen = new Dato(datoText.getText());
-                                avtale.setDato(datoText.getText());
+                                avtale.settAvtaleDato(datoen);
                         }
                         catch(Exception e){
                                 //TODO: lag dialog
@@ -393,8 +399,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 String[] starttidTabell = starttidText.getText().split(":");
                                 int time = Integer.parseInt(starttidTabell[0]);
                                 int min = Integer.parseInt(starttidTabell[1]);
-                                Time tid = new Time(time, min);
-                                avtale.setStarttid(tid.toString());
+                                Time tid = new Time(time, min, 0);
+                                avtale.settStarttid(tid);
                         }
                         catch(Exception e){
                                 feilmelding += "Starttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
@@ -405,8 +411,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 String[] sluttidTabell = sluttidText.getText().split(":");
                                 int time = Integer.parseInt(sluttidTabell[0]);
                                 int min = Integer.parseInt(sluttidTabell[1]);
-                                Time tid = new Time(time, min);
-                                avtale.setSluttid(tid.toString());
+                                Time tid = new Time(time, min, 0);
+                                avtale.settSluttid(tid);
                         }
                         catch(Exception e){
                                 feilmelding += "Sluttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
@@ -420,7 +426,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         
 //              }
                 if(!tittelText.getText().equals("")){
-                        avtale.setTittel(tittelText.getText());
+                        avtale.settAvtaleNavn(tittelText.getText());
                 } 
                 else{
                         feilmelding += "Tittel: Mangler tittel \n";
@@ -435,7 +441,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         feilmelding += "Sted: Mangler sted \n";
                 }
                 if(!beskrivelseText.getText().equals(null)){
-                        avtale.setBeskrivelse(beskrivelseText.getText());
+                        avtale.settBeskrivelse(beskrivelseText.getText());
                 } 
                 
                 
@@ -443,7 +449,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         if(oppforing instanceof Avtale){
                                 try{
                                 if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
-                                ((Avtale) avtale).setAntallAndre(Integer.parseInt(antallAndreText.getText()));
+                                ((Avtale) avtale).settAntallEksterne(Integer.parseInt(antallAndreText.getText()));
                                 }
                                 catch (Exception e){
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
@@ -483,16 +489,17 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         }
         
         public void setAvtale(Avtale avtale){
-                if (oppdatering) this.avtale = avtale;
+                if (oppdatering) 
+                		this.avtale = avtale;
                 if(avtale instanceof Avtale){
-                        datoText.setText(avtale.getDato());
-                        starttidText.setText(avtale.getStarttid());
-                        sluttidText.setText(avtale.getSluttid());
-                        tittelText.setText(avtale.getTittel());
-                        stedText.setText(avtale.getSted());
-                        antallAndreText.setText(""+((Mote)avtale).getAntallAndre());
-                        totaltText.setText(""+((Mote)avtale).getTotaltAntall());
-                        beskrivelseText.setText(avtale.getBeskrivelse());
+                        datoText.setText(avtale.hentAvtaleDato().toString());
+                        starttidText.setText(avtale.hentStarttid().toString());
+                        sluttidText.setText(avtale.hentSluttid().toString());
+                        tittelText.setText(avtale.hentAvtaleNavn());
+                        stedText.setText(avtale.hentRom().hentNavn());
+                        antallAndreText.setText(""+(avtale).hentAntallEksterne());
+                        totaltText.setText(""+(avtale).hentAntallDeltakere());
+                        beskrivelseText.setText(avtale.hentBeskrivelse());
                         moteRadio.doClick();
                 }
         
@@ -509,7 +516,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
                 else if(e.getSource() == oppdaterMoterom){
                         try {
-                                moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
+                                moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText(), 0), Integer.parseInt(totaltText.getText()));
                         } catch (IllegalArgumentException e2) {
                                 Feilmelding.visFeilmelding(this, "Dato, Starttid eller Sluttid er feil utfylt", Feilmelding.FEIL_UGYLDIG_UTFYLLING);
                         }
@@ -518,7 +525,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 else if(e.getSource() == moteRadio){
                         if(moteRadio.isSelected()){
                                 if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-                                        moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
+                                        moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText(), 0), Integer.parseInt(totaltText.getText()));
                                 }
                                 moteromList.setVisible(true);
                                 oppdaterMoterom.setEnabled(true);
@@ -564,7 +571,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 if(e.getSource() == moteromList){
                         try {
                                 Moterom m = (Moterom)moteromList.getSelectedValue();
-                                stedText.setText(m.getNavn());
+                                stedText.setText(m.hentNavn());
                         } catch (NullPointerException e1) {
                         }
                 }

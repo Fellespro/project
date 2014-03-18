@@ -375,7 +375,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         public void lagre(){
                 feilmelding = "";
-                avtale.setLagetAv(person);
+                avtale.settOpprettetAv(person);
                 
 //              if(datoText.getText() != null){
                         try{

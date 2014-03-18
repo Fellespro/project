@@ -18,6 +18,18 @@ public class PersonListe implements Iterable<Person>{
                 personListe.add(p);
         }
         
+        public Person finnPerson(int ID)
+        {
+        	for(int i = 0;i < personListe.size();i++)
+        	{
+        		if(hentPerson(i).getPersonId() == ID)
+        		{
+        			return hentPerson(i);
+        		}
+        	}
+        	return null;
+        }
+        
         /**
          * 
          * @param p

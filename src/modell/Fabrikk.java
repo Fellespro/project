@@ -1,4 +1,4 @@
-package modell;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,6 +48,15 @@ public class Fabrikk {
 		ArrayList<String> liste = new ArrayList<String>();
 		while(rs.next()){
 			liste.add(rs.getString(1)+rs.getInt(2));
+		}
+		return liste;
+	}
+
+	public static ArrayList<Moterom> prosesserMoterom(ResultSet rs) throws SQLException {
+		ArrayList<Moterom> liste = new ArrayList<Moterom>();
+		while(rs.next()){
+			Moterom m = new Moterom(rs.getInt(1), rs.getInt(2), "navn ikke i database");
+			liste.add(m);
 		}
 		return liste;
 	}

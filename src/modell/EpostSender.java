@@ -1,3 +1,5 @@
+
+
 import java.sql.Date;
 import java.util.Properties;
 
@@ -76,7 +78,7 @@ public class EpostSender {
 	
 	public String lagAvtalemelding(Avtale avtale)
 	{
-		String oppsummering = avtale.hentOpprettetav().getNavn() + " har invitert deg til å delta på et møte hos Firma X. \n\n\nInformasjon om møtet:\n\n";
+		String oppsummering = avtale.hentOpprettetAv().getNavn() + " har invitert deg til å delta på et møte hos Firma X. \n\n\nInformasjon om møtet:\n\n";
 		oppsummering += "Tittel: ";
 		oppsummering += avtale.hentAvtaleNavn() + "\n";
 		
@@ -102,7 +104,7 @@ public class EpostSender {
 			for(int i = 0;i < avtale.hentAntallInterne();i++)
 			{
 				oppsummering += "- Navn: " + avtale.hentPerson(i).getNavn();
-				if(avtale.hentPerson(i) == avtale.hentOpprettetav() ){
+				if(avtale.hentPerson(i) == avtale.hentOpprettetAv() ){
 					oppsummering += " (møteinnkaller)\n";
 				}
 				else

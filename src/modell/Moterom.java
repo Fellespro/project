@@ -1,10 +1,10 @@
-
+package modell;
 
 public class Moterom {
-
+	
 	private int romid;
-	private int kapasitet;
-	private String navn;
+	private int kapasitet; 
+	private String navn; 
 	
 	public Moterom(){
 		romid = 0;
@@ -17,34 +17,34 @@ public class Moterom {
 		this.navn=navn;
 	}
 	
-	
-	
-	public int getRomID() {
+
+
+	public int hentRomID() {
 		return romid;
 	}
-	
-	
-	public String getNavn() {
+
+
+	public String hentNavn() {
 		return navn;
 	}
-	
-	
-	public void setNavn(String navn) {
+
+
+	public void settNavn(String navn) {
 		this.navn = navn;
 	}
-	
-	
-	public void setRomid(int romid) {
+
+
+	public void settRomid(int romid) {
 		this.romid = romid;
 	}
-	
-	
-	public int getKapasitet() {
+
+
+	public int hentKapasitet() {
 		return kapasitet;
 	}
-	
-	
-	public void setKapasitet(int kapasitet) {
+
+
+	public void settKapasitet(int kapasitet) {
 		this.kapasitet = kapasitet;
 	}
 }

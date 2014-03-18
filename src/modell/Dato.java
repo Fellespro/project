@@ -1,4 +1,4 @@
-
+package modell;
 
 import java.util.Calendar;
 
@@ -65,6 +65,14 @@ public class Dato {
 		}
 		
 	}
+	
+	public int getUkenr()
+	{
+		Calendar kalender = Calendar.getInstance();
+		kalender.set(this.getAar(), this.getMnd()-1, this.getDag());
+		int uke = kalender.get(Calendar.WEEK_OF_YEAR);
+		return uke;
+	}
 
 
 //hjelper sjekk()
@@ -82,14 +90,6 @@ private int dagerManed(int mnd, int aar){
 		else return 28;
 	}
 	return -1;
-}
-
-public int getUkenr()
-{
-	Calendar kalender = Calendar.getInstance();
-	kalender.set(this.getAar(), this.getMnd()-1, this.getDag());
-	int uke = kalender.get(Calendar.WEEK_OF_YEAR);
-	return uke;
 }
 
 

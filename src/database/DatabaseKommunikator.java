@@ -1,15 +1,12 @@
 package database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import utilities.Utilities;
 
-import modell.Avtale;
-import modell.Dato;
-import modell.Moterom;
-import modell.Person;
-import modell.Tid;
+import modell.*;
 
 /*
  * Klassen kobler seg til en mySQL-database p� NTNUs server
@@ -19,12 +16,11 @@ import modell.Tid;
  * password=swag
  * 
  * Hvordan bruke:
- * Opprett et DatabaseCommunicator-objekt
- * DC.initialize();
- * N� kan du bruke DC.get/set for � hente ut/sette det du vil.
- * 
- * Husk � avslutte med:
- * DC.close()!
+ *  - Opprett et DatabaseCommunicator-objekt
+ *  - DC.initialize();
+ *  - Do stuff
+ * Avslutt med:
+ *  - DC.close()!
  * 
  * OBS! OBS!
  * DatabaseCommunicator er veldig dum. Den sjekker ikke om avtaler o.l. som skal legges
@@ -113,39 +109,33 @@ public class DatabaseKommunikator {
 	public boolean erGyldigInnlogging(String brukernavn, String passord) throws SQLException{
 		String query="Select * from Ansatt where brukernavn='"+brukernavn+"' and passord='"+passord+"'";
 		ResultSet rs = this.makeSingleQuery(query); //Utf�r sp�rring og motta resultat
-		boolean match = false; //Inntil motbevist
-		while(rs.next()){//Sjekk resultet av sp�rringen
-			match = brukernavn.equals(rs.getString(1));
-			match = match && passord.equals(rs.getString(2));
-		}
-		return match;
+		return Fabrikk.inneholderMatch(rs, brukernavn, passord);
 	}
 	
-	//Krav 2 - Legge inn avtale
-	//sted(moterom) er en String her. Dersom et Moterom skal brukes, send Moterom.romid som en String.
-	//Om det ikke skal settes et Moterom for avtalen: lag en beskrivende String.
-	public void leggInnAvtale(Dato avtaledato, Tid starttid, Tid sluttid, Tid altstart, Tid varighet, 
-			String beskrivelse, Moterom rom, Person admin, int antallDeltagere) throws SQLException{
-		
-		//MERK: AvtaleID har autoincrement
-		String query = "INSERT INTO Avtale VALUES " + 
-				"(0, "+avtaledato.toString()+", "+starttid.toString()+", "+sluttid.toString()+", "+
-				altstart.toString()+", '"+beskrivelse+"', "+Utilities.getCurrentDateTime()+", "+
-				antallDeltagere+", '"+admin.getBrukernavn()+"', "+rom.getRomID()+")";
+	/**
+	 *Krav 2 - Legge inn avtale
+	 *Om det ikke skal brukes et m�terom: sett m�teromid til -1, og legg inn sted i beskrivelse!
+	 *For � automatisk generere en gyldig avtaleID, sett den til 0.
+	 * @param avtale
+	 * @throws SQLException 
+	 */
+	public void leggInnAvtale(Avtale avtale) throws SQLException{
+		String query = "INSERT INTO Avtale VALUES " +
+					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
+					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
+					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
+					", '" + avtale.hentOpprettetav() + "', " + avtale.hentRomID() +",'"+avtale.getSted()+"')";
 		
 		makeSingleUpdate(query);
-		
-		
-		//TODO: lag en insertAppointment(Avtale a) som er tilsvarende denne..
-		
 	}
 	
 	/**
 	 * Krav 3: Legge til deltager til avtale
 	 * @param ansatt
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void inviterTilAvtale(Person ansatt, Avtale avtale){
+	public void inviterTilAvtale(Person ansatt, Avtale avtale) throws SQLException{
 		String query = "INSERT INTO Inviterte VALUES "+
 				"('"+ansatt.getBrukernavn()+"', "+avtale.hentAvtaleID()+")";
 
@@ -156,8 +146,9 @@ public class DatabaseKommunikator {
 	 * Krav 3: Fjern deltager fra avtale
 	 * @param ansatt
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void fjernFraAvtale(Person ansatt, Avtale avtale){
+	public void fjernFraAvtale(Person ansatt, Avtale avtale) throws SQLException{
 		String query = "DELETE FROM Inviterte " +
 				"WHERE brukernavn='"+ansatt.getBrukernavn()+"' AND avtaleid="+avtale.hentAvtaleID();
 
@@ -169,21 +160,32 @@ public class DatabaseKommunikator {
 	 * @param avtale
 	 * 
 	 * Sl�r opp p� avtelen sin id og oppdaterer alle felt
+	 * @throws SQLException 
 	 */
-	public void endreAvtale(Avtale avtale){
-		//TODO: Blir mye klipp og lim fra opprett avtale, s� fullf�r den f�rst!
-		//UPDATE table_name
-		//SET column1=value1,column2=value2,...
-		//WHERE some_column=some_value;
+	public void endreAvtale(Avtale avtale) throws SQLException{
+		String query = "UPDATE Avtale SET " +
+					" tittel='"+avtale.hentAvtaleNavn() +
+					"', dato='"+avtale.hentAvtaleDato().toString() +"', starttidspunkt='"+
+				avtale.hentStarttid().toString()+"', sluttidspunkt='"+
+					avtale.hentSluttid().toString() +"', alternativtid='"+
+					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
+					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRomID() +
+					", sted='"+avtale.getSted()+"' "
+				+" WHERE avtaleid="+avtale.hentAvtaleID();
+		
+		makeSingleUpdate(query);
 	}
 	
 	/**
 	 * Krav 5: Slett avtale
 	 * @param avtale
+	 * @throws SQLException 
 	 */
-	public void slettAvtale(Avtale avtale){
+	public void slettAvtale(Avtale avtale) throws SQLException{
 		String query = "DELETE FROM Avtale " +
 				"WHERE avtaleid="+avtale.hentAvtaleID();
+		makeSingleUpdate(query);
 	}
 	
 	/**
@@ -191,13 +193,107 @@ public class DatabaseKommunikator {
 	 * Denne er ikke st�ttet av databasen...
 	 */
 	public void reserverMoterom(){
-		System.out.println("Hold your horses! Reservasjon av m�terom er ikke implementert...");
+		System.out.println("Hold your horses! Reservasjon av m�terom er ikke implementert i databasen...");
+		System.out.println("Legg inn m�teromID som verdi for 'sted' i en Avtale for � reservere");
 	}
 	
-	public ResultSet hentAvtaler(Ansatt ansatt){
-		String query = "SELECT * FROM Avtale " +
-				"WHERE admin='"+ansatt.getBrukernavn()+"'";
+	/**
+	 * Krav 7: Hent alle avtaler relatert til en gitt person
+	 * Henter unionen av alle avtaler som Person er invitert til og har opprettet.
+	 * @param ansatt
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Avtale> hentAvtaler(Person ansatt) throws SQLException{
+		String query = "select Avtale.* " + 
+				"from Avtale "+
+				"inner join inviterte on (Inviterte.brukernavn='"+ansatt.getBrukernavn()+"' and Avtale.avtaleid = Inviterte.avtaleid) "+
+				"union "+
+				"select Avtale.* " + 
+				"from Avtale "+
+				"where admin='"+ansatt.getBrukernavn()+"'";
+		
+		ResultSet rs = makeSingleQuery(query);
+		return Fabrikk.prosesserAvtaler(rs);
 	}
+	
+	/**
+	 * Krav 8: Hent status for deltagelse for alle deltagere for et gitt m�te
+	 * Status for deltagelse er en 2-bits-verdi, der verdiene betyr som f�lger:
+	 * 0=Ikke svart, 1=Deltar, 2=Deltar ikke, 3=Deltar ikke og ikke synlig
+	 * 
+	 * Hax i ArrayListen: De f�rste 6 bokstavene utgj�r brukernavnet, den siste(7.) utgj�r status for deltagelse
+	 * @param avtale
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<String> hentStatusForDeltakelse(Avtale avtale) throws SQLException{
+		String query = "select brukernavn, deltagelse " +
+				"from Inviterte " +
+				"where avtaleid="+avtale.hentAvtaleID();
+		
+		ResultSet rs = makeSingleQuery(query);
+		
+		return Fabrikk.prosesserStatusForDeltagelse(rs);
+	}
+	
+	/**
+	 * Krav 9: Melde avbud for m�te
+	 * Metoden gj�r litt mer enn det som er spurt om i dette kravet.
+	 * Metoden tar inn en person, en avtale, en bolsk variabel for svar p� innkalling, og en
+	 * bolsk variabel som sier om avtalen skal skjules i denne personens personlige kalender
+	 * Bruk av de bolske variablene (deltar, synlig)	(X=likegyldig)
+	 *  - Person takker ja til invitasjon = (true, X)
+	 *  - Person takker nei til invitasjon, men vil fremdeles se avtalen = (false, true)
+	 *  - Person takker nei og vil ikke se avtalen i sin kalender = (false, false)
+	 * @param p
+	 * @param a
+	 * @throws SQLException 
+	 */
+	public void svarePaInvitasjon(Person p, Avtale a, boolean deltar, boolean synlig) throws SQLException{
+		int svar = 0;
+		if(deltar)
+			svar = 1;
+		else if (synlig)
+			svar = 2;
+		else
+			svar = 3;
+		
+		String query = "UPDATE Inviterte SET " +
+				"deltagelse="+svar+
+				"WHERE brukernavn='"+p.getBrukernavn()+"' AND  avtaleid="+a.hentAvtaleID();
+		
+		makeSingleUpdate(query);
+	}
+	
+	/**
+	 * Krav 10: Reservere m�terom
+	 * Resrevasjonen ligger i Avtale-klassen. Slettes en avtale, forsvinner reservasjonen ogs�, ettersom
+	 * den er en del av avtalen.
+	 * Denne metoden henter alle m�terom slik at modellen kan sjekke hva som er ledig p� et gitt tidspunkt.
+	 * @throws SQLException 
+	 */
+	public ArrayList<Moterom> hentMoterom() throws SQLException{
+		String query = "SELECT * FROM Moterom";
+		ResultSet rs = makeSingleQuery(query);
+		return Fabrikk.prosesserMoterom(rs);
+	}
+	
+	
+	/**
+	 * Krav 11: Visning. 
+	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
+	 */	
+	
+	
+	/**
+	 * main metode brukt til testing
+	 * @param args
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException{		
 		DatabaseKommunikator dc = new DatabaseKommunikator();

@@ -20,7 +20,17 @@ public class Utilities {
 	public static String getCurrentDateTime(){
 		Date date = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "'"+df.format(date)+"'";
+		return df.format(date);
 	}
+	
+	 public static boolean isInteger(String s) {
+	     try { 
+	         Integer.parseInt(s); 
+	     } catch(NumberFormatException e) { 
+	         return false; 
+	     }
+	     // only got here if we didn't return false
+	     return true;
+	 }
 
 }

@@ -1,9 +1,6 @@
 package modell;
-<<<<<<< HEAD
-=======
 
 import java.sql.Date;
->>>>>>> 4cdd02a47e8441122c19306c8a406e6b8ad7eedc
 
 import java.sql.Time;
 import java.text.DateFormat;

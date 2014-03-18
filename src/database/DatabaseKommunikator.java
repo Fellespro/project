@@ -137,7 +137,7 @@ public class DatabaseKommunikator {
 					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
 					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
 					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
-					", '" + avtale.hentOpprettetav() + "', " + avtale.hentRomID() +",'"+avtale.getSted()+"')";
+					", '" + avtale.hentOpprettetAv().getPersonId() /*?*/ + "', " + avtale.hentRom().hentRomID() +",'"+avtale.hentRom()+"')";
 		
 		makeSingleUpdate(query);
 	}
@@ -187,7 +187,7 @@ public class DatabaseKommunikator {
 					avtale.hentSluttid().toString() +"', alternativtid='"+
 					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
 					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
-					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRomID() +
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRom().hentRomID() +
 					", sted='"+avtale.getSted()+"' "
 				+" WHERE avtaleid="+avtale.hentAvtaleID();
 		

@@ -91,7 +91,7 @@ public class EpostSender {
 		oppsummering += "Varighet: ";
 		oppsummering += avtale.hentVarighet() + "\n";
 		oppsummering += "Sted: ";
-		oppsummering += avtale.hentRom().getNavn() + "\n";
+		oppsummering += avtale.hentRom().hentNavn() + "\n";
 		
 		oppsummering += "\nBeskrivelse: ";
 		oppsummering += avtale.hentBeskrivelse() + "\n";

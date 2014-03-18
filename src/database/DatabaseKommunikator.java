@@ -282,9 +282,16 @@ public class DatabaseKommunikator {
 	 * Denne metoden henter alle m�terom slik at modellen kan sjekke hva som er ledig p� et gitt tidspunkt.
 	 * @throws SQLException 
 	 */
-	public ResultSet hentMoterom() throws SQLException{
+	public ArrayList<Moterom> hentMoterom(){
 		String query = "SELECT * FROM Moterom";
-		return makeSingleQuery(query);
+		ResultSet rs;
+		try {
+			rs = makeSingleQuery(query);
+			return Fabrikk.prosesserMoterom(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	
@@ -293,21 +300,6 @@ public class DatabaseKommunikator {
 	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
 	 */
 	
-	/**
-	 * Krav 12: Spore m�teinnkallinger
-	 * 
-	 * @param a
-	 * @return
-	 * @throws SQLException 
-	 */
-	public ResultSet hentSvar (Avtale a) throws SQLException{
-		String query = "SELECT brukernavn, deltagelse " +
-				"FROM Inviterte " +
-				"WHERE avtaleid="+a.hentAvtaleID();
-		
-		return makeSingleQuery(query);
-	}
-
 	public Person hentPerson(String bruker2) {
 		String query = "SELECT * " +
 				"FROM Ansatt " +
@@ -321,6 +313,19 @@ public class DatabaseKommunikator {
 		
 		return null;
 		
+	}
+	
+	public ArrayList<Person> hentPersoner(){
+		String query = "SELECT * " +
+				"FROM Ansatt ";
+		try {
+			ResultSet rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPersoner(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	

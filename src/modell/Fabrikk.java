@@ -65,6 +65,35 @@ public class Fabrikk {
 		}
 		return null;
 	}
+
+	public static ArrayList<Person> prosesserPersoner(ResultSet rs) {
+		ArrayList<Person> liste = new ArrayList<Person>();
+		try {
+			while(rs.next()){
+				Person p;
+				p = new Person(rs.getString(1));
+				p.setNavn(rs.getString(3));
+				liste.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return liste;
+	}
+
+	public static ArrayList<Moterom> prosesserMoterom(ResultSet rs) {
+		ArrayList<Moterom> liste = new ArrayList<Moterom>();
+		try {
+			while(rs.next()){
+				Moterom m;
+				m = new Moterom(rs.getInt(1), rs.getInt(2), "...");
+				liste.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return liste;
+	}
 	
 	
 	

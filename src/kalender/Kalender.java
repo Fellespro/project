@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import database.*;
-import gui.*;
+import GUI.*;
 import modell.*;
 
 public class Kalender implements ActionListener {

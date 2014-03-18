@@ -112,7 +112,6 @@ public class DatabaseKommunikator {
 			rs = this.makeSingleQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} //Utfï¿½r spï¿½rring og motta resultat
 		try {
 			return Fabrikk.inneholderMatch(rs, brukernavn, passord);
 		} catch (SQLException e) {
@@ -133,7 +132,7 @@ public class DatabaseKommunikator {
 					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
 					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
 					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
-					", '" + avtale.hentOpprettetav() + "', " + avtale.hentRomID() +",'"+avtale.getSted()+"')";
+					", '" + avtale.hentOpprettetAv().getPersonId() /*?*/ + "', " + avtale.hentRom().hentRomID() +",'"+avtale.hentRom()+"')";
 		
 		makeSingleUpdate(query);
 	}
@@ -168,7 +167,6 @@ public class DatabaseKommunikator {
 	 * Krav 4: Endre avtale
 	 * @param avtale
 	 * 
-	 * Slï¿½r opp pï¿½ avtelen sin id og oppdaterer alle felt
 	 * @throws SQLException 
 	 */
 	public void endreAvtale(Avtale avtale) throws SQLException{
@@ -179,7 +177,7 @@ public class DatabaseKommunikator {
 					avtale.hentSluttid().toString() +"', alternativtid='"+
 					avtale.hentAlternativStarttid() +"', beskrivelse='"+avtale.hentBeskrivelse() +
 					"', sistendret='"+Utilities.getCurrentDateTime()+"', antalldeltagere='"+
-					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRomID() +
+					avtale.hentAntallDeltakere()+"', rom="+avtale.hentRom().hentRomID() +
 					", sted='"+avtale.getSted()+"' "
 				+" WHERE avtaleid="+avtale.hentAvtaleID();
 		
@@ -202,8 +200,7 @@ public class DatabaseKommunikator {
 	 * Denne er ikke stï¿½ttet av databasen...
 	 */
 	public void reserverMoterom(){
-		System.out.println("Hold your horses! Reservasjon av mï¿½terom er ikke implementert i databasen...");
-		System.out.println("Legg inn mï¿½teromID som verdi for 'sted' i en Avtale for ï¿½ reservere");
+		System.out.println("Hold your horses! Reservasjon av moterom er ikke implementert i databasen...");
 	}
 	
 	/**
@@ -282,9 +279,16 @@ public class DatabaseKommunikator {
 	 * Denne metoden henter alle mï¿½terom slik at modellen kan sjekke hva som er ledig pï¿½ et gitt tidspunkt.
 	 * @throws SQLException 
 	 */
-	public ResultSet hentMoterom() throws SQLException{
+	public ArrayList<Moterom> hentMoterom(){
 		String query = "SELECT * FROM Moterom";
-		return makeSingleQuery(query);
+		ResultSet rs;
+		try {
+			rs = makeSingleQuery(query);
+			return Fabrikk.prosesserMoterom(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	
@@ -292,20 +296,33 @@ public class DatabaseKommunikator {
 	 * Krav 11: Visning. 
 	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
 	 */
-	
-	/**
-	 * Krav 12: Spore mï¿½teinnkallinger
-	 * 
-	 * @param a
-	 * @return
-	 * @throws SQLException 
-	 */
-	public ResultSet hentSvar (Avtale a) throws SQLException{
-		String query = "SELECT brukernavn, deltagelse " +
-				"FROM Inviterte " +
-				"WHERE avtaleid="+a.hentAvtaleID();
+
+	public Person hentPerson(String bruker2) {
+		String query = "SELECT * " +
+				"FROM Ansatt " +
+				"WHERE brukernavn='"+bruker2+"'";
+		try {
+			ResultSet rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPerson(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
-		return makeSingleQuery(query);
+		return null;
+		
+	}
+	
+	public ArrayList<Person> hentPersoner(){
+		String query = "SELECT * " +
+				"FROM Ansatt ";
+		try {
+			ResultSet rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPersoner(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	public Person hentPerson(String bruker2) {

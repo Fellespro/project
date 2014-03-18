@@ -1,4 +1,4 @@
-
+package modell;
 
 public enum Respons {
 	nei, 

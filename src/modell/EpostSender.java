@@ -1,4 +1,4 @@
-
+package modell;
 
 import java.sql.Date;
 import java.util.Properties;

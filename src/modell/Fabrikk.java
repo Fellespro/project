@@ -1,4 +1,4 @@
-
+package modell;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 /**
  * 
- * Denne klassen brukes til å prosessere ResultSet fra databasespørringer og 
+ * Denne klassen brukes til ï¿½ prosessere ResultSet fra databasespï¿½rringer og 
  * lage objekt-instanser av dem.
- * Fabrikk blir antageligvis kun brukt av DatabaseKommunikator. Andre klasser må dermed kommunisere
+ * Fabrikk blir antageligvis kun brukt av DatabaseKommunikator. Andre klasser mï¿½ dermed kommunisere
  * med DatabaseKommunikator.
  */
 
@@ -16,7 +16,7 @@ public class Fabrikk {
 	
 	public static boolean inneholderMatch (ResultSet rs, String brukernavn, String passord) throws SQLException{
 		boolean match = false; //Inntil motbevist
-		while(rs.next()){//Sjekk resultet av spørringen
+		while(rs.next()){//Sjekk resultet av spï¿½rringen
 			match = brukernavn.equals(rs.getString(1));
 			match = match && passord.equals(rs.getString(2));
 		}

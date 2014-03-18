@@ -112,11 +112,6 @@ public class DatabaseKommunikator {
 			rs = this.makeSingleQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-<<<<<<< HEAD
-		} //Utf�r sp�rring og motta resultat
-=======
-		} //Utfï¿½r spï¿½rring og motta resultat
->>>>>>> 379b57690c0ea407b9ddfb5589a1ff8ac53bf4cb
 		try {
 			return Fabrikk.inneholderMatch(rs, brukernavn, passord);
 		} catch (SQLException e) {
@@ -172,11 +167,6 @@ public class DatabaseKommunikator {
 	 * Krav 4: Endre avtale
 	 * @param avtale
 	 * 
-<<<<<<< HEAD
-	 * Sl�r opp p� avtelen sin id og oppdaterer alle felt
-=======
-	 * Slï¿½r opp pï¿½ avtelen sin id og oppdaterer alle felt
->>>>>>> 379b57690c0ea407b9ddfb5589a1ff8ac53bf4cb
 	 * @throws SQLException 
 	 */
 	public void endreAvtale(Avtale avtale) throws SQLException{
@@ -210,13 +200,7 @@ public class DatabaseKommunikator {
 	 * Denne er ikke stï¿½ttet av databasen...
 	 */
 	public void reserverMoterom(){
-<<<<<<< HEAD
-		System.out.println("Hold your horses! Reservasjon av m�terom er ikke implementert i databasen...");
-		System.out.println("Legg inn m�teromID som verdi for 'sted' i en Avtale for � reservere");
-=======
-		System.out.println("Hold your horses! Reservasjon av mï¿½terom er ikke implementert i databasen...");
-		System.out.println("Legg inn mï¿½teromID som verdi for 'sted' i en Avtale for ï¿½ reservere");
->>>>>>> 379b57690c0ea407b9ddfb5589a1ff8ac53bf4cb
+		System.out.println("Hold your horses! Reservasjon av moterom er ikke implementert i databasen...");
 	}
 	
 	/**
@@ -312,8 +296,7 @@ public class DatabaseKommunikator {
 	 * Krav 11: Visning. 
 	 * Dette er allerede dekket med metoden som henter ut alle avtaler for en gitt person
 	 */
-	
-<<<<<<< HEAD
+
 	public Person hentPerson(String bruker2) {
 		String query = "SELECT * " +
 				"FROM Ansatt " +
@@ -338,19 +321,6 @@ public class DatabaseKommunikator {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-=======
-	/**
-	 * Krav 12: Spore mï¿½teinnkallinger
-	 * 
-	 * @param a
-	 * @return
-	 * @throws SQLException 
-	 */
-	public ResultSet hentSvar (Avtale a) throws SQLException{
-		String query = "SELECT brukernavn, deltagelse " +
-				"FROM Inviterte " +
-				"WHERE avtaleid="+a.hentAvtaleID();
->>>>>>> 379b57690c0ea407b9ddfb5589a1ff8ac53bf4cb
 		
 		return null;
 	}

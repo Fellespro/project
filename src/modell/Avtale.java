@@ -1,86 +1,96 @@
 package modell;
 
 import java.sql.Date;
+
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
-
-import javax.xml.soap.Text;
-import java.lang.Object;
 
 
 public class Avtale {
-	
+
+	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private static int antall_avtaler = 0;
-	
+
 	private final int avtaleID;
 	private String avtaleNavn;
-	private String opprettetAv;
-	/*protected Date avtaleDato;*/
-	private Calendar avtaleDato;
+	private Person opprettetAv;
+
+	private Dato avtaleDato;
 	private Time starttid;
 	private Time sluttid;
 	private Time alternativStarttid;
+	private Moterom rom;
+
 	private String beskrivelse;
+
 	private String sistEndret;
-	private List<Entry<Person, Respons>> deltakere;
-	private int antallDeltakere;
 	private Respons status;
-	private String sted;
-	private int rom;
-	
-	Avtale () 
-	{
-		avtaleID = antall_avtaler;
-		antall_avtaler ++;
-		beskrivelse = new String("-");
-		antallDeltakere = 0;
-		status = Respons.kanskje;
-		deltakere = new Vector<Entry<Person,Respons>>();
-	}
+
+	private int antallInterneDeltakere;
+	private List<PersonListeElement> interneDeltakere;
+	private int antallEksterneDeltakere;
+	private List<String> eksterneDeltakere;
 
 
-	Avtale(boolean tomAvtale){
-	//Må kunne opprette avtaler der vi bestemmer avtaleID selv, når vi skal laste inn data fra databasen!
-		if(tomAvtale){
-		}
+	Avtale (int id, String navn, Person oppretter, Dato dato, Time start, Time slutt, Time alt_start, Moterom rom,
+			String beskr, String sist_endret, Respons resp, Vector<PersonListeElement> interne, int int_dltkr,
+			Vector<String> eksterne, int ekst_dltkr)
+	{
+		this.avtaleID = id;
+		this.avtaleNavn = navn;
+		this.opprettetAv = oppretter;
+
+		this.avtaleDato = dato;
+		this.starttid = start;
+		this.sluttid = slutt;
+		this.alternativStarttid = alt_start;
+		this.rom = rom;
+
+		this.beskrivelse = beskr;
+
+		sistEndret = sist_endret;
+		status = resp;
+
+		interneDeltakere = interne;
+		antallInterneDeltakere = int_dltkr;
+		eksterneDeltakere = eksterne;
+		antallEksterneDeltakere = ekst_dltkr;
 	}
-	
-	Avtale (Time start, Time slutt)
+
+	Avtale (Person oppretter, Dato dato, Time start, Time slutt)
 	{
 		avtaleID = antall_avtaler;
 		antall_avtaler ++;
-		beskrivelse = new String("-");
-		starttid = start;
-		sluttid = slutt;
-		antallDeltakere = 0;
-		status = Respons.kanskje;
-	}
-	
-	Avtale (Calendar dato, Time start, Time slutt)
-	{
-		avtaleID = antall_avtaler;
-		antall_avtaler ++;
-		beskrivelse = new String("-");
+		avtaleNavn = new String("-");
+		opprettetAv = oppretter;
+
 		avtaleDato = dato;
 		starttid = start;
 		sluttid = slutt;
-		antallDeltakere = 0;
+		rom = new Moterom();
+
+		beskrivelse = new String("-");
+
+		sistEndret = dateFormat.format(Calendar.getInstance().getTime());
 		status = Respons.kanskje;
+
+		interneDeltakere = new Vector<PersonListeElement>();
+		interneDeltakere.add(new PersonListeElement(oppretter));
+		antallInterneDeltakere = 1;
+		eksterneDeltakere = new Vector<String>();
+		antallEksterneDeltakere = 0;
 	}
-	
+
+
 	public int hentAvtaleID()
 	{
 		return this.avtaleID;
 	}
 
-	public void settAvtaleID(int id){
-		avtaleID = id;
-	}
-	
 	public String hentAvtaleNavn()
 	{
 		if(avtaleNavn != null)
@@ -88,84 +98,81 @@ public class Avtale {
 		else
 			return "";
 	}
-	
+
 	public void settAvtaleNavn(String navn)
 	{
 		avtaleNavn = navn;
+		settSistEndret(null);
 	}
-	
-	public String hentOpprettetav()
+
+	public Person hentOpprettetAv()
 	{
-		if(opprettetAv !=null)
-		{
-			return opprettetAv;
-		}
-		else
-			return "";
+		return opprettetAv;
 	}
-	
-	public void settOpprettetAv(String oppretter)
+
+	public void settOpprettetAv(Person oppretter)
 	{
 		opprettetAv = oppretter;
+		settSistEndret(null);
 	}
-	
-	public Calendar hentAvtaleDato()
+
+	public Dato hentAvtaleDato()
 	{
 		if(avtaleDato != null)
 			return avtaleDato;
 		else
 			return null;
 	}
-	
-	public void settAvtaleDato(Calendar dato)
+
+	public void settAvtaleDato(Dato dato)
 	{
 		avtaleDato = dato;
+		settSistEndret(null);
 	}
-	
+
 	public Time hentStarttid()
 	{
-		if(starttid != null)
-			return starttid;
-		else
-			return new Time(0,0,0);
+		return starttid;
 	}
-	
+
 	public void settStarttid(Time tid)
 	{
 		starttid = tid;
+		settSistEndret(null);
 	}
-	
+
 	public Time hentSluttid()
 	{
-		if(sluttid != null)
-			return sluttid;
-		else
-			return new Time(0,0,0);
+		return sluttid;
 	}
-	
+
 	public void settSluttid(Time tid)
 	{
 		sluttid = tid;
+		settSistEndret(null);
 	}
-	
+
 	public Time hentAlternativStarttid()
 	{
 		return alternativStarttid;
 	}
-	
+
 	public void settAlternativStarttid(Time tid)
 	{
 		alternativStarttid = tid;
+		settSistEndret(null);
 	}
-	
-	public String getSted(){
-                return sted;
-        }
-        
-        public void setSted(String sted){
-                this.sted = sted;
-        }
-	
+
+	public Moterom hentRom()
+	{
+		return rom;
+	}
+
+	public void settRom(Moterom rom)
+	{
+		this.rom = rom;
+	}
+
 	public Time hentVarighet()
 	{
 		Time varighet = new Time(0,0,0);
@@ -180,7 +187,7 @@ public class Avtale {
 		}
 		return varighet;
 	}
-	
+
 	public void settVarighet(Time varighet)
 	{
 		if(starttid != null)
@@ -195,18 +202,20 @@ public class Avtale {
 		{
 			System.out.println("Start-tid ikke satt");
 		}
+		settSistEndret(null);
 	}
-	
+
 	public String hentBeskrivelse()
 	{
 		return beskrivelse;
 	}
-	
+
 	public void settBeskrivelse(String b)
 	{
 		this.beskrivelse = b;
+		settSistEndret(null);
 	}
-	
+
 	public String hentSistEndret()
 	{
 		if(sistEndret != null)
@@ -214,106 +223,192 @@ public class Avtale {
 		else
 			return "";
 	}
-	
+
 	public void settSistEndret(String endret)
 	{
-		sistEndret = endret;
+		if(endret == null)
+			sistEndret = dateFormat.format(Calendar.getInstance().getTime());
+		else
+			sistEndret = endret;
 	}
-	
+
+	public String hentStatus()
+	{
+		if(this.status == Respons.ja)
+		{
+			return "Godkjent av alle";
+		}
+		if(this.status == Respons.nei)
+		{
+			return "Avslått av en eller flere";
+		}
+		else
+		{
+			return "Avventer respons";
+		}
+	}
+
+	public void settStatus(Respons r)
+	{
+		status = r;
+		settSistEndret(null);
+	}
+
+	public int hentAntallDeltakere()
+	{
+		return antallInterneDeltakere + antallEksterneDeltakere;
+	}
+
+	public int hentAntallInterne()
+	{
+		return antallInterneDeltakere;
+	}
+
+	public void settAntallInterne(int ant)
+	{
+		antallInterneDeltakere = ant;
+	}
+
+	public int hentAntallEksterne()
+	{
+		return antallEksterneDeltakere;
+	}
+
+	public void settAntallEksterne(int ant)
+	{
+		antallEksterneDeltakere = ant;
+	}
+
 	public Person hentPerson(int pos)
 	{
-		if(antallDeltakere <= pos)
+		if(antallInterneDeltakere <= pos)
 		{
-			pos = antallDeltakere - 1;
+			pos = antallInterneDeltakere - 1;
 		}
 		else if(pos < 0)
 		{
 			pos = 0;
 		}
-		return deltakere.get(pos).getKey();
+		return interneDeltakere.get(pos).hentPerson();
 	}
-	
-	public void leggTilPerson(Person person)
+
+	public String hentEmail(int pos)
 	{
-		antallDeltakere ++;
-	}
-	
-	public int hentAntallDeltakere()
-	{
-		return antallDeltakere;
-	}
-	
-	public void settAntallDeltakere(int a){
-		antallDeltakere = a;
-	}
-	
-	public String hentStatus()
-	{
-		if(this.status == Respons.ja)
+		if(antallEksterneDeltakere <= pos)
 		{
-			return "Godkjent";
+			pos = antallEksterneDeltakere - 1;
 		}
-		if(this.status == Respons.nei)
+		else if(pos < 0)
 		{
-			return "Avslått";
+			pos = 0;
 		}
-		else
-		{
-			return "Avventer";
-		}
+		return eksterneDeltakere.get(pos);
 	}
-	
-	public void settStatus(Respons r)
+
+	public void leggTilDeltaker(Person person)
 	{
-		status = r;
-	}
-	
-	public int hentRomID(){
-		return rom;
-	}
-	
-	public void settRomID(int r){
-		this.rom = r;
-	}
-	
-	public void print()
-	{
-		System.out.print("AvtaleID:");
-		System.out.println(this.hentAvtaleID());
-		System.out.print("AvtaleNavn:");
-		System.out.println(this.hentAvtaleNavn());
-		System.out.print("Opprettet av:");
-		System.out.println(this.hentOpprettetav());
-		System.out.print("Sist endret:");
-		System.out.println(this.hentSistEndret());
-		System.out.print("AvtaleDato:");
-		System.out.println(this.hentAvtaleDato());
-		System.out.print("Starttid:");
-		System.out.println(this.hentStarttid());
-		System.out.print("Sluttid:");
-		System.out.println(this.hentSluttid());
-		System.out.print("Alternativ starttid:");
-		System.out.print(this.hentAlternativStarttid());
-		System.out.print("Varighet:");
-		System.out.println(this.hentVarighet());
-		System.out.print("Beskivelse: ");
-		System.out.println(this.hentBeskrivelse());
-		System.out.print("Status: ");
-		System.out.println(this.hentStatus());
-		System.out.print("Antall deltakere: ");
-		System.out.println(this.hentAntallDeltakere());
-		System.out.print("Deltakere: ");
-		if(this.hentAntallDeltakere() > 0)
+		for(int i = 0;i < antallInterneDeltakere;i++)
 		{
-			for(int i = 0;i < this.hentAntallDeltakere();i++)
+			if(interneDeltakere.get(i).hentPerson() == person)
 			{
-				System.out.println("Navn: " + deltakere.get(i).getKey().getNavn() + ", ID: " + deltakere.get(i).getKey().getNavn());
+				return;
 			}
 		}
-		else
-		{
-			System.out.println("-");
-		}
+		interneDeltakere.add(new PersonListeElement(person));
+		antallInterneDeltakere ++;
+		settSistEndret(null);
 	}
-		
+
+	public void fjernDeltaker(Person person)
+	{
+		for(int i = 0;i < antallInterneDeltakere;i++)
+		{
+			if(interneDeltakere.get(i).hentPerson() == person)
+			{
+				interneDeltakere.remove(i);
+				antallInterneDeltakere --;
+			}
+		}
+		settSistEndret(null);
+	}
+
+	public void leggTilDeltaker(String email)
+	{
+		for(int i = 0;i < antallEksterneDeltakere;i++)
+		{
+			if(eksterneDeltakere.get(i) == email)
+			{
+				return;
+			}
+		}
+		eksterneDeltakere.add(new String(email));
+		antallEksterneDeltakere ++;
+		settSistEndret(null);
+	}
+
+	public void fjernDeltaker(String email)
+	{
+		for(int i = 0;i < antallEksterneDeltakere;i++)
+		{
+			if(eksterneDeltakere.get(i) == email)
+			{
+				eksterneDeltakere.remove(i);
+				antallEksterneDeltakere --;
+			}
+		}
+		settSistEndret(null);
+	}
+
+	public boolean avtaleIUke(int ukenr, int aar)
+	{
+		if((avtaleDato.getAar() == aar) && (ukenr == avtaleDato.getUkenr()))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean avtaleOverlapp(Avtale a)
+	{
+		//starttidspunkt for avtale a
+		int start_time_a = a.hentStarttid().getHours();
+		int start_minutt_a = a.hentStarttid().getMinutes();
+		double start_a = start_time_a + ((double)start_minutt_a)/100;
+
+		//sluttidspunkt for avtale a
+		int slutt_time_a = a.hentSluttid().getHours();
+		int slutt_minutt_a = a.hentSluttid().getMinutes();
+		double slutt_a = slutt_time_a + ((double)slutt_minutt_a)/100;
+
+		//2 måter å krasje: a overlapper this på enten start eller slutt
+		if(avtaleKrasj(start_a, slutt_a))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean avtaleKrasj(double start_a, double slutt_a)
+	{
+		//starttidspunkt for this
+		int start_time_this = hentStarttid().getHours();
+		int start_minutt_this = hentStarttid().getMinutes();
+		double start_this = start_time_this + ((double)start_minutt_this)/100;
+
+		//sluttidspunkt for this
+		int slutt_time_this = hentSluttid().getHours();
+		int slutt_minutt_this = hentSluttid().getMinutes();
+		double slutt_this = slutt_time_this + ((double)slutt_minutt_this)/100;
+
+		if(start_this < start_a && !(slutt_this < start_a))
+		{
+			return true;
+		}
+		else if(start_a < start_this && !(slutt_a < start_this))
+		{
+			return true;
+		}
+		return false;
+	}
+
 }

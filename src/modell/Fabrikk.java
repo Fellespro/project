@@ -1,19 +1,19 @@
-package modell;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * 
- * Denne klassen brukes til å prosessere ResultSet fra databasespørringer og 
+ *
+ * Denne klassen brukes til å prosessere ResultSet fra databasespørringer og
  * lage objekt-instanser av dem.
  * Fabrikk blir antageligvis kun brukt av DatabaseKommunikator. Andre klasser må dermed kommunisere
  * med DatabaseKommunikator.
  */
 
 public class Fabrikk {
-	
+
 	public static boolean inneholderMatch (ResultSet rs, String brukernavn, String passord) throws SQLException{
 		boolean match = false; //Inntil motbevist
 		while(rs.next()){//Sjekk resultet av spørringen
@@ -22,7 +22,7 @@ public class Fabrikk {
 		}
 		return match;
 	}
-	
+
 	public static ArrayList<Avtale> prosesserAvtaler(ResultSet rs) throws SQLException{
 		ArrayList<Avtale> liste = new ArrayList<Avtale>();
 		while(rs.next()){
@@ -41,7 +41,7 @@ public class Fabrikk {
 			a.setSted(rs.getString(12));
 			liste.add(a);
 		}
-		return liste;	
+		return liste;
 	}
 
 	public static ArrayList<String> prosesserStatusForDeltagelse(ResultSet rs) throws SQLException {
@@ -91,10 +91,11 @@ public class Fabrikk {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+
 		}
 		return liste;
 	}
-	
-	
-	
+
+
+
 }

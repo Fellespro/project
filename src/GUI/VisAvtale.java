@@ -1,4 +1,4 @@
-package gui;
+package GUI;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import modell.Avtale;
+import modell.Tid;
 
 public class VisAvtale extends JPanel implements ActionListener{
 
@@ -243,13 +244,13 @@ public class VisAvtale extends JPanel implements ActionListener{
         public void setOppforing(Avtale avtale) {
                 this.avtale = avtale;
                 
-                datoText.setText(avtale.getDato());
-                starttidText.setText(avtale.getStarttid());
-                sluttidText.setText(avtale.getSluttid());
-                tittelText.setText(avtale.getTittel());
-                motelederText.setText(avtale.getLagetAv().getNavn());
-                stedText.setText(avtale.getSted());
-                beskrivelseText.setText(avtale.getBeskrivelse());
+                datoText.setText(avtale.hentAvtaleDato().toString());
+                starttidText.setText((new Tid(avtale.hentStarttid().getHours(), avtale.hentStarttid().getMinutes(), avtale.hentStarttid().getSeconds())).toString());
+                sluttidText.setText((new Tid(avtale.hentSluttid().getHours(), avtale.hentSluttid().getMinutes(), avtale.hentSluttid().getSeconds())).toString());
+                tittelText.setText(avtale.hentAvtaleNavn());
+                motelederText.setText(avtale.hentOpprettetAv().getNavn());
+                stedText.setText(avtale.hentRom().getNavn());
+                beskrivelseText.setText(avtale.hentBeskrivelse());
                 
                 
         }

@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,6 +26,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import database.DatabaseKommunikator;
 
 import modell.*;
 
@@ -69,7 +72,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private List<ActionListener> actionListeners;
         
         //koble til databasen. Ha det i denne klassen eller ta ut?
-        private Database database;
+        private DatabaseKommunikator database;
         private Person person;
         
         private int antallAndre = 0;
@@ -80,7 +83,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private boolean oppdatering;
         
         //trenger en oppdatering med cascade i modell
-        public NyHendelse(Database database, Person person, boolean oppdatering){
+        public NyHendelse(DatabaseKommunikator database, Person person, boolean oppdatering){
                 this.database = database;
                 this.person = person;
                 this.oppdatering = oppdatering;
@@ -329,10 +332,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         public void setAutoOppforing(){
                 Calendar cal = Calendar.getInstance();
                 Dato dato = new Dato(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR));
-                Time startTid = new Time(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+                Time startTid = new Time(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),0);
                 Time sluttTid;
-                if(cal.get(Calendar.HOUR_OF_DAY)+1==24) sluttTid = new Time(0, cal.get(Calendar.MINUTE));
-                else sluttTid = new Time(cal.get(Calendar.HOUR_OF_DAY)+1,cal.get(Calendar.MINUTE));
+                if(cal.get(Calendar.HOUR_OF_DAY)+1==24) sluttTid = new Time(0, cal.get(Calendar.MINUTE),0);
+                else sluttTid = new Time(cal.get(Calendar.HOUR_OF_DAY)+1,cal.get(Calendar.MINUTE),0);
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());

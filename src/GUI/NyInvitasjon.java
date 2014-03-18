@@ -46,10 +46,10 @@ public class NyInvitasjon extends JPanel implements ActionListener{
         private JButton svarSenere;
 
         private List<ActionListener> actionListeners;
-
-        private Avtale mote;
-        private Database database;
-
+        
+        private Avtale avtale;
+        private DatabaseKommunikator database;
+        
         public NyInvitasjon() {
                 initiateMote();
         }
@@ -67,7 +67,7 @@ public class NyInvitasjon extends JPanel implements ActionListener{
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.add(this);
-                playSound();
+                //playSound();
         }
         public void initiateMote() {
                 actionListeners = new ArrayList<ActionListener>();
@@ -178,20 +178,19 @@ public class NyInvitasjon extends JPanel implements ActionListener{
         public void addActionListener(ActionListener listener) {
                 this.actionListeners.add(listener);
         }
-
-        public void setMote(Avtale mote){
-                this.mote = mote;
-                tittelText.setText(mote.getTittel());
-                motelederText.setText(mote.getLagetAv().getNavn());
-                stedText.setText(mote.getSted());
-                datoText.setText(mote.getDato());
-                starttidText.setText(mote.getStarttid());
-                sluttidText.setText(mote.getSluttid());
-
-
+        
+        public void setMote(Avtale a){
+                this.avtale = a;
+                tittelText.setText(a.hentAvtaleNavn());
+                motelederText.setText(a.hentOpprettetAv().getNavn());
+                stedText.setText(a.hentRom().getNavn());
+                datoText.setText(a.hentAvtaleDato().toString());
+                starttidText.setText((new Tid(a.hentStarttid().getHours(), a.hentStarttid().getMinutes(), a.hentStarttid().getSeconds()).toString()));
+                sluttidText.setText((new Tid(a.hentSluttid().getHours(), a.hentSluttid().getMinutes(), a.hentSluttid().getSeconds()).toString()));
+                
         }
-        public Mote getMote(){
-                return this.mote;
+        public Avtale getAvtale(){
+                return this.avtale;
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -199,7 +198,7 @@ public class NyInvitasjon extends JPanel implements ActionListener{
                 if(e.getSource() == godtaButton){
                         for (ActionListener l : this.actionListeners) {
                                 l.actionPerformed(e);
-                                support.firePropertyChange("moteInvitasjonGodta", null, mote);
+                                support.firePropertyChange("moteInvitasjonGodta", null, avtale);
                         }
                 }
                 else if(e.getSource() == svarSenere){
@@ -212,7 +211,7 @@ public class NyInvitasjon extends JPanel implements ActionListener{
                         //TODO: send svar til databasen
                         for (ActionListener l : this.actionListeners) {
                                 l.actionPerformed(e);
-                                support.firePropertyChange("moteInvitasjonAvslaa", null, mote);
+                                support.firePropertyChange("moteInvitasjonAvslaa", null, avtale);
 
                         }
                 }
@@ -230,8 +229,12 @@ public class NyInvitasjon extends JPanel implements ActionListener{
         public static void main(String args[]){
                 //Avtale mote = new Mote();
                 //NyInvitasjon mi = new MoteInvitasjon(mote);
+        }
 }
- r594 by haaland on Apr 1, 2011   Diff
+
+/*
+ r594 by haaland on Apr 1, 2011   Diff 
+>>>>>>> 379b57690c0ea407b9ddfb5589a1ff8ac53bf4cb
 All revisions of this file
 File info
 Size: 5969 bytes, 240 lines
@@ -239,4 +242,4 @@ View raw file
 File properties
 svn:mime-type
 text/plain
-
+*/

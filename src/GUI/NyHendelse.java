@@ -340,8 +340,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
                 //tittelText.setText("møte");
-                
-                
         }
         
         public void setAntallAnsatte(int antallAnsatte){
@@ -356,10 +354,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         public Person getPerson(){
                 return this.person;
         }
-        public void setInviterte(AlleAnsatteListe inviterte){
+        public void setInviterte(PersonListe inviterte){
                 PersonListe pListe = new PersonListe();
-                for(int i=0; i<inviterte.getModel().getSize();i++){
-                        Person p = (Person)inviterte.getModel().getElementAt(i);
+                for(int i=0; i<inviterte.antallPersoner();i++){
+                        Person p = (Person)inviterte.hentPerson(i);
                         pListe.leggTilPerson(p);
                 }
                 for(int i = 0;i < pListe.antallPersoner();i++)
@@ -419,8 +417,13 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         }
                         
                 try {
-                        if (!Time.checkTimes(avtale.getStarttid(), avtale.getSluttid()))
+                        if (!(avtale.hentStarttid().getHours() < avtale.hentSluttid().getHours()))
                                 feilmelding += "Klokkeslett: Sluttid skjer før starttid";
+                        else if(avtale.hentStarttid().getHours() == avtale.hentSluttid().getHours() &&
+                        		!(avtale.hentStarttid().getMinutes() < avtale.hentSluttid().getMinutes()))
+                        {
+                        		feilmelding += "Klokkeslett: Sluttid skjer før starttid";
+                        }
                 } catch (Exception e) {
                 }       
                         
@@ -434,7 +437,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 if(!stedText.getText().equals("")){
                         avtale.setSted(stedText.getText());
                         if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
-                                ((Avtale)avtale).setMoterom((Moterom)moteromList.getSelectedValue());
+                                ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
                 }
                 else{
@@ -463,8 +466,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         if (!oppdatering) {
                                 oppforing.setLagetAv(getPerson());
                                 int id = database.addOppforing(oppforing);
-                                if (avtale instanceof Avtale) ((Avtale)oppforing).setMoteId(id);
-                                else ((Avtale)oppforing).setAvtaleId(id);
+                                if (avtale instanceof Avtale) 
+                                		((Avtale)oppforing).setMoteId(id);
+                                else 
+                                		((Avtale)oppforing).setAvtaleId(id);
                         } else {
                                 database.updateOppforing(getPerson(), avtale);
                         }

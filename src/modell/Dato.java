@@ -22,6 +22,10 @@ public class Dato {
 		this.aar = aar;
 	}
 	
+	public Dato(String dato){
+		
+	}
+	
 		
 	
 	public int getDag() {

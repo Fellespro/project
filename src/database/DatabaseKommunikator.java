@@ -5,13 +5,14 @@ import java.util.Properties;
 
 import utilities.Utilities;
 
+import modell.Avtale;
 import modell.Dato;
 import modell.Moterom;
 import modell.Person;
 import modell.Tid;
 
 /*
- * Klassen kobler seg til en mySQL-database på NTNUs server
+ * Klassen kobler seg til en mySQL-database pï¿½ NTNUs server
  * jdbcDriver=com.mysql.jdbc.Driver
  * url=jdbc:mysql://localhost/testDB
  * user=olestes_fp
@@ -20,14 +21,14 @@ import modell.Tid;
  * Hvordan bruke:
  * Opprett et DatabaseCommunicator-objekt
  * DC.initialize();
- * Nå kan du bruke DC.get/set for å hente ut/sette det du vil.
+ * Nï¿½ kan du bruke DC.get/set for ï¿½ hente ut/sette det du vil.
  * 
- * Husk å avslutte med:
+ * Husk ï¿½ avslutte med:
  * DC.close()!
  * 
  * OBS! OBS!
  * DatabaseCommunicator er veldig dum. Den sjekker ikke om avtaler o.l. som skal legges
- * inn i databasen har gyldige data. Går utifra at modellen garanterer at alt er korrekt!
+ * inn i databasen har gyldige data. Gï¿½r utifra at modellen garanterer at alt er korrekt!
  * 
  * 
  */
@@ -41,7 +42,7 @@ public class DatabaseKommunikator {
 	private Connection conn;
 	
 	
-	//Tilkoblingsinfo blir satt her. Hardkodet foreløbig
+	//Tilkoblingsinfo blir satt her. Hardkodet forelï¿½big
 	public DatabaseKommunikator(){
 		jdbcDriver = "com.mysql.jdbc.Driver"; // String containing the driver Class name
 		url = "jdbc:mysql://mysql.stud.ntnu.no/olestes_fpdb"; // Address to the database
@@ -63,7 +64,7 @@ public class DatabaseKommunikator {
 			conn = DriverManager.getConnection(url, bruker, passord);
 			System.out.println("Tilkobling opprettet");
 		} catch (SQLException e) {
-			System.out.println("Nicht Güt! SQLException! Kunne ikke koble til...");
+			System.out.println("Nicht Gï¿½t! SQLException! Kunne ikke koble til...");
 			e.printStackTrace();
 		}
 		
@@ -106,14 +107,14 @@ public class DatabaseKommunikator {
 		st.executeUpdate(sql);
 	}
 	
-	//Krav 1 - Logge på
-	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilhørende
+	//Krav 1 - Logge pï¿½
+	//Tar inn brukernavn og passord og sjekker om det finnes et brukernavn med tilhï¿½rende
 	//passord i databasen.
 	public boolean erGyldigInnlogging(String brukernavn, String passord) throws SQLException{
 		String query="Select * from Ansatt where brukernavn='"+brukernavn+"' and passord='"+passord+"'";
-		ResultSet rs = this.makeSingleQuery(query); //Utfør spørring og motta resultat
+		ResultSet rs = this.makeSingleQuery(query); //Utfï¿½r spï¿½rring og motta resultat
 		boolean match = false; //Inntil motbevist
-		while(rs.next()){//Sjekk resultet av spørringen
+		while(rs.next()){//Sjekk resultet av spï¿½rringen
 			match = brukernavn.equals(rs.getString(1));
 			match = match && passord.equals(rs.getString(2));
 		}
@@ -146,7 +147,7 @@ public class DatabaseKommunikator {
 	 */
 	public void inviterTilAvtale(Person ansatt, Avtale avtale){
 		String query = "INSERT INTO Inviterte VALUES "+
-				"('"+ansatt.getBrukernavn()+"', "+avtale.getAvtaleID()+")";
+				"('"+ansatt.getBrukernavn()+"', "+avtale.hentAvtaleID()+")";
 
 		makeSingleUpdate(query);
 	}
@@ -158,7 +159,7 @@ public class DatabaseKommunikator {
 	 */
 	public void fjernFraAvtale(Person ansatt, Avtale avtale){
 		String query = "DELETE FROM Inviterte " +
-				"WHERE brukernavn='"+ansatt.getBrukernavn()+"' AND avtaleid="+avtale.getAvtaleID();
+				"WHERE brukernavn='"+ansatt.getBrukernavn()+"' AND avtaleid="+avtale.hentAvtaleID();
 
 		makeSingleUpdate(query);
 	}
@@ -167,10 +168,10 @@ public class DatabaseKommunikator {
 	 * Krav 4: Endre avtale
 	 * @param avtale
 	 * 
-	 * Slår opp på avtelen sin id og oppdaterer alle felt
+	 * Slï¿½r opp pï¿½ avtelen sin id og oppdaterer alle felt
 	 */
 	public void endreAvtale(Avtale avtale){
-		//TODO: Blir mye klipp og lim fra opprett avtale, så fullfør den først!
+		//TODO: Blir mye klipp og lim fra opprett avtale, sï¿½ fullfï¿½r den fï¿½rst!
 		//UPDATE table_name
 		//SET column1=value1,column2=value2,...
 		//WHERE some_column=some_value;
@@ -182,15 +183,15 @@ public class DatabaseKommunikator {
 	 */
 	public void slettAvtale(Avtale avtale){
 		String query = "DELETE FROM Avtale " +
-				"WHERE avtaleid="+avtale.getAvtaleID();
+				"WHERE avtaleid="+avtale.hentAvtaleID();
 	}
 	
 	/**
-	 * Krav 6: Reservere møterom
-	 * Denne er ikke støttet av databasen...
+	 * Krav 6: Reservere mï¿½terom
+	 * Denne er ikke stï¿½ttet av databasen...
 	 */
-	public void reserverMøterom(){
-		System.out.println("Hold your horses! Reservasjon av møterom er ikke implementert...");
+	public void reserverMoterom(){
+		System.out.println("Hold your horses! Reservasjon av mï¿½terom er ikke implementert...");
 	}
 	
 	public ResultSet hentAvtaler(Ansatt ansatt){

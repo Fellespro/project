@@ -1,6 +1,8 @@
-package modell;
 
-//mangler muligens en konstruktør med en string som argument. 
+
+import java.util.Calendar;
+
+//mangler muligens en konstruktï¿½r med en string som argument. 
 public class Dato {
 	private int dag;
 	private int mnd;
@@ -56,10 +58,10 @@ public class Dato {
 		
 	private void sjekk(int dag, int mnd, int aar) {
 		if (dag < 1 || dag > dagerManed(mnd, aar)){
-			throw new IllegalArgumentException("Feil tall på dag:" + dag);
+			throw new IllegalArgumentException("Feil tall pï¿½ dag:" + dag);
 		}
 		if (mnd < 1 || mnd > 12) {
-			throw new IllegalArgumentException("Feil tall på måned:" + mnd);
+			throw new IllegalArgumentException("Feil tall pï¿½ mï¿½ned:" + mnd);
 		}
 		
 	}
@@ -80,6 +82,14 @@ private int dagerManed(int mnd, int aar){
 		else return 28;
 	}
 	return -1;
+}
+
+public int getUkenr()
+{
+	Calendar kalender = Calendar.getInstance();
+	kalender.set(this.getAar(), this.getMnd()-1, this.getDag());
+	int uke = kalender.get(Calendar.WEEK_OF_YEAR);
+	return uke;
 }
 
 

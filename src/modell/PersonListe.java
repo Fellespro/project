@@ -1,11 +1,8 @@
-package modell;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class PersonListe implements Iterable<Person>{
         private List<Person> personListe = new ArrayList<Person>();

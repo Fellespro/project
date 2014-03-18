@@ -1,3 +1,5 @@
+
+
 public enum Respons {
 	nei, 
 	ja, 

@@ -17,6 +17,10 @@ public class Tid {
 		second = s;
 	}
 	
+	public Tid(String tid){
+		
+	}
+	
 	public String toString(){
 		String out = "'"+hour+":"+minute+":"+second+"'";
 		return out;

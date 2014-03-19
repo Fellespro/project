@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -11,7 +12,9 @@ import modell.*;
 
 public class Lister extends JPanel implements ListSelectionListener{
 	private JList<Object> liste;
+	private JCheckBox boks;
 	private DatabaseKommunikator db;
+	private JScrollPane pane;
 	
 	public Lister(){
 		db=new DatabaseKommunikator();
@@ -26,29 +29,44 @@ public class Lister extends JPanel implements ListSelectionListener{
 	public void personListe(){
 		lagListe(db.hentPersoner().toArray());
 	}
-	public void romListe(){
-		lagListe(db.hentMoterom().toArray());
-	}
 	/*public void gruppeListe(){
 		lagListe(db.hentPersoner().toArray());
 	}*/
 	private void lagListe(Object[] listen){
 		liste=new JList<Object>(listen);
 		liste.addListSelectionListener(this);
-		add(liste);
+		//liste.setAlignmentX(LEFT_ALIGNMENT);
+		//liste.setFixedCellWidth(140);
+		//liste.setMaximumSize(new Dimension(140,100));
+		pane=new JScrollPane();
+		pane.setViewportView(liste);
+		pane.setMaximumSize(new Dimension(140,160));
+		add(pane);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
-//	public static void main (String[] args){
-//		JFrame frame=new JFrame();
-//		AnsattListe2 panel=new AnsattListe2 ();
-//		panel.personListe();
-//		
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	    
-//	   	frame.add(panel);
-//	   	frame.pack();
-//	   	frame.setVisible(true);
-//		frame.setSize(1200, 200);
-//	}
+	public void romListe(){
+		lagRomListe(db.hentMoterom().toArray());
+	}
+	private void lagRomListe(Object[] listen){
+		boks=new JCheckBox("velg rom automagisk", true);
+		boks.setAlignmentX(CENTER_ALIGNMENT);
+		add(boks);
+		lagListe(listen);
+		
+	}
+	public static void main (String[] args){
+		JFrame frame=new JFrame();
+		Lister panel=new Lister ();
+		panel.personListe();
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    
+	   	frame.add(panel);
+	   	frame.pack();
+	   	frame.setVisible(true);
+		frame.setSize(1200, 800);
+	}
 	public void valueChanged(ListSelectionEvent e){
+		boks.setSelected(false);
 	}
 }

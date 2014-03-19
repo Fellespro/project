@@ -207,7 +207,25 @@ public class DatabaseKommunikator {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Avtale> hentAvtaler(ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
+	public ArrayList<Avtale> hentPersonAvtaler (ArrayList<Avtale> avtaleliste, Person person){
+		String query = "select Avtale.avtaleid " + 
+				"from Avtale " +
+				"inner join inviterte on (Inviterte.brukernavn='"+person.getBrukernavn()+"' and Avtale.avtaleid = Inviterte.avtaleid) "+
+				"union "+
+				"select Avtale.* " + 
+				"from Avtale "+
+				"where admin='"+person.getBrukernavn()+"'";
+		
+		ResultSet rs;
+		try {
+			rs = makeSingleQuery(query);
+			return Fabrikk.prosesserPersonAvtaler(rs, avtaleliste, person);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public ArrayList<Avtale> hentAlleAvtaler(ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
 		String query = "select Avtale.* " + 
 				"from Avtale ";
 				/*+
@@ -324,9 +342,16 @@ public class DatabaseKommunikator {
 		return null;
 	}
 
-	public Moterom hentEnkeltRom(int romID) {
-		// TODO Auto-generated method stub
+	public ArrayList<Moterom> hentRom(){
+		//TODO: do
 		return null;
+	}
+	
+	public ArrayList<Gruppe> hentGrupper(){
+		String query = "SELECT * " +
+				"";
+		return null;
+		
 	}
 		
 	

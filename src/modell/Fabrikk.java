@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
-import database.DatabaseKommunikator;
-
 public class Fabrikk {
 
 	public static boolean inneholderMatch (ResultSet rs, String brukernavn, String passord) throws SQLException{
@@ -38,10 +36,23 @@ public class Fabrikk {
 			Person oppretter = hentPerson(personliste, op);
 			int romID = rs.getInt(11);
 			Moterom rom = hentRom(romliste, romID);
-			String sted = rs.getString(12);
+			//String sted = rs.getString(12);
 			a = new Avtale(id, navn, oppretter, dato, start, slutt, alt_start, rom, beskrivelse,
 					sist_endret, Respons.kanskje, null, antallDeltakere, null, 0);
 			liste.add(a);
+		}
+		return liste;
+	}
+	
+	public static ArrayList<Avtale> prosesserPersonAvtaler(ResultSet rs, ArrayList<Avtale> avtaleliste, Person person) throws SQLException {
+		ArrayList<Avtale> liste = new ArrayList<Avtale>();
+		while(rs.next()){
+			int avtaleid = rs.getInt(1);
+			for(int i=0; i<avtaleliste.size(); i++){
+				if(avtaleid==avtaleliste.get(i).hentAvtaleID()){
+					liste.add(avtaleliste.get(i));
+				}
+			}
 		}
 		return liste;
 	}
@@ -68,6 +79,7 @@ public class Fabrikk {
 		int h = 10*(s.charAt(0)-'0')+(s.charAt(1)-'0');
 		int m = 10*(s.charAt(3)-'0')+(s.charAt(4)-'0');
 		int sek = 10*(s.charAt(6)-'0')+(s.charAt(7)-'0');
+		@SuppressWarnings("deprecation")
 		Time t = new Time(h, m, sek);
 		return t;
 	}
@@ -123,7 +135,5 @@ public class Fabrikk {
 		}
 		return liste;
 	}
-
-
 
 }

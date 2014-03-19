@@ -249,7 +249,7 @@ public class VisAvtale extends JPanel implements ActionListener{
                 sluttidText.setText((new Tid(avtale.hentSluttid().getHours(), avtale.hentSluttid().getMinutes(), avtale.hentSluttid().getSeconds())).toString());
                 tittelText.setText(avtale.hentAvtaleNavn());
                 motelederText.setText(avtale.hentOpprettetAv().getNavn());
-                stedText.setText(avtale.hentRom().getNavn());
+                stedText.setText(avtale.hentRom().hentNavn());
                 beskrivelseText.setText(avtale.hentBeskrivelse());
                 
                 

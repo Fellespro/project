@@ -14,15 +14,27 @@ public class PersonListe implements Iterable<Person>{
          * 
          * @param p
          */
-        public void addPerson(Person p){
+        public void leggTilPerson(Person p){
                 personListe.add(p);
+        }
+        
+        public Person finnPerson(int ID)
+        {
+        	for(int i = 0;i < personListe.size();i++)
+        	{
+        		if(hentPerson(i).getPersonId() == ID)
+        		{
+        			return hentPerson(i);
+        		}
+        	}
+        	return null;
         }
         
         /**
          * 
          * @param p
          */
-        public void removePerson(Person p){
+        public void fjernPerson(Person p){
                 personListe.remove(p);
         }
 
@@ -31,7 +43,7 @@ public class PersonListe implements Iterable<Person>{
          * @param p
          * @return
          */
-        public boolean containsPerson(Person p){
+        public boolean inneholderPerson(Person p){
                 return personListe.contains(p);
         }
 
@@ -40,12 +52,12 @@ public class PersonListe implements Iterable<Person>{
                 return personListe.iterator();
         }
         
-        public Person getPerson(int i){
+        public Person hentPerson(int i){
                 if(personListe.isEmpty()) return null;
                 return personListe.get(i);
         }
         
-        public int size() {
+        public int antallPersoner() {
                 return personListe.size();
         }
         

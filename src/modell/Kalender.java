@@ -8,16 +8,21 @@ import java.util.List;
 import javax.swing.JFrame;
 
 
-public class Kalender extends JFrame {
+public class Kalender{
 	
-	private List<Avtale> avtaler;
+	private List<Avtale> avtaleliste;
+	private List<Person> personliste;
+	private List<Moterom> moteromliste;
 	
 
 	Kalender()
 	{
-		avtaler = new ArrayList<Avtale>();
+		avtaleliste = new ArrayList<Avtale>();
+		personliste = new ArrayList<Person>();
+		moteromliste = new ArrayList<Moterom>();
 	}
 	
+	/*
 	public int avtaleOverlapp(Avtale a)
 	{
 		int antallOverlapp = 0;
@@ -30,6 +35,7 @@ public class Kalender extends JFrame {
 		}
 		return antallOverlapp;
 	}
+	*/
 	
 	public List<Avtale> hentAvtaler(int aar, int ukenr)
 	{
@@ -102,5 +108,6 @@ public class Kalender extends JFrame {
 			System.out.println(avtalertidspunkt.get(i).hentAvtaleID() + ", " + avtalertidspunkt.get(i).hentAvtaleDato());
 		}
 	}
+	
 	
 }

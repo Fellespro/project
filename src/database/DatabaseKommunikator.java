@@ -207,17 +207,19 @@ public class DatabaseKommunikator {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Avtale> hentAvtaler(Person ansatt) throws SQLException{
+	public ArrayList<Avtale> hentAvtaler(ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
 		String query = "select Avtale.* " + 
-				"from Avtale "+
+				"from Avtale ";
+				/*+
 				"inner join inviterte on (Inviterte.brukernavn='"+ansatt.getBrukernavn()+"' and Avtale.avtaleid = Inviterte.avtaleid) "+
 				"union "+
 				"select Avtale.* " + 
 				"from Avtale "+
 				"where admin='"+ansatt.getBrukernavn()+"'";
+				*/
 		
 		ResultSet rs = makeSingleQuery(query);
-		return Fabrikk.prosesserAvtaler(rs);
+		return Fabrikk.prosesserAvtaler(rs, personliste, romliste);
 	}
 	
 	/**
@@ -319,6 +321,11 @@ public class DatabaseKommunikator {
 			e.printStackTrace();
 		}
 		
+		return null;
+	}
+
+	public Moterom hentEnkeltRom(int romID) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 		

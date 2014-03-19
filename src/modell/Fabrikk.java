@@ -136,4 +136,29 @@ public class Fabrikk {
 		return liste;
 	}
 
+	public static ArrayList<Gruppe> prosesserGrupper(ResultSet gruppers, ArrayList<Person> personliste, ResultSet gmrs) throws SQLException {
+		ArrayList<Gruppe> liste = new ArrayList<Gruppe>();
+		//Lag alle grupper
+		while(gruppers.next()){
+			liste.add(new Gruppe(gruppers.getInt(1), gruppers.getString(2)));
+		}
+		
+		//Legg til alle gruppemedlemmer!
+		while(gmrs.next()){
+			Person p = hentPerson(personliste, gmrs.getString(1));
+			Gruppe g = hentGruppe(liste, gmrs.getInt(2));
+			g.leggTilPerson(p);
+		}
+		return liste;
+	}
+
+	private static Gruppe hentGruppe(ArrayList<Gruppe> liste, int gruppeid) {
+		for(int i=0; i<liste.size(); i++){
+			if(liste.get(i).getGruppeID()==gruppeid){
+				return liste.get(i);
+			}
+		}
+		return null;
+	}
+
 }

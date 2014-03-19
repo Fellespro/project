@@ -341,15 +341,20 @@ public class DatabaseKommunikator {
 		
 		return null;
 	}
-
-	public ArrayList<Moterom> hentRom(){
-		//TODO: do
-		return null;
-	}
 	
-	public ArrayList<Gruppe> hentGrupper(){
+	public ArrayList<Gruppe> hentGrupper(ArrayList<Person> personliste){
 		String query = "SELECT * " +
-				"";
+				"FROM Grupper";
+		
+		String gruppemedlemquery = "SELECT * " +
+				"FROM Gruppemedlemmer";
+		try {
+			ResultSet gruppers = makeSingleQuery(query);
+			ResultSet gmrs = makeSingleQuery(gruppemedlemquery);
+			return Fabrikk.prosesserGrupper(gruppers, personliste, gmrs);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
 		return null;
 		
 	}

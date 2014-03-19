@@ -47,4 +47,8 @@ public class Moterom {
 	public void settKapasitet(int kapasitet) {
 		this.kapasitet = kapasitet;
 	}
+	
+	public String toString(){
+		return ""+romid;
+	}
 }

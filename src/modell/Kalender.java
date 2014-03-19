@@ -22,6 +22,10 @@ public class Kalender{
 		moteromliste = new ArrayList<Moterom>();
 	}
 	
+	public void hentAvtaler(){
+		
+	}
+	
 	/*
 	public int avtaleOverlapp(Avtale a)
 	{
@@ -35,7 +39,6 @@ public class Kalender{
 		}
 		return antallOverlapp;
 	}
-	*/
 	
 	public List<Avtale> hentAvtaler(int aar, int ukenr)
 	{
@@ -83,6 +86,7 @@ public class Kalender{
 	{
 		avtaler.remove(a);
 	}
+	*/
 	
 	public static void main(String[] args)
 	{

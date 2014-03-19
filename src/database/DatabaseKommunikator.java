@@ -16,10 +16,10 @@ import modell.*;
  * 
  * Hvordan bruke:
  *  - Opprett et DatabaseCommunicator-objekt
- *  - DC.initialize();
+ *  - DC.kobleOpp();
  *  - Do stuff
  * Avslutt med:
- *  - DC.close()!
+ *  - DC.lukk()!
  * 
  * OBS! OBS!
  * DatabaseCommunicator er veldig dum. Den sjekker ikke om avtaler o.l. som skal legges

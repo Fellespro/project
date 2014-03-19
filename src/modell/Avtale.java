@@ -1,10 +1,10 @@
 package modell;
 
 import java.sql.Date;
-
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
@@ -284,7 +284,7 @@ public class Avtale {
 		}
 		if(this.status == Respons.nei)
 		{
-			return "Avslått av en eller flere";
+			return "Avsl��tt av en eller flere";
 		}
 		else
 		{
@@ -311,6 +311,13 @@ public class Avtale {
 	public void settAntallInterne(int ant)
 	{
 		antallInterneDeltakere = ant;
+	}
+	
+	public ArrayList<Person> hentInterneDeltakere(){
+		ArrayList<Person> personliste = new ArrayList<Person>();
+		for(int i=0; i<interneDeltakere.size(); i++)
+			personliste.add(interneDeltakere.get(i).hentPerson());
+		return personliste;
 	}
 
 	public int hentAntallEksterne()
@@ -424,7 +431,7 @@ public class Avtale {
 		int slutt_minutt_a = a.hentSluttid().getMinutes();
 		double slutt_a = slutt_time_a + ((double)slutt_minutt_a)/100;
 
-		//2 måter å krasje: a overlapper this på enten start eller slutt
+		//2 m��ter �� krasje: a overlapper this p�� enten start eller slutt
 		if(avtaleKrasj(start_a, slutt_a))
 		{
 			return true;

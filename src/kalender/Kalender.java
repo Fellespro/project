@@ -14,8 +14,10 @@ public class Kalender implements ActionListener {
 	private Person kalenderEier;	//Person sin kalender skal vises
 	private Login login;
 	private DatabaseKommunikator dk;
+	private modell.Kalender mkalender;
+	private Kalendertabell ktabell;
 
-	//main - for å kunne kjøre applikasjonen
+	//main - for ï¿½ kunne kjï¿½re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
 		Kalender k = new Kalender();
 	}
@@ -23,8 +25,10 @@ public class Kalender implements ActionListener {
 	public Kalender(){
 		dk = new DatabaseKommunikator();
 		kalenderEier = new Person();
+		mkalender = new modell.Kalender();
+		ktabell = new Kalendertabell();
 
-		//Vis loginskjermen. this som parameter slik at this kan settes som actinolistener på login
+		//Vis loginskjermen. this som parameter slik at this kan settes som actinolistener pï¿½ login
 		login = new Login(this);
 	}
 
@@ -42,10 +46,10 @@ public class Kalender implements ActionListener {
 			dk.kobleOpp();
 
 			if(dk.erGyldigInnlogging(bruker, passord)){
-				//Hurray! Få bort login og vis kalender!
+				//Hurray! Fï¿½ bort login og vis kalender!
 				login.lukk();
 				kalenderEier = dk.hentPerson(bruker);
-				JOptionPane.showMessageDialog(null, "Du er nå logget inn som "+kalenderEier.getNavn());
+				JOptionPane.showMessageDialog(null, "Du er nï¿½ logget inn som "+kalenderEier.getNavn());
 				this.visKalender();
 			}
 			else{
@@ -57,7 +61,7 @@ public class Kalender implements ActionListener {
 	}
 
 	private void visKalender() {
-
+		ktabell.visTabell();
 	}
 
 }

@@ -19,8 +19,11 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	private BlaaCelle blaa;
 	private GulCelle gul;
 	private HvitCelle hvit;
+	private JFrame ramme;
 	
 	public Kalendertabell(){
+		ramme = new JFrame();
+		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		lagTabell();
@@ -32,6 +35,7 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 		gul = new GulCelle();
 		hvit = new HvitCelle();
 		
+		ramme.add(this);
 	}
 	//Lager liste med ukedager og legger ukedagene inn i tabell.
 	public void settInnUkedag(){
@@ -88,6 +92,12 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 				tabell[fraklokke+i].getColumnModel().getColumn(dagnr).setCellRenderer(hvit);
 		}
 		
+	}
+	
+	public void visTabell(){
+		ramme.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ramme.pack();
+		ramme.setVisible(true);
 	}
 	//Test
 	/*

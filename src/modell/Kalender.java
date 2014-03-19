@@ -1,29 +1,43 @@
 package modell;
 
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import database.DatabaseKommunikator;
 
 import javax.swing.JFrame;
 
 
 public class Kalender{
 	
-	private List<Avtale> avtaleliste;
-	private List<Person> personliste;
-	private List<Moterom> moteromliste;
+	private ArrayList<Avtale> avtaleliste;
+	private ArrayList<Person> personliste;
+	private ArrayList<Gruppe> gruppeliste;
+	private ArrayList<Moterom> moteromliste;
+	private DatabaseKommunikator dk;
 	
 
-	Kalender()
-	{
+	public Kalender(){
 		avtaleliste = new ArrayList<Avtale>();
 		personliste = new ArrayList<Person>();
 		moteromliste = new ArrayList<Moterom>();
-	}
-	
-	public void hentAvtaler(){
+		gruppeliste = new ArrayList<Gruppe>();
 		
+		dk = new DatabaseKommunikator();
+		dk.kobleOpp();
+		
+		personliste = dk.hentPersoner();
+		gruppeliste = dk.hentGrupper(personliste);
+		moteromliste = dk.hentMoterom();
+		try {
+			avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		dk.lukk();
 	}
 	
 	/*
@@ -39,20 +53,39 @@ public class Kalender{
 		}
 		return antallOverlapp;
 	}
+	*/
 	
-	public List<Avtale> hentAvtaler(int aar, int ukenr)
+	public ArrayList<Avtale> hentPersonAvtaler(Person ansatt, int aar, int ukenr)
 	{
-		List<Avtale> avtalerIUke = new ArrayList<Avtale>();
-		for(int i = 0;i < avtaler.size();i++)
-		{
-			if(avtaler.get(i).hentAvtaleDato().getUkenr() == ukenr && avtaler.get(i).hentAvtaleDato().getAar() == aar)
+		ArrayList<Avtale> personAvtaler = new ArrayList<Avtale>();
+		for(int i = 0;i < avtaleliste.size();i++){
+			if(erPersonIAvtale(avtaleliste.get(i),ansatt)==true)
+				personAvtaler.add(avtaleliste.get(i));
+		}
+		return personAvtaler;
+	}
+	
+	public ArrayList<Avtale> hentUkeAvtaler(ArrayList<Avtale> personAvtaler, int aar, int ukenr)
+	{
+		ArrayList<Avtale> avtalerIUke = new ArrayList<Avtale>();
+		for(int i = 0;i < personAvtaler.size();i++){
+			if(personAvtaler.get(i).hentAvtaleDato().getUkenr() == ukenr && personAvtaler.get(i).hentAvtaleDato().getAar() == aar)
 			{
-				avtalerIUke.add(avtaler.get(i));
+				avtalerIUke.add(personAvtaler.get(i));
 			}
 		}
 		return avtalerIUke;
 	}
 	
+	public boolean erPersonIAvtale(Avtale avtale, Person ansatt){
+		ArrayList<Person> tempPersonListe = avtale.hentInterneDeltakere();
+		for(int i = 0; i<tempPersonListe.size(); i++){
+			if(ansatt.getPersonId()==tempPersonListe.get(i).getPersonId())
+				return true;
+		}
+		return false;
+	}
+	/*
 	public List<Avtale> hentAvtaler(int aar, int ukenr, int dagnr, int start, int slutt)
 	{
 		List<Avtale> avtaler = new ArrayList<Avtale>();
@@ -76,42 +109,14 @@ public class Kalender{
 		}
 		return avtaler;
 	}
-	
-	public void leggTilAvtale(Avtale a)
-	{
-		avtaler.add(a);
-	}
-	
-	public void fjernAvtale(Avtale a)
-	{
-		avtaler.remove(a);
-	}
 	*/
 	
-	public static void main(String[] args)
-	{
-		Kalender kalender = new Kalender();
-		Person person = new Person(1, "Stine Lilleborge");
-		Avtale avtale = new Avtale(person, new Dato(16, 1, 2014), new Time(0), new Time(0+2));
-		kalender.leggTilAvtale(avtale);
-		kalender.leggTilAvtale(new Avtale(person, new Dato(13, 1, 2014), new Time(13, 15, 00), new Time(15, 00, 00)));
-		kalender.leggTilAvtale(new Avtale(person, new Dato(15, 1, 2014), new Time(13, 15, 00), new Time(15, 00, 00)));
-		kalender.leggTilAvtale(new Avtale(person, new Dato(10, 1, 2014), new Time(13, 15, 00), new Time(15, 00, 00)));
-		kalender.leggTilAvtale(new Avtale(person, new Dato(17, 1, 2014), new Time(16, 15, 00), new Time(17, 00, 00)));
-		kalender.leggTilAvtale(new Avtale(person, new Dato(9, 1, 2014), new Time(13, 15, 00), new Time(15, 00, 00)));
-		kalender.fjernAvtale(avtale);
-		List<Avtale> avtaleruke = kalender.hentAvtaler(2014, 3);
-		for(int i = 0;i < avtaleruke.size();i++)
-		{
-			System.out.println(avtaleruke.get(i).hentAvtaleID() + ", " + avtaleruke.get(i).hentAvtaleDato());
-		}
-		System.out.println("\n");
-		List<Avtale> avtalertidspunkt = kalender.hentAvtaler(2014, 3, 1, 12, 15);
-		for(int i = 0;i < avtalertidspunkt.size();i++)
-		{
-			System.out.println(avtalertidspunkt.get(i).hentAvtaleID() + ", " + avtalertidspunkt.get(i).hentAvtaleDato());
-		}
-	}
+	public void leggTilAvtale(Avtale a){}
 	
+	public void fjernAvtale(Avtale a){}
+	/*
+	public static void main(String[] args)
+	{}
+	*/
 	
 }

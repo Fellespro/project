@@ -1,14 +1,16 @@
 package modell;
 
+import java.util.ArrayList;
+
 public class Gruppe {
 
-	private Person[] personListe;
+	private ArrayList<Person> personListe;
 	private int gruppeID;
 	private String gruppeNavn;
 	
-	public Gruppe(Person[] personListe, int gruppeID, String gruppeNavn){
+	public Gruppe(int gruppeID, String gruppeNavn){
 		
-		this.personListe=personListe;
+		this.personListe= new ArrayList<Person>();
 		this.gruppeID=gruppeID;
 		this.gruppeNavn=gruppeNavn;
 	}
@@ -21,11 +23,12 @@ public class Gruppe {
 		return gruppeNavn;
 	}
 
-	public Person[] getPersonListe() {
+	public ArrayList<Person> getPersonListe() {
 		return personListe;
 	}
 	
-	//HEI
-	
+	public void leggTilPerson(Person p){
+		personListe.add(p);
+	}
 	
 }

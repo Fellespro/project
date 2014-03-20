@@ -20,9 +20,9 @@ public class Avtale {
 	private Person opprettetAv;
 
 	private Dato avtaleDato;
-	private Time starttid;
-	private Time sluttid;
-	private Time alternativStarttid;
+	private Tid starttid;
+	private Tid sluttid;
+	private Tid alternativStarttid;
 	private Moterom rom;
 
 	private String beskrivelse;
@@ -80,9 +80,11 @@ public class Avtale {
 	 */
 
 
-	Avtale (int id, String navn, Person oppretter, Dato dato, Time start, Time slutt, Time alt_start, Moterom rom,
+
+	Avtale (int id, String navn, Person oppretter, Dato dato, Tid start, Tid slutt, Tid alt_start, Moterom rom,
 			String beskr, String sist_endret, Respons resp, ArrayList<PersonListeElement> interne, int int_dltkr,
 			ArrayList<String> eksterne, int ekst_dltkr)
+
 	{
 		this.avtaleID = id;
 		this.avtaleNavn = navn;
@@ -105,7 +107,7 @@ public class Avtale {
 		antallEksterneDeltakere = ekst_dltkr;
 	}
 
-	Avtale (Person oppretter, Dato dato, Time start, Time slutt)
+	Avtale (Person oppretter, Dato dato, Tid start, Tid slutt)
 	{
 		avtaleID = antall_avtaler;
 		antall_avtaler ++;
@@ -174,34 +176,34 @@ public class Avtale {
 		settSistEndret(null);
 	}
 
-	public Time hentStarttid()
+	public Tid hentStarttid()
 	{
 		return starttid;
 	}
 
-	public void settStarttid(Time tid)
+	public void settStarttid(Tid tid)
 	{
 		starttid = tid;
 		settSistEndret(null);
 	}
 
-	public Time hentSluttid()
+	public Tid hentSluttid()
 	{
 		return sluttid;
 	}
 
-	public void settSluttid(Time tid)
+	public void settSluttid(Tid tid)
 	{
 		sluttid = tid;
 		settSistEndret(null);
 	}
 
-	public Time hentAlternativStarttid()
+	public Tid hentAlternativStarttid()
 	{
 		return alternativStarttid;
 	}
 
-	public void settAlternativStarttid(Time tid)
+	public void settAlternativStarttid(Tid tid)
 	{
 		alternativStarttid = tid;
 		settSistEndret(null);
@@ -217,29 +219,45 @@ public class Avtale {
 		this.rom = rom;
 	}
 
-	public Time hentVarighet()
+	public Tid hentVarighet()
 	{
-		Time varighet = new Time(0,0,0);
+		Tid varighet = new Tid();
 		if(starttid != null && sluttid != null)
 		{
-			Time slutt = hentSluttid();
-			Time start = hentStarttid();
-			int timer = slutt.getHours() - start.getHours();
-			int minutter = slutt.getMinutes() - start.getMinutes();
-			int sekunder = slutt.getSeconds() - start.getSeconds();
-			varighet = new Time(timer, minutter, sekunder);
+			Tid slutt = hentSluttid();
+			Tid start = hentStarttid();
+			int timer = slutt.hentTime() - start.hentTime();
+			int minutter = slutt.hentMin() - start.hentMin();
+			if(minutter<0){
+				timer--;
+				minutter=60-minutter;
+			}
+			int sekunder = slutt.hentSec() - start.hentSec();
+			if(sekunder<0){
+				minutter--;
+				sekunder=60-sekunder;
+			}
+			varighet = new Tid(timer, minutter, sekunder);
 		}
 		return varighet;
 	}
 
-	public void settVarighet(Time varighet)
+	public void settVarighet(Tid varighet)
 	{
 		if(starttid != null)
 		{
-			int timer = starttid.getHours() + varighet.getHours();
-			int minutter = starttid.getMinutes() + varighet.getMinutes();
-			int sekunder = starttid.getSeconds() + varighet.getSeconds();
-			Time slutt = new Time(timer, minutter, sekunder);
+			int timer = starttid.hentTime() + varighet.hentTime();
+			int minutter = starttid.hentMin() + varighet.hentMin();
+			if(minutter<0){
+				timer--;
+				minutter=60-minutter;
+			}
+			int sekunder = starttid.hentSec() + varighet.hentSec();
+			if(sekunder<0){
+				minutter--;
+				sekunder=60-sekunder;
+			}
+			Tid slutt = new Tid(timer, minutter, sekunder);
 			settSluttid(slutt);
 		}
 		else
@@ -422,13 +440,13 @@ public class Avtale {
 	public boolean avtaleOverlapp(Avtale a)
 	{
 		//starttidspunkt for avtale a
-		int start_time_a = a.hentStarttid().getHours();
-		int start_minutt_a = a.hentStarttid().getMinutes();
+		int start_time_a = a.hentStarttid().hentTime();
+		int start_minutt_a = a.hentStarttid().hentMin();
 		double start_a = start_time_a + ((double)start_minutt_a)/100;
 
 		//sluttidspunkt for avtale a
-		int slutt_time_a = a.hentSluttid().getHours();
-		int slutt_minutt_a = a.hentSluttid().getMinutes();
+		int slutt_time_a = a.hentSluttid().hentTime();
+		int slutt_minutt_a = a.hentSluttid().hentMin();
 		double slutt_a = slutt_time_a + ((double)slutt_minutt_a)/100;
 
 		//2 m��ter �� krasje: a overlapper this p�� enten start eller slutt
@@ -442,13 +460,13 @@ public class Avtale {
 	public boolean avtaleKrasj(double start_a, double slutt_a)
 	{
 		//starttidspunkt for this
-		int start_time_this = hentStarttid().getHours();
-		int start_minutt_this = hentStarttid().getMinutes();
+		int start_time_this = hentStarttid().hentTime();
+		int start_minutt_this = hentStarttid().hentMin();
 		double start_this = start_time_this + ((double)start_minutt_this)/100;
 
 		//sluttidspunkt for this
-		int slutt_time_this = hentSluttid().getHours();
-		int slutt_minutt_this = hentSluttid().getMinutes();
+		int slutt_time_this = hentSluttid().hentTime();
+		int slutt_minutt_this = hentSluttid().hentMin();
 		double slutt_this = slutt_time_this + ((double)slutt_minutt_this)/100;
 
 		if(start_this < start_a && !(slutt_this < start_a))

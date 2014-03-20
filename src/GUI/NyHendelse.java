@@ -35,7 +35,7 @@ import javax.swing.event.ListSelectionListener;
 import database.DatabaseKommunikator;
 import modell.*;
 
-public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener, MouseListener {
+public class NyHendelse extends JPanel /*implements ActionListener, ListSelectionListener, DocumentListener, MouseListener*/ {
   
 		//Opprette alle knappene som trengs
 		private JButton hjemButton;
@@ -65,7 +65,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         private List<ActionListener> actionListeners;
         
-        private DatabaseKommunikator database;
+        //private DatabaseKommunikator database;
         private Person person;
         private Avtale avtale;
         
@@ -74,9 +74,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         
         //trenger en oppdatering med cascade i modell
-        public NyHendelse(DatabaseKommunikator database, Person person, boolean oppdatering){
+        public NyHendelse(/*DatabaseKommunikator database, */Person person, boolean oppdatering){
         	
-		        this.database = database;
+		        //this.database = database;
 		        this.person = person;
 		        this.oppdatering = oppdatering;
 		                
@@ -131,7 +131,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.fill = GridBagConstraints.VERTICAL;
                 
                 hjemButton = new JButton("Hjem");
-                hjemButton.addActionListener(this);
                 
                 c.gridx = 3;
                 c.gridy = 0;
@@ -201,7 +200,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 moteRadio = new JRadioButton();
                 moteRadio.setName("moteRadio");
-                moteRadio.addActionListener(this);
 
                 c.gridx = 6;
                 c.gridy = 11;
@@ -218,7 +216,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 antallAndreText = new JTextField("");
                 antallAndreText.setText("");
                 antallAndreText.setEditable(true);
-                antallAndreText.getDocument().addDocumentListener((this));
                 c.gridx = 4;
                 c.gridy = 13;
                 this.add(antallAndreText,c);
@@ -229,7 +226,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 oppdaterMoterom = new JButton("Oppdater møterom");
                 oppdaterMoterom.setName("oppdaterMoterom");
-                oppdaterMoterom.addActionListener(this);
                 c.gridx = 6;
                 c.gridy = 15;
                 this.add(oppdaterMoterom,c);
@@ -250,7 +246,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 moteromScrollPane.add(liste);
                 
                 moteromScrollPane.setVisible(true);
-                moteromScrollPane.addMouseListener(this);
                 this.add(moteromScrollPane,c);
                 
         //Beskrivelse
@@ -276,7 +271,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.weighty = 0;
                 lagreButton = new JButton("Lagre");
                 lagreButton.setName("lagre");
-                lagreButton.addActionListener(this);
                 c.gridx = 3;
                 c.gridy = 19;
 //              c.gridheight = 1;
@@ -285,23 +279,30 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 avbrytButton = new JButton("Avbryt");
                 avbrytButton.setName("avbryt");
-                avbrytButton.addActionListener(this);
                 c.gridx = 4;
                 c.gridy = 19;
                 this.add(avbrytButton,c);
-                
+                /*
 		        actionListeners = new ArrayList<ActionListener>();
+
+                avbrytButton.addActionListener(this);
+                lagreButton.addActionListener(this);
+                moteromScrollPane.addMouseListener(this);
+                oppdaterMoterom.addActionListener(this);
+                antallAndreText.getDocument().addDocumentListener((this));
+                hjemButton.addActionListener(this);
+                moteRadio.addActionListener(this);
 		                
 		        actionListeners.add((lagreButton.getActionListeners())[0]);
 		        actionListeners.add((avbrytButton.getActionListeners())[0]);
 		        actionListeners.add((moteRadio.getActionListeners())[0]);
 		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
-                
-                nullstillFelt();
-                setAutoOppforing();
+                /*
+                //nullstillFelt();
+                //setAutoOppforing();*/
                         
         }
-        
+        /*
         public void setOppdatering(boolean oppdatering) {
                 this.oppdatering = oppdatering;
         }
@@ -322,6 +323,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 sluttidText.setText(sluttTid.toString());
                 tittelText.setText("møte");
         }
+        */
         /*
         public void setAntallAnsatte(int antallAnsatte){
                 this.antallAnsatte = antallAnsatte;
@@ -331,7 +333,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 totaltAntall = antallAnsatte + antallAndre + 1;
                 totaltText.setText(""+totaltAntall);
         }
-        */
+        *//*
         public Person getPerson(){
                 return this.person;
         }
@@ -361,7 +363,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         public void lagre(){
         	
               feilmelding = "";
-              String avtaleTittel = tittelText.getText(); 
+             /* String avtaleTittel = tittelText.getText(); 
               Person avtalePerson = person;
               Dato avtaleDato = new Dato(starttidText.getText()); 
               Tid avtaleStart = new Tid(starttidText.getText()); 
@@ -374,10 +376,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
               ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
               int avtaleAntDltkr = 0;
               ArrayList<String> avtaleEksterne = new ArrayList<String>(); 
-              int avtaleEkstDltkr = 0;
+              int avtaleEkstDltkr = 0;*/
               
-              Avtale avtale2 = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
-            		  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+              //Avtale avtale2 = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+            		  					 // avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
               
               
               /*
@@ -483,8 +485,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                //         //TODO: feilmelding ?
               //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                // }
-        }
-        
+       /* }*/
+        /*
         public Avtale getAvtale(){
                 return avtale;
         }
@@ -531,15 +533,15 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	        }
 	        else if(e.getSource() == oppdaterMoterom){
 	               
-	        		moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	        		moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
 	                
-	        }
+	        /*}
 	  
 	        else if(e.getSource() == moteRadio){
 	                if(moteRadio.isSelected()){
 	                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-	                        	moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
-	                        }
+	                        	moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+	                      /*  }
 	                        moteromScrollPane.setVisible(true);
 	                        oppdaterMoterom.setEnabled(true);
 	                        antallAndreText.setEditable(true);
@@ -622,8 +624,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		public void valueChanged(ListSelectionEvent e) {
 				if(e.getSource() == moteromList){
 		                try {
-		                        Moterom m = (Moterom)moteromList.getSelectedValue();
-		                        stedText.setText(m.hentNavn());
+		                       // Moterom m = (Moterom)moteromList.getSelectedValue();
+		                        //stedText.setText(m.hentNavn());
 		                } catch (NullPointerException e1) {
 		                		
 		                }
@@ -659,15 +661,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		public void mouseReleased(MouseEvent arg0) {
 			// TODO Auto-generated method stub
 			
-		}
-		
-		public static void main(String[] args)
-		{
-			NyHendelse hendelse = new NyHendelse(new DatabaseKommunikator(), new Person(1, "blabla"), true);
-			JFrame frame = new JFrame();
-			frame.setSize(1000,800);
-			frame.add(hendelse);
-			frame.setVisible(true);
-		}
+		}*/
 			
 }

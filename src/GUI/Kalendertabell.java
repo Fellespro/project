@@ -46,9 +46,9 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	
 	//Lager liste med klokkeslett og legger det inn i tabell.
 	public void settInnKlokkeslett(){
-		radnavn=new String[16];
+		radnavn=new String[24];
 		for(int i=0; i<radnavn.length; i++){
-			radnavn[i]=String.format("%02d", i+6)+"00";
+			radnavn[i]=String.format("%02d", i)+"00";
 			tabell[i+1].setValueAt(radnavn[i], 0, 0);
 			//Gjør celle ikke fokuserbar.
 			tabell[i+1].getColumnModel().getColumn(0).setCellRenderer(new UfokusertCelle());
@@ -57,7 +57,7 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	
 	//Lager selve tabellen og legger til ListSelectionListener.
 	public void lagTabell(){
-		tabell = new JTable[17];
+		tabell = new JTable[25];
 		
 		for(int i=0; i<tabell.length; i++){
 		tabell[i]=new JTable(1, 8);
@@ -71,7 +71,7 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	}
 	
 	//Setter farge på avtaleområde.
-	public void setFarge(int dagnr, int fraklokke, int tilklokke, int fargenr, String motenavn){
+	public void settFarge(int dagnr, int fraklokke, int tilklokke, int fargenr, String motenavn){
 		tabell[fraklokke].setValueAt(motenavn, 0, dagnr);
 		int antall = tilklokke-fraklokke;
 		

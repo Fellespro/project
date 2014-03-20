@@ -34,6 +34,7 @@ public class Kalender{
 		moteromliste = dk.hentMoterom();
 		try {
 			avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);
+			System.out.println("Antall avtaler i databasen[mkalender]: "+avtaleliste.size());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	

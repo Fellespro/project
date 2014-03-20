@@ -2,8 +2,11 @@ package kalender;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
+import utilities.Utilities;
 
 import database.*;
 import GUI.*;
@@ -62,7 +65,13 @@ public class Kalender implements ActionListener {
 
 	private void visKalender() {
 		ktabell.visTabell();
-		//mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier, 2014, ))
+		ArrayList<Avtale> ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+		System.out.println("Antall ukeavtaler[kkalender] " +ukeAvtalerListe.size());
+		for(int i=0; i<ukeAvtalerListe.size(); i++){
+			Avtale a = ukeAvtalerListe.get(i);
+			ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+		}
+		ktabell.repaint();
 	}
 
 }

@@ -81,8 +81,8 @@ public class Avtale {
 
 
 	Avtale (int id, String navn, Person oppretter, Dato dato, Time start, Time slutt, Time alt_start, Moterom rom,
-			String beskr, String sist_endret, Respons resp, Vector<PersonListeElement> interne, int int_dltkr,
-			Vector<String> eksterne, int ekst_dltkr)
+			String beskr, String sist_endret, Respons resp, ArrayList<PersonListeElement> interne, int int_dltkr,
+			ArrayList<String> eksterne, int ekst_dltkr)
 	{
 		this.avtaleID = id;
 		this.avtaleNavn = navn;

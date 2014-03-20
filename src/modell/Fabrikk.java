@@ -38,7 +38,7 @@ public class Fabrikk {
 			Moterom rom = hentRom(romliste, romID);
 			//String sted = rs.getString(12);
 			a = new Avtale(id, navn, oppretter, dato, start, slutt, alt_start, rom, beskrivelse,
-					sist_endret, Respons.kanskje, null, antallDeltakere, null, 0);
+					sist_endret, Respons.kanskje, new ArrayList<PersonListeElement>(), antallDeltakere, new ArrayList<String>(), 0);
 			liste.add(a);
 		}
 		return liste;

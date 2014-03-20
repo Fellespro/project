@@ -32,11 +32,8 @@ public class Kalender{
 		personliste = dk.hentPersoner();
 		gruppeliste = dk.hentGrupper(personliste);
 		moteromliste = dk.hentMoterom();
-		try {
-			avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}	
+		avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);
+		System.out.println("Antall avtaler i databasen[mkalender]: "+avtaleliste.size());	
 		dk.lukk();
 	}
 	
@@ -55,13 +52,31 @@ public class Kalender{
 	}
 	*/
 	
+	public ArrayList<Avtale> hentAvtaleliste() {
+		return avtaleliste;
+	}
+
+	public ArrayList<Person> hentPersonliste() {
+		return personliste;
+	}
+
+	public ArrayList<Gruppe> hentGruppeliste() {
+		return gruppeliste;
+	}
+
+	public ArrayList<Moterom> hentMoteromliste() {
+		return moteromliste;
+	}
+
 	public ArrayList<Avtale> hentPersonAvtaler(Person ansatt, int aar, int ukenr)
 	{
+		System.out.println(avtaleliste.size());
 		ArrayList<Avtale> personAvtaler = new ArrayList<Avtale>();
 		for(int i = 0;i < avtaleliste.size();i++){
 			if(erPersonIAvtale(avtaleliste.get(i),ansatt)==true)
 				personAvtaler.add(avtaleliste.get(i));
 		}
+		System.out.println(personAvtaler.size());
 		return personAvtaler;
 	}
 	

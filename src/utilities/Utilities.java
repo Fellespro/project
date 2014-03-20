@@ -2,7 +2,10 @@ package utilities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class Utilities {
 	/*
@@ -14,13 +17,27 @@ public class Utilities {
 	
 	//main blir brukt til å teste at ting funker. Blir slettet når alt funker/er ferdig
 	public static void main(String[] args){
-		
+		System.out.println(getTodaysDayOfWeek());
 	}
 	
 	public static String getCurrentDateTime(){
 		Date date = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return df.format(date);
+	}
+	
+	public static int getCurrentWeek(){
+		Calendar c = new GregorianCalendar();
+		return c.get(Calendar.WEEK_OF_YEAR);
+	}
+	
+	public static int getTodaysDayOfWeek(){
+		Calendar c = Calendar.getInstance();
+		int out = c.get(Calendar.DAY_OF_WEEK)-1;
+		if(out==0){
+			out = 7;
+		}
+		return out;
 	}
 	
 	 public static boolean isInteger(String s) {

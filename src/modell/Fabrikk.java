@@ -16,7 +16,7 @@ public class Fabrikk {
 		return match;
 	}
 
-	public static ArrayList<Avtale> prosesserAvtaler(ResultSet rs, ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
+	public static ArrayList<Avtale> prosesserAvtaler(ResultSet rs, ResultSet inviterters, ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
 		ArrayList<Avtale> liste = new ArrayList<Avtale>();
 		while(rs.next()){
 			Avtale a;
@@ -38,12 +38,27 @@ public class Fabrikk {
 			Moterom rom = hentRom(romliste, romID);
 			//String sted = rs.getString(12);
 			a = new Avtale(id, navn, oppretter, dato, start, slutt, alt_start, rom, beskrivelse,
-					sist_endret, Respons.kanskje, null, antallDeltakere, null, 0);
+					sist_endret, Respons.kanskje, hentInviterte(id, inviterters, personliste, oppretter), antallDeltakere, new ArrayList<String>(), 0);
 			liste.add(a);
 		}
 		return liste;
 	}
 	
+	private static ArrayList<PersonListeElement> hentInviterte(int id,
+			ResultSet inviterters, ArrayList<Person> personliste,
+			Person oppretter) throws SQLException {
+		ArrayList<PersonListeElement> ple = new ArrayList<PersonListeElement>();
+		ple.add(new PersonListeElement(oppretter));
+		while(inviterters.next()){
+			String bruker = inviterters.getString(1);
+			int aid = inviterters.getInt(2);
+			if(aid==id){
+				ple.add(new PersonListeElement(hentPerson(personliste, bruker)));
+			}
+		}
+		return null;
+	}
+
 	public static ArrayList<Avtale> prosesserPersonAvtaler(ResultSet rs, ArrayList<Avtale> avtaleliste, Person person) throws SQLException {
 		ArrayList<Avtale> liste = new ArrayList<Avtale>();
 		while(rs.next()){
@@ -76,6 +91,9 @@ public class Fabrikk {
 	}
 	
 	public static Time hentTime(String s){
+		if(s==null){
+			return new Time(0,0,0);
+		}
 		int h = 10*(s.charAt(0)-'0')+(s.charAt(1)-'0');
 		int m = 10*(s.charAt(3)-'0')+(s.charAt(4)-'0');
 		int sek = 10*(s.charAt(6)-'0')+(s.charAt(7)-'0');

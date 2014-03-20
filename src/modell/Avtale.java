@@ -284,7 +284,7 @@ public class Avtale {
 		}
 		if(this.status == Respons.nei)
 		{
-			return "Avsl��tt av en eller flere";
+			return "Avslått av en eller flere";
 		}
 		else
 		{

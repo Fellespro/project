@@ -435,7 +435,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         feilmelding += "Tittel: Mangler tittel \n";
                 }
                 if(!stedText.getText().equals("")){
-                        avtale.setSted(stedText.getText());
+                        avtale.settSted(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel på et rom*/
                         if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
                                 ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
@@ -449,7 +449,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 
 //              if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
-                        if(oppforing instanceof Avtale){
+                        if(avtale instanceof Avtale){
                                 try{
                                 if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
                                 ((Avtale) avtale).settAntallEksterne(Integer.parseInt(antallAndreText.getText()));
@@ -461,21 +461,18 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 //              }
         }
         public void sendTilDatabase(boolean oppdatering){
-                //              Kaller på database og send oppforing
+                //Kaller på database og send oppforing
                 try {
                         if (!oppdatering) {
-                                oppforing.setLagetAv(getPerson());
-                                int id = database.addOppforing(oppforing);
-                                if (avtale instanceof Avtale) 
-                                		((Avtale)oppforing).setMoteId(id);
-                                else 
-                                		((Avtale)oppforing).setAvtaleId(id);
+                               	avtale.settOpprettetAv(getPerson());
+                                database.leggInnAvtale(avtale);
                         } else {
-                                database.updateOppforing(getPerson(), avtale);
+                        		/* må lage oppdaterAvtale-funksjon i databasen*/
+                                database.oppdaterAvtale(getPerson(), avtale);
                         }
                         
                 } catch (SQLException e) {
-                        //TODO: feilmelding
+                        //TODO: feilmelding ?
                         Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                 }
         }
@@ -490,7 +487,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 antallAndreText.setText("0");
                 totaltText.setText("0");
                 beskrivelseText.setText("");
-                avtaleRadio.doClick();
+                //avtaleRadio.doClick(); //hva er dette?
         }
         
         public void setAvtale(Avtale avtale){

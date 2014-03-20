@@ -34,6 +34,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
   
   //Opprette alle knappene som trengs
   private JButton hjemButton;
+  
+  		private JPanel view;
         
         private JLabel datoLabel;
         private JTextField datoText;
@@ -273,9 +275,11 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridx = 9;
                 c.gridy = 5;
                 c.fill = GridBagConstraints.BOTH;
-                moteromList.setVisible(false);
-                moteromList.addListSelectionListener(this);
-                moteromScrollPane = new JScrollPane(moteromList);
+                view = new JPanel();
+                moteromScrollPane = new JScrollPane(view); //(moteromList);
+                view.add(moteromList);
+                moteromScrollPane.setVisible(false);
+                moteromScrollPane.addListSelectionListener(this);
                 this.add(moteromScrollPane,c);
                 
         //Beskrivelse
@@ -340,7 +344,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                //tittelText.setText("m¿te");
+                //tittelText.setText("mï¿½te");
         }
         
         public void setAntallAnsatte(int antallAnsatte){
@@ -419,10 +423,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         }
                         
                 try {
-                        if (!(avtale.hentStarttid().getHours() < avtale.hentSluttid().getHours()))
+                        if (!(avtale.hentStarttid().hentTime() < avtale.hentSluttid().hentTime()))
                                 feilmelding += "Klokkeslett: Sluttid skjer fÃ¸r starttid";
-                        else if(avtale.hentStarttid().getHours() == avtale.hentSluttid().getHours() &&
-                        		!(avtale.hentStarttid().getMinutes() < avtale.hentSluttid().getMinutes()))
+                        else if(avtale.hentStarttid().hentTime() == avtale.hentSluttid().hentTime() &&
+                        		!(avtale.hentStarttid().hentMin() < avtale.hentSluttid().hentMin()))
                         {
                         		feilmelding += "Klokkeslett: Sluttid skjer fÃ¸r starttid";
                         }
@@ -437,7 +441,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         feilmelding += "Tittel: Mangler tittel \n";
                 }
                 if(!stedText.getText().equals("")){
-                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel pŒ et rom*/
+                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel pï¿½ et rom*/
                         if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
                                 ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
@@ -471,7 +475,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                    //            	avtale.settOpprettetAv(getPerson());
                      //           database.leggInnAvtale(avtale);
                        // } else {
-                        //		/* mŒ lage oppdaterAvtale-funksjon i databasen*/
+                        //		/* mï¿½ lage oppdaterAvtale-funksjon i databasen*/
                          //       database.endreAvtale(getPerson(), avtale);
                        // }
                         
@@ -523,35 +527,35 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 for (ActionListener l : this.actionListeners) {
                         l.actionPerformed(e);
                 }
-        }
-        else if(e.getSource() == oppdaterMoterom){
-               
-                        LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
-                
-        }
-  
-        else if(e.getSource() == moteRadio){
-                if(moteRadio.isSelected()){
-                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-                                LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
-                        }
-                        moteromList.setVisible(true);
-                        oppdaterMoterom.setEnabled(true);
-                        antallAndreText.setEditable(true);
-                        antallAndreText.setText("0");
-                }
-                for (ActionListener l : this.actionListeners) {
-                        l.actionPerformed(e);
-                }
-        }
-        else if(e.getSource() == lagreButton){
-                if (!oppdatering) {
-                        if(moteRadio.isSelected()){
-                                avtale = new Avtale();
-                        }
+	        }
+	        else if(e.getSource() == oppdaterMoterom){
+	               
+	        		LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	                
+	        }
+	  
+	        else if(e.getSource() == moteRadio){
+	                if(moteRadio.isSelected()){
+	                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
+	                        	LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	                        }
+	                        moteromScrollPane.setVisible(true);
+	                        oppdaterMoterom.setEnabled(true);
+	                        antallAndreText.setEditable(true);
+	                        antallAndreText.setText("0");
+	                }
+	                for (ActionListener l : this.actionListeners) {
+	                        l.actionPerformed(e);
+	                }
+	        }
+	        else if(e.getSource() == lagreButton){
+	                if (!oppdatering) {
+	                        if(moteRadio.isSelected()){
+	                                avtale = new Avtale();
+	                        }
                         
-                }
-        //Lagrer verdier i objektet avtale
+	                }
+	                //Lagrer verdier i objektet avtale
                 lagre();
                 
                 if (feilmelding.equals("")){

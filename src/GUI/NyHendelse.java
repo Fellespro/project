@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -15,13 +17,16 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -30,7 +35,7 @@ import javax.swing.event.ListSelectionListener;
 import database.DatabaseKommunikator;
 import modell.*;
 
-public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener{
+public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener, MouseListener {
   
   //Opprette alle knappene som trengs
   private JButton hjemButton;
@@ -88,10 +93,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 actionListeners = new ArrayList<ActionListener>();
                 
-                actionListeners.add((lagreButton.getActionListeners())[0]);
+                /*actionListeners.add((lagreButton.getActionListeners())[0]);
                 actionListeners.add((avbrytButton.getActionListeners())[0]);
                 actionListeners.add((moteRadio.getActionListeners())[0]);
-                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
+                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);*/
                 
         //Layout
                 this.setLayout(new GridBagLayout());
@@ -273,9 +278,13 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridx = 9;
                 c.gridy = 5;
                 c.fill = GridBagConstraints.BOTH;
-                moteromList.setVisible(false);
-                moteromList.addListSelectionListener(this);
-                moteromScrollPane = new JScrollPane(moteromList);
+
+                JList list = new JList((ListModel) moteromList);
+                
+                moteromScrollPane.add(list);
+                
+                moteromScrollPane.setVisible(false);
+                moteromScrollPane.addMouseListener(this);
                 this.add(moteromScrollPane,c);
                 
         //Beskrivelse
@@ -340,7 +349,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                //tittelText.setText("m¿te");
+                //tittelText.setText("mï¿½te");
         }
         
         public void setAntallAnsatte(int antallAnsatte){
@@ -419,10 +428,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         }
                         
                 try {
-                        if (!(avtale.hentStarttid().getHours() < avtale.hentSluttid().getHours()))
+                        if (!(avtale.hentStarttid().hentTime() < avtale.hentSluttid().hentTime()))
                                 feilmelding += "Klokkeslett: Sluttid skjer fÃ¸r starttid";
-                        else if(avtale.hentStarttid().getHours() == avtale.hentSluttid().getHours() &&
-                        		!(avtale.hentStarttid().getMinutes() < avtale.hentSluttid().getMinutes()))
+                        else if(avtale.hentStarttid().hentTime() == avtale.hentSluttid().hentTime() &&
+                        		!(avtale.hentStarttid().hentMin() < avtale.hentSluttid().hentMin()))
                         {
                         		feilmelding += "Klokkeslett: Sluttid skjer fÃ¸r starttid";
                         }
@@ -437,7 +446,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         feilmelding += "Tittel: Mangler tittel \n";
                 }
                 if(!stedText.getText().equals("")){
-                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel pŒ et rom*/
+                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel pï¿½ et rom*/
                         if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
                                 ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
@@ -471,7 +480,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                    //            	avtale.settOpprettetAv(getPerson());
                      //           database.leggInnAvtale(avtale);
                        // } else {
-                        //		/* mŒ lage oppdaterAvtale-funksjon i databasen*/
+                        //		/* mï¿½ lage oppdaterAvtale-funksjon i databasen*/
                          //       database.endreAvtale(getPerson(), avtale);
                        // }
                         
@@ -523,35 +532,35 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 for (ActionListener l : this.actionListeners) {
                         l.actionPerformed(e);
                 }
-        }
-        else if(e.getSource() == oppdaterMoterom){
-               
-                        LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
-                
-        }
-  
-        else if(e.getSource() == moteRadio){
-                if(moteRadio.isSelected()){
-                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-                                LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
-                        }
-                        moteromList.setVisible(true);
-                        oppdaterMoterom.setEnabled(true);
-                        antallAndreText.setEditable(true);
-                        antallAndreText.setText("0");
-                }
-                for (ActionListener l : this.actionListeners) {
-                        l.actionPerformed(e);
-                }
-        }
-        else if(e.getSource() == lagreButton){
-                if (!oppdatering) {
-                        if(moteRadio.isSelected()){
-                                avtale = new Avtale();
-                        }
+	        }
+	        else if(e.getSource() == oppdaterMoterom){
+	               
+	        		moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	                
+	        }
+	  
+	        else if(e.getSource() == moteRadio){
+	                if(moteRadio.isSelected()){
+	                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
+	                        	moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	                        }
+	                        moteromScrollPane.setVisible(true);
+	                        oppdaterMoterom.setEnabled(true);
+	                        antallAndreText.setEditable(true);
+	                        antallAndreText.setText("0");
+	                }
+	                for (ActionListener l : this.actionListeners) {
+	                        l.actionPerformed(e);
+	                }
+	        }
+	        else if(e.getSource() == lagreButton){
+	                if (!oppdatering) {
+	                        if(moteRadio.isSelected()){
+	                                avtale = new Avtale(person, new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+	                        }
                         
-                }
-        //Lagrer verdier i objektet avtale
+	                }
+	                //Lagrer verdier i objektet avtale
                 lagre();
                 
                 if (feilmelding.equals("")){
@@ -615,14 +624,54 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			if(e.getSource() == moteromList){
-                try {
-                        Moterom m = (Moterom)moteromList.getSelectedValue();
-                        stedText.setText(m.hentNavn());
-                } catch (NullPointerException e1) {
-                }
-        }
+				if(e.getSource() == moteromList){
+		                try {
+		                        Moterom m = (Moterom)moteromList.getSelectedValue();
+		                        stedText.setText(m.hentNavn());
+		                } catch (NullPointerException e1) {
+		                		
+		                }
+				}
+			
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public static void main(String[] args)
+		{
+			NyHendelse hendelse = new NyHendelse(new DatabaseKommunikator(), new Person(1, "Blabla"), true);
+			/*JFrame frame = new JFrame();
+			frame.setSize(1000, 1000);
+			frame.setVisible(true);*/
 			
 		}
 			
-		}
+}

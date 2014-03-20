@@ -185,8 +185,8 @@ public class NyInvitasjon extends JPanel implements ActionListener{
                 motelederText.setText(a.hentOpprettetAv().getNavn());
                 stedText.setText(a.hentRom().hentNavn());
                 datoText.setText(a.hentAvtaleDato().toString());
-                starttidText.setText((new Tid(a.hentStarttid().getHours(), a.hentStarttid().getMinutes(), a.hentStarttid().getSeconds()).toString()));
-                sluttidText.setText((new Tid(a.hentSluttid().getHours(), a.hentSluttid().getMinutes(), a.hentSluttid().getSeconds()).toString()));
+                starttidText.setText((new Tid(a.hentStarttid().hentTime(), a.hentStarttid().hentMin(), a.hentStarttid().hentSek()).toString()));
+                sluttidText.setText((new Tid(a.hentSluttid().hentTime(), a.hentSluttid().hentMin(), a.hentSluttid().hentSek()).toString()));
                 
         }
         public Avtale getAvtale(){

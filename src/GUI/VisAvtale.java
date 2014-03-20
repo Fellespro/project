@@ -245,8 +245,8 @@ public class VisAvtale extends JPanel implements ActionListener{
                 this.avtale = avtale;
                 
                 datoText.setText(avtale.hentAvtaleDato().toString());
-                starttidText.setText((new Tid(avtale.hentStarttid().getHours(), avtale.hentStarttid().getMinutes(), avtale.hentStarttid().getSeconds())).toString());
-                sluttidText.setText((new Tid(avtale.hentSluttid().getHours(), avtale.hentSluttid().getMinutes(), avtale.hentSluttid().getSeconds())).toString());
+                starttidText.setText((new Tid(avtale.hentStarttid().hentTime(), avtale.hentStarttid().hentMin(), avtale.hentStarttid().hentSek())).toString());
+                sluttidText.setText((new Tid(avtale.hentSluttid().hentTime(), avtale.hentSluttid().hentMin(), avtale.hentSluttid().hentSek())).toString());
                 tittelText.setText(avtale.hentAvtaleNavn());
                 motelederText.setText(avtale.hentOpprettetAv().getNavn());
                 stedText.setText(avtale.hentRom().hentNavn());

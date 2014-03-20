@@ -2,7 +2,12 @@ package utilities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
+import modell.Avtale;
 
 public class Utilities {
 	/*
@@ -23,6 +28,21 @@ public class Utilities {
 		return df.format(date);
 	}
 	
+	public static int getCurrentWeek(){
+		Calendar c = new GregorianCalendar();
+		return c.get(Calendar.WEEK_OF_YEAR);
+	}
+	
+	/*
+	public static int getTodaysDayOfWeek(){
+		Calendar c = Calendar.getInstance();
+		int out = c.get(Calendar.DAY_OF_WEEK)-1;
+		if(out==0){
+			out = 7;
+		}
+		return out;
+	}*/
+	
 	 public static boolean isInteger(String s) {
 	     try { 
 	         Integer.parseInt(s); 
@@ -32,5 +52,15 @@ public class Utilities {
 	     // only got here if we didn't return false
 	     return true;
 	 }
+
+	public static int getDayOfWeek(Avtale a) {
+		int out = -1;
+		int d = a.hentAvtaleDato().getDag();
+		int m = a.hentAvtaleDato().getMnd();
+		int y = a.hentAvtaleDato().getAar();
+		int c = 6;
+		out = (d + m + y + y/4 + c )%7;
+		return out;
+	}
 
 }

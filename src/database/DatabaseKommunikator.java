@@ -57,7 +57,6 @@ public class DatabaseKommunikator {
 		try {
 			//Opprett tilkobling
 			conn = DriverManager.getConnection(url, bruker, passord);
-			System.out.println("Tilkobling opprettet");
 		} catch (SQLException e) {
 			System.out.println("Nicht Gï¿½t! SQLException! Kunne ikke koble til...");
 			e.printStackTrace();
@@ -225,7 +224,7 @@ public class DatabaseKommunikator {
 		}
 		return null;
 	}
-	public ArrayList<Avtale> hentAlleAvtaler(ArrayList<Person> personliste, ArrayList<Moterom> romliste) throws SQLException{
+	public ArrayList<Avtale> hentAlleAvtaler(ArrayList<Person> personliste, ArrayList<Moterom> romliste){
 		String query = "select Avtale.* " + 
 				"from Avtale ";
 				/*+
@@ -236,8 +235,18 @@ public class DatabaseKommunikator {
 				"where admin='"+ansatt.getBrukernavn()+"'";
 				*/
 		
-		ResultSet rs = makeSingleQuery(query);
-		return Fabrikk.prosesserAvtaler(rs, personliste, romliste);
+		ResultSet rs;
+		try {
+			rs = makeSingleQuery(query);
+			String invitertequery = "SELECT * " +
+					"FROM Inviterte";
+			ResultSet inviterters = makeSingleQuery(invitertequery);
+			return Fabrikk.prosesserAvtaler(rs, inviterters, personliste, romliste);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -344,7 +353,7 @@ public class DatabaseKommunikator {
 	
 	public ArrayList<Gruppe> hentGrupper(ArrayList<Person> personliste){
 		String query = "SELECT * " +
-				"FROM Grupper";
+				"FROM Gruppe";
 		
 		String gruppemedlemquery = "SELECT * " +
 				"FROM Gruppemedlemmer";

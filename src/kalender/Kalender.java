@@ -2,8 +2,20 @@ package kalender;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+import utilities.Utilities;
 
 import database.*;
 import GUI.*;
@@ -26,7 +38,7 @@ public class Kalender implements ActionListener {
 		dk = new DatabaseKommunikator();
 		kalenderEier = new Person();
 		mkalender = new modell.Kalender();
-		ktabell = new Kalendertabell();
+		ktabell = new Kalendertabell(this);
 
 		//Vis loginskjermen. this som parameter slik at this kan settes som actinolistener p� login
 		login = new Login(this);
@@ -49,7 +61,7 @@ public class Kalender implements ActionListener {
 				//Hurray! F� bort login og vis kalender!
 				login.lukk();
 				kalenderEier = dk.hentPerson(bruker);
-				JOptionPane.showMessageDialog(null, "Du er n� logget inn som "+kalenderEier.getNavn());
+				JOptionPane.showMessageDialog(null, "Du er no logget inn som "+kalenderEier.getNavn());
 				this.visKalender();
 			}
 			else{
@@ -62,6 +74,12 @@ public class Kalender implements ActionListener {
 
 	private void visKalender() {
 		ktabell.visTabell();
+		ArrayList<Avtale> ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+		System.out.println("Antall ukeavtaler[kkalender] " +ukeAvtalerListe.size());
+		for(int i=0; i<ukeAvtalerListe.size(); i++){
+			Avtale a = ukeAvtalerListe.get(i);
+			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+		}
 	}
 
 }

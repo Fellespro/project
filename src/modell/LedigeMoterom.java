@@ -3,20 +3,28 @@ package modell;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+
 import database.DatabaseKommunikator;
 
-public class LedigeMoterom {
+public class LedigeMoterom extends DefaultListModel{
 	private ArrayList<Moterom> rom;
+	private ArrayList<Moterom> lRom;
 	private ArrayList<Avtale> avtaler;
 	
-	public void ledigeRom(Dato dato,Tid start, Tid slutt){
+
+	public LedigeMoterom(){
 		DatabaseKommunikator database=new DatabaseKommunikator();
 		database.kobleOpp();
 		rom=database.hentMoterom();
 		avtaler=database.hentAlleAvtaler(database.hentPersoner(), rom);
 		database.lukk();
-		//fjerner alle avtaler som har ikke krï¿½sjer med fastsatt tid.
-		//teller neddover fordi nï¿½r det fjernes noe fra et arrayList sï¿½ flyttes alt som er etter
+	}
+	public void ledigeRom(Dato dato,Tid start, Tid slutt){
+		lRom=new ArrayList<Moterom>(rom);
+		ArrayList<Avtale> avtaler=new ArrayList<Avtale>(this.avtaler);
+		//fjerner alle avtaler som har ikke kræsjer med fastsatt tid.
+		//teller neddover fordi når det fjernes noe fra et arrayList så flyttes alt som er etter
 		//en plass fremm, og da ville vi hoppet over plasser hvis vi gikk oppover.
 		for (int i=avtaler.size()-1;i>=0;i--){
 			//tester for dato
@@ -53,5 +61,19 @@ public class LedigeMoterom {
 				avtaler.remove(i);
 			}
 		}
+	}
+	
+	public ArrayList<Moterom> hentListe()
+	{
+		return lRom;
+	}
+	
+	public boolean isSelectionEmpty()
+	{
+		if(lRom.size() == 0)
+		{
+			return true;
+		}
+		return false;
 	}
 }

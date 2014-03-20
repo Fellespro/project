@@ -106,8 +106,36 @@ public class Avtale {
 		eksterneDeltakere = eksterne;
 		antallEksterneDeltakere = ekst_dltkr;
 	}
+	
+	public Avtale (String navn, Person oppretter, Dato dato, Tid start, Tid slutt, Tid alt_start, Moterom rom,
+			String beskr, String sist_endret, Respons resp, ArrayList<PersonListeElement> interne, int int_dltkr,
+			ArrayList<String> eksterne, int ekst_dltkr)
 
-	Avtale (Person oppretter, Dato dato, Tid start, Tid slutt)
+	{
+		avtaleID = antall_avtaler;
+		antall_avtaler ++;
+		this.avtaleNavn = navn;
+		this.opprettetAv = oppretter;
+
+		this.avtaleDato = dato;
+		this.starttid = start;
+		this.sluttid = slutt;
+		this.alternativStarttid = alt_start;
+		this.rom = rom;
+
+		this.beskrivelse = beskr;
+
+		sistEndret = sist_endret;
+		status = resp;
+
+		interneDeltakere = interne;
+		antallInterneDeltakere = int_dltkr;
+		eksterneDeltakere = eksterne;
+		antallEksterneDeltakere = ekst_dltkr;
+	}
+
+
+	public Avtale (Person oppretter, Dato dato, Tid start, Tid slutt)
 	{
 		avtaleID = antall_avtaler;
 		antall_avtaler ++;

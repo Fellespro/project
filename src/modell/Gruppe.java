@@ -30,5 +30,8 @@ public class Gruppe {
 	public void leggTilPerson(Person p){
 		personListe.add(p);
 	}
+	public String toString(){
+		return ""+gruppeNavn;
+	}
 	
 }

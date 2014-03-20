@@ -70,7 +70,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         private List<ActionListener> actionListeners;
         
-        //koble til databasen. Ha det i denne klassen eller ta ut?
         private DatabaseKommunikator database;
         private Person person;
         
@@ -88,6 +87,12 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 this.oppdatering = oppdatering;
                 
                 actionListeners = new ArrayList<ActionListener>();
+                
+                actionListeners.add((lagreButton.getActionListeners())[0]);
+                actionListeners.add((avbrytButton.getActionListeners())[0]);
+                actionListeners.add((moteRadio.getActionListeners())[0]);
+                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
+                
         //Layout
                 this.setLayout(new GridBagLayout());
                 GridBagConstraints c = new GridBagConstraints();
@@ -328,10 +333,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         public void setAutoOppforing(){
                 Calendar cal = Calendar.getInstance();
                 Dato dato = new Dato(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR));
-                Time startTid = new Time(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),0);
-                Time sluttTid;
-                if(cal.get(Calendar.HOUR_OF_DAY)+1==24) sluttTid = new Time(0, cal.get(Calendar.MINUTE),0);
-                else sluttTid = new Time(cal.get(Calendar.HOUR_OF_DAY)+1,cal.get(Calendar.MINUTE),0);
+                Tid startTid = new Tid(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),0);
+                Tid sluttTid;
+                if(cal.get(Calendar.HOUR_OF_DAY)+1==24) sluttTid = new Tid(0, cal.get(Calendar.MINUTE),0);
+                else sluttTid = new Tid(cal.get(Calendar.HOUR_OF_DAY)+1,cal.get(Calendar.MINUTE),0);
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
@@ -394,7 +399,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 int time = Integer.parseInt(starttidTabell[0]);
                                 int min = Integer.parseInt(starttidTabell[1]);
                                 @SuppressWarnings("deprecation")
-								Time tid = new Time(time, min, 0);
+								Tid tid = new Tid(time, min, 0);
                                 avtale.settStarttid(tid);
                         }
                         catch(Exception e){
@@ -406,7 +411,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 String[] sluttidTabell = sluttidText.getText().split(":");
                                 int time = Integer.parseInt(sluttidTabell[0]);
                                 int min = Integer.parseInt(sluttidTabell[1]);
-                                Time tid = new Time(time, min, 0);
+                                Tid tid = new Tid(time, min, 0);
                                 avtale.settSluttid(tid);
                         }
                         catch(Exception e){
@@ -445,7 +450,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 } 
                 
                 
-//              if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
+          //   if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
                         if(avtale instanceof Avtale){
                                 try{
                                 if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
@@ -454,6 +459,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 catch (Exception e){
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
                                 }
+                              
                         }
              }
               }
@@ -501,50 +507,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         beskrivelseText.setText(avtale.hentBeskrivelse());
                         moteRadio.doClick();
                 }
-                
-        public void valueChanged(ListSelectionEvent e) {
-                if(e.getSource() == moteromList){
-                        try {
-                                Moterom m = (Moterom)moteromList.getSelectedValue();
-                                stedText.setText(m.hentNavn());
-                        } catch (NullPointerException e1) {
-                        }
-                }
-        }
-
-        public void insertUpdate(DocumentEvent e) {
-                        for(int i = 0; i< antallAndreText.getText().length(); i++){
-                                if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                                        antallAndre = 0;
-                                        antallAndreText.setText("0");
-                                        setTotaltText();
-                                        return;
-                                }
-                        }
-                        antallAndre = Integer.parseInt(antallAndreText.getText());
-                        setTotaltText();
-        }       
-
-        public void removeUpdate(DocumentEvent e) {
-                if(antallAndreText.getText().length() != 0){
-                        for(int i = 0; i< antallAndreText.getText().length(); i++){
-                                if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                                        antallAndre = 0;
-                                        antallAndreText.setText("0");
-                                        setTotaltText();
-                                        return;
-                                }
-                        }
-                        antallAndre = Integer.parseInt(antallAndreText.getText());
-                        setTotaltText();
-                }
-                else {
-                        antallAndre = 0;
-                        setTotaltText();
-                        return;
-                
-                }
-        }
+        
 }
 
 		@Override
@@ -552,7 +515,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 			// TODO Auto-generated method stub
 			
 		}
-
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -594,7 +556,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 if (feilmelding.equals("")){
 
-                        //La KalenderSystem lytte for å skifte view
+                        //La CalendarSystem lytte for å skifte view
                         for (ActionListener l : this.actionListeners) {
                                 l.actionPerformed(e);
                         }
@@ -613,5 +575,54 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
         }
 }
+
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			for(int i = 0; i< antallAndreText.getText().length(); i++){
+                if(!Character.isDigit(antallAndreText.getText().charAt(i))){
+                        antallAndre = 0;
+                        antallAndreText.setText("0");
+                        setTotaltText();
+                        return;
+                }
+        }
+        antallAndre = Integer.parseInt(antallAndreText.getText());
+        setTotaltText();
+			
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			if(antallAndreText.getText().length() != 0){
+                for(int i = 0; i< antallAndreText.getText().length(); i++){
+                        if(!Character.isDigit(antallAndreText.getText().charAt(i))){
+                                antallAndre = 0;
+                                antallAndreText.setText("0");
+                                setTotaltText();
+                                return;
+                        }
+                }
+                antallAndre = Integer.parseInt(antallAndreText.getText());
+                setTotaltText();
+        }
+        else {
+                antallAndre = 0;
+                setTotaltText();
+                return;
+        
+        }
+}
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			if(e.getSource() == moteromList){
+                try {
+                        Moterom m = (Moterom)moteromList.getSelectedValue();
+                        stedText.setText(m.hentNavn());
+                } catch (NullPointerException e1) {
+                }
+        }
+			
+		}
 			
 		}

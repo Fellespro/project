@@ -14,6 +14,7 @@ public class LedigeMoterom {
 		database.kobleOpp();
 		rom=database.hentMoterom();
 		avtaler=database.hentAlleAvtaler(database.hentPersoner(), rom);
+		database.lukk();
 		//fjerner alle avtaler som har ikke kræsjer med fastsatt tid.
 		//teller neddover fordi når det fjernes noe fra et arrayList så flyttes alt som er etter
 		//en plass fremm, og da ville vi hoppet over plasser hvis vi gikk oppover.

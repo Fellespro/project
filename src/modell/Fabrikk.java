@@ -56,7 +56,7 @@ public class Fabrikk {
 				ple.add(new PersonListeElement(hentPerson(personliste, bruker)));
 			}
 		}
-		return null;
+		return ple;
 	}
 
 	public static ArrayList<Avtale> prosesserPersonAvtaler(ResultSet rs, ArrayList<Avtale> avtaleliste, Person person) throws SQLException {

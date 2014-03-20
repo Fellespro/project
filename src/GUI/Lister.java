@@ -52,7 +52,8 @@ public class Lister extends JPanel implements ListSelectionListener{
 	}
 	public void romListe(Dato dato,Tid start,Tid slutt){
 		LedigeMoterom rom=new LedigeMoterom();
-		lagRomListe(rom.ledigeRom(dato, start, slutt).toArray());
+		rom.ledigeRom(dato, start, slutt);
+		lagRomListe(rom.hentListe().toArray());
 	}
 	private void lagRomListe(Object[] listen){
 		boks=new JCheckBox("velg rom automagisk", true);

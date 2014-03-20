@@ -37,9 +37,9 @@ public class AnsattListe extends JPanel implements ListSelectionListener, Docume
         private JScrollPane alleAnsatteScrollPane;
         private JScrollPane invitertScrollPane;
         
-        private Database database;
+        private DatabaseKommunikator database;
         
-        public AnsattListe(Database database){
+        public AnsattListe(DatabaseKommunikator database){
                 this.database = database;
                 invitertModel = new DefaultListModel();
                 alleAnsatteListe = new AlleAnsatteListe(database);

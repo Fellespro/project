@@ -31,7 +31,7 @@ public class MoteromListe extends JList implements ListSelectionListener{
                 //moteListe = new JList();
                 moteListeModel = new DefaultListModel();
                 this.setModel(moteListeModel);
-                this.setCellRenderer(new MoteromCellRenderer());
+                //this.setCellRenderer(new MoteromCellRenderer());
                 hentMoterom(dato, starttid, sluttid, kapasitet);
         }
         public MoteromListe(DatabaseKommunikator database){
@@ -42,7 +42,7 @@ public class MoteromListe extends JList implements ListSelectionListener{
                 //moteListe = new JList();
                 moteListeModel = new DefaultListModel();
                 this.setModel(moteListeModel);
-                this.setCellRenderer(new MoteromCellRenderer());
+               // this.setCellRenderer(new MoteromCellRenderer());
         }
         public void addListSelectionListener(ListSelectionListener listener) {
                 this.listSelectionListeners.add(listener);

@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import database.DatabaseKommunikator;
-
 import modell.*;
 
 public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener{
@@ -56,7 +55,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private JRadioButton moteRadio;
         
         private JLabel moteromLabel;
-        private MoteromListe moteromList;
+        private LedigeMoterom moteromList;
         private JScrollPane moteromScrollPane;
         private JButton oppdaterMoterom;
         
@@ -96,10 +95,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.weighty = 1;
                 c.weightx = 1;
                 c.fill = GridBagConstraints.BOTH;
-                
-                
-                
-                
+    
         //Streker
                 /*c.gridx = 2;
                 c.gridy = 0;
@@ -266,7 +262,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridy = 4;
                 this.add(oppdaterMoterom,c);
                 
-                moteromList = new MoteromListe(database);
+                moteromList = new LedigeMoterom();
                 c.gridheight = 2;
                 c.gridwidth = 2;
                 c.gridx = 9;
@@ -339,7 +335,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                //tittelText.setText("møte");
+                //tittelText.setText("m�te");
         }
         
         public void setAntallAnsatte(int antallAnsatte){
@@ -381,7 +377,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 feilmelding = "";
                 avtale.settOpprettetAv(person);
                 
-//              if(datoText.getText() != null){
+              if(datoText.getText() != null){
                         try{
                                 Dato datoen = new Dato(datoText.getText());
                                 avtale.settAvtaleDato(datoen);
@@ -391,13 +387,14 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 feilmelding += "Dato: Feil format eller ugyldig dato. Husk å skrive på formatet dd-mm-yyyy \n";
                         }
                         
-//              }
-//              if(starttidText.getText() != null){
+//             }
+             if(starttidText.getText() != null){
                         try{
                                 String[] starttidTabell = starttidText.getText().split(":");
                                 int time = Integer.parseInt(starttidTabell[0]);
                                 int min = Integer.parseInt(starttidTabell[1]);
-                                Time tid = new Time(time, min, 0);
+                                @SuppressWarnings("deprecation")
+								Time tid = new Time(time, min, 0);
                                 avtale.settStarttid(tid);
                         }
                         catch(Exception e){
@@ -435,7 +432,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         feilmelding += "Tittel: Mangler tittel \n";
                 }
                 if(!stedText.getText().equals("")){
-                        avtale.settSted(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel på et rom*/
+                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel p� et rom*/
                         if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
                                 ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
@@ -458,24 +455,25 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
                                 }
                         }
-//              }
+             }
+              }
         }
-        public void sendTilDatabase(boolean oppdatering){
+       //* public void sendTilDatabase(boolean oppdatering){
                 //Kaller på database og send oppforing
-                try {
-                        if (!oppdatering) {
-                               	avtale.settOpprettetAv(getPerson());
-                                database.leggInnAvtale(avtale);
-                        } else {
-                        		/* må lage oppdaterAvtale-funksjon i databasen*/
-                                database.oppdaterAvtale(getPerson(), avtale);
-                        }
+               // try {
+                 //       if (!oppdatering) {
+                   //            	avtale.settOpprettetAv(getPerson());
+                     //           database.leggInnAvtale(avtale);
+                       // } else {
+                        //		/* m� lage oppdaterAvtale-funksjon i databasen*/
+                         //       database.endreAvtale(getPerson(), avtale);
+                       // }
                         
-                } catch (SQLException e) {
-                        //TODO: feilmelding ?
-                        Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
-                }
-        }
+              //  } catch (SQLException e) {
+               //         //TODO: feilmelding ?
+              //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
+               // }
+      //  }
         public Avtale getAvtale(){
                 return avtale;
         }
@@ -487,7 +485,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 antallAndreText.setText("0");
                 totaltText.setText("0");
                 beskrivelseText.setText("");
-                //avtaleRadio.doClick(); //hva er dette?
         }
         
         public void setAvtale(Avtale avtale){
@@ -504,71 +501,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         beskrivelseText.setText(avtale.hentBeskrivelse());
                         moteRadio.doClick();
                 }
-        
-        public void addActionListener(ActionListener listener) {
-                this.actionListeners.add(listener);
-        }
-        
-        public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == hjemButton){
-                        avtaleRadio.doClick();
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-                else if(e.getSource() == oppdaterMoterom){
-                        try {
-                                moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText(), 0), Integer.parseInt(totaltText.getText()));
-                        } catch (IllegalArgumentException e2) {
-                                Feilmelding.visFeilmelding(this, "Dato, Starttid eller Sluttid er feil utfylt", Feilmelding.FEIL_UGYLDIG_UTFYLLING);
-                        }
-                }
-          
-                else if(e.getSource() == moteRadio){
-                        if(moteRadio.isSelected()){
-                                if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-                                        moteromList.hentMoterom(new Dato(datoText.getText()), new Time(starttidText.getText()), new Time(sluttidText.getText(), 0), Integer.parseInt(totaltText.getText()));
-                                }
-                                moteromList.setVisible(true);
-                                oppdaterMoterom.setEnabled(true);
-                                antallAndreText.setEditable(true);
-                                antallAndreText.setText("0");
-                        }
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-                else if(e.getSource() == lagreButton){
-                        if (!oppdatering) {
-                                if(moteRadio.isSelected()){
-                                        avtale = new Avtale();
-                                }
-                                
-                        }
-                //Lagrer verdier i objektet avtale
-                        lagre();
-                        
-                        if (feilmelding.equals("")){
-
-                                //La KalenderSystem lytte for å skifte view
-                                for (ActionListener l : this.actionListeners) {
-                                        l.actionPerformed(e);
-                                }
                 
-                                //Lagre oppforing i databasen
-                                sendTilDatabase(oppdatering);
-                        } else {
-                                System.out.println(feilmelding);
-                                Feilmelding.visFeilmelding(this, feilmelding, Feilmelding.FEIL_UGYLDIG_UTFYLLING);
-                        }
-                }
-                else if(e.getSource() == avbrytButton){
-                        avtaleRadio.doClick();
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-        }
         public void valueChanged(ListSelectionEvent e) {
                 if(e.getSource() == moteromList){
                         try {
@@ -577,11 +510,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         } catch (NullPointerException e1) {
                         }
                 }
-        }
-
-        public void changedUpdate(DocumentEvent arg0) {
-                // TODO Auto-generated method stub
-                
         }
 
         public void insertUpdate(DocumentEvent e) {
@@ -618,6 +546,72 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
         }
 }
-  
 
+		@Override
+		public void changedUpdate(DocumentEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == hjemButton){
+                moteRadio.doClick();
+                for (ActionListener l : this.actionListeners) {
+                        l.actionPerformed(e);
+                }
+        }
+        else if(e.getSource() == oppdaterMoterom){
+               
+                        LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
+                
+        }
+  
+        else if(e.getSource() == moteRadio){
+                if(moteRadio.isSelected()){
+                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
+                                LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()), Integer.parseInt(totaltText.getText()));
+                        }
+                        moteromList.setVisible(true);
+                        oppdaterMoterom.setEnabled(true);
+                        antallAndreText.setEditable(true);
+                        antallAndreText.setText("0");
+                }
+                for (ActionListener l : this.actionListeners) {
+                        l.actionPerformed(e);
+                }
+        }
+        else if(e.getSource() == lagreButton){
+                if (!oppdatering) {
+                        if(moteRadio.isSelected()){
+                                avtale = new Avtale();
+                        }
+                        
+                }
+        //Lagrer verdier i objektet avtale
+                lagre();
+                
+                if (feilmelding.equals("")){
+
+                        //La KalenderSystem lytte for å skifte view
+                        for (ActionListener l : this.actionListeners) {
+                                l.actionPerformed(e);
+                        }
+        
+                        //Lagre oppforing i databasen
+             //           sendTilDatabase(oppdatering);
+              //  } else {
+             //           System.out.println(feilmelding);
+             //           Feilmelding.visFeilmelding(this, feilmelding, Feilmelding.FEIL_UGYLDIG_UTFYLLING);
+                }
+        }
+        else if(e.getSource() == avbrytButton){
+                moteRadio.doClick();
+                for (ActionListener l : this.actionListeners) {
+                        l.actionPerformed(e);
+                }
+        }
 }
+			
+		}

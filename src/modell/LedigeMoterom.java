@@ -3,9 +3,11 @@ package modell;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+
 import database.DatabaseKommunikator;
 
-public class LedigeMoterom {
+public class LedigeMoterom extends DefaultListModel{
 	private ArrayList<Moterom> rom;
 	private ArrayList<Avtale> avtaler;
 	
@@ -53,5 +55,24 @@ public class LedigeMoterom {
 				avtaler.remove(i);
 			}
 		}
+	}
+	
+	public ArrayList<Moterom> hentListe()
+	{
+		return rom;
+	}
+	
+	public Moterom getSelectedValue()
+	{
+		return null;		
+	}
+	
+	public boolean isSelectionEmpty()
+	{
+		if(rom.size() == 0)
+		{
+			return true;
+		}
+		return false;
 	}
 }

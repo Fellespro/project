@@ -107,7 +107,7 @@ public class Avtale {
 		antallEksterneDeltakere = ekst_dltkr;
 	}
 
-	Avtale (Person oppretter, Dato dato, Tid start, Tid slutt)
+	public Avtale (Person oppretter, Dato dato, Tid start, Tid slutt)
 	{
 		avtaleID = antall_avtaler;
 		antall_avtaler ++;

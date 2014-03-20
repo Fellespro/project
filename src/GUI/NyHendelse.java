@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -15,13 +17,16 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -30,12 +35,10 @@ import javax.swing.event.ListSelectionListener;
 import database.DatabaseKommunikator;
 import modell.*;
 
-public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener{
+public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener, MouseListener {
   
   //Opprette alle knappene som trengs
   private JButton hjemButton;
-  
-  		private JPanel view;
         
         private JLabel datoLabel;
         private JTextField datoText;
@@ -90,10 +93,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 actionListeners = new ArrayList<ActionListener>();
                 
-                actionListeners.add((lagreButton.getActionListeners())[0]);
+                /*actionListeners.add((lagreButton.getActionListeners())[0]);
                 actionListeners.add((avbrytButton.getActionListeners())[0]);
                 actionListeners.add((moteRadio.getActionListeners())[0]);
-                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
+                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);*/
                 
         //Layout
                 this.setLayout(new GridBagLayout());
@@ -275,11 +278,13 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridx = 9;
                 c.gridy = 5;
                 c.fill = GridBagConstraints.BOTH;
-                view = new JPanel();
-                moteromScrollPane = new JScrollPane(view); //(moteromList);
-                view.add(moteromList);
+
+                JList list = new JList((ListModel) moteromList);
+                
+                moteromScrollPane.add(list);
+                
                 moteromScrollPane.setVisible(false);
-                moteromScrollPane.addListSelectionListener(this);
+                moteromScrollPane.addMouseListener(this);
                 this.add(moteromScrollPane,c);
                 
         //Beskrivelse
@@ -530,14 +535,14 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	        }
 	        else if(e.getSource() == oppdaterMoterom){
 	               
-	        		LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	        		moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
 	                
 	        }
 	  
 	        else if(e.getSource() == moteRadio){
 	                if(moteRadio.isSelected()){
 	                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-	                        	LedigeMoterom.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
+	                        	moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText())/*, Integer.parseInt(totaltText.getText())*/);
 	                        }
 	                        moteromScrollPane.setVisible(true);
 	                        oppdaterMoterom.setEnabled(true);
@@ -551,7 +556,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	        else if(e.getSource() == lagreButton){
 	                if (!oppdatering) {
 	                        if(moteRadio.isSelected()){
-	                                avtale = new Avtale();
+	                                avtale = new Avtale(person, new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
 	                        }
                         
 	                }
@@ -619,14 +624,54 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			if(e.getSource() == moteromList){
-                try {
-                        Moterom m = (Moterom)moteromList.getSelectedValue();
-                        stedText.setText(m.hentNavn());
-                } catch (NullPointerException e1) {
-                }
-        }
+				if(e.getSource() == moteromList){
+		                try {
+		                        Moterom m = (Moterom)moteromList.getSelectedValue();
+		                        stedText.setText(m.hentNavn());
+		                } catch (NullPointerException e1) {
+		                		
+		                }
+				}
+			
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		public static void main(String[] args)
+		{
+			NyHendelse hendelse = new NyHendelse(new DatabaseKommunikator(), new Person(1, "Blabla"), true);
+			/*JFrame frame = new JFrame();
+			frame.setSize(1000, 1000);
+			frame.setVisible(true);*/
 			
 		}
 			
-		}
+}

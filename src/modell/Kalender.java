@@ -55,6 +55,22 @@ public class Kalender{
 	}
 	*/
 	
+	public ArrayList<Avtale> hentAvtaleliste() {
+		return avtaleliste;
+	}
+
+	public ArrayList<Person> hentPersonliste() {
+		return personliste;
+	}
+
+	public ArrayList<Gruppe> hentGruppeliste() {
+		return gruppeliste;
+	}
+
+	public ArrayList<Moterom> hentMoteromliste() {
+		return moteromliste;
+	}
+
 	public ArrayList<Avtale> hentPersonAvtaler(Person ansatt, int aar, int ukenr)
 	{
 		ArrayList<Avtale> personAvtaler = new ArrayList<Avtale>();

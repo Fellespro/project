@@ -76,6 +76,9 @@ public class Fabrikk {
 	}
 	
 	public static Time hentTime(String s){
+		if(s==null){
+			return new Time(0,0,0);
+		}
 		int h = 10*(s.charAt(0)-'0')+(s.charAt(1)-'0');
 		int m = 10*(s.charAt(3)-'0')+(s.charAt(4)-'0');
 		int sek = 10*(s.charAt(6)-'0')+(s.charAt(7)-'0');

@@ -49,7 +49,7 @@ public class Kalender implements ActionListener {
 				//Hurray! F� bort login og vis kalender!
 				login.lukk();
 				kalenderEier = dk.hentPerson(bruker);
-				JOptionPane.showMessageDialog(null, "Du er n� logget inn som "+kalenderEier.getNavn());
+				JOptionPane.showMessageDialog(null, "Du er no logget inn som "+kalenderEier.getNavn());
 				this.visKalender();
 			}
 			else{
@@ -62,6 +62,7 @@ public class Kalender implements ActionListener {
 
 	private void visKalender() {
 		ktabell.visTabell();
+		//mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier, 2014, ))
 	}
 
 }

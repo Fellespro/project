@@ -57,7 +57,6 @@ public class DatabaseKommunikator {
 		try {
 			//Opprett tilkobling
 			conn = DriverManager.getConnection(url, bruker, passord);
-			System.out.println("Tilkobling opprettet");
 		} catch (SQLException e) {
 			System.out.println("Nicht Gï¿½t! SQLException! Kunne ikke koble til...");
 			e.printStackTrace();
@@ -344,7 +343,7 @@ public class DatabaseKommunikator {
 	
 	public ArrayList<Gruppe> hentGrupper(ArrayList<Person> personliste){
 		String query = "SELECT * " +
-				"FROM Grupper";
+				"FROM Gruppe";
 		
 		String gruppemedlemquery = "SELECT * " +
 				"FROM Gruppemedlemmer";

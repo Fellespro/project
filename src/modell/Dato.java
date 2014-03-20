@@ -23,9 +23,16 @@ public class Dato {
 	}
 	
 	public Dato(String dato){
-		this.aar = Integer.parseInt(dato.substring(0, 4));
-		this.mnd = Integer.parseInt(dato.substring(5, 7));
-		this.dag = Integer.parseInt(dato.substring(8, 10));
+		if(dato==null){
+			dag=0;
+			mnd=0;
+			aar=0;
+		}
+		else{
+			this.aar = Integer.parseInt(dato.substring(0, 4));
+			this.mnd = Integer.parseInt(dato.substring(5, 7));
+			this.dag = Integer.parseInt(dato.substring(8, 10));
+		}
 		
 	}
 	

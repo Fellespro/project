@@ -37,68 +37,50 @@ import modell.*;
 
 public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, DocumentListener, MouseListener {
   
-  //Opprette alle knappene som trengs
-  private JButton hjemButton;
+		//Opprette alle knappene som trengs
+		private JButton hjemButton;
+		
+        private JTextField tittelText;
         
-        private JLabel datoLabel;
         private JTextField datoText;
-        private JLabel starttidLabel;
         private JTextField starttidText;
-        private JLabel sluttidLabel;
         private JTextField sluttidText;
         
-        private JLabel tittelLabel;
-        private JTextField tittelText;
-        private JLabel stedLabel;
         private JTextField stedText;
-        private JLabel antallAndreLabel;
+        
         private JTextField antallAndreText;
-        private JLabel totaltLabel;
         private JTextField totaltText;
         
-        private JLabel moteLabel;
         private JRadioButton moteRadio;
         
-        private JLabel moteromLabel;
         private LedigeMoterom moteromList;
         private JScrollPane moteromScrollPane;
         private JButton oppdaterMoterom;
         
-        private JLabel beskrivelseLabel;
         private JTextArea beskrivelseText;
         private JScrollPane beskrivelseScroll;
         
         private JButton lagreButton;
         private JButton avbrytButton;
         
-        private Avtale avtale;
-        
         private List<ActionListener> actionListeners;
         
         private DatabaseKommunikator database;
         private Person person;
-        
-        private int antallAndre = 0;
-        private int totaltAntall = 0;
-        private int antallAnsatte = 0;
+        private Avtale avtale;
         
         private String feilmelding;
         private boolean oppdatering;
         
+        
         //trenger en oppdatering med cascade i modell
         public NyHendelse(DatabaseKommunikator database, Person person, boolean oppdatering){
-                this.database = database;
-                this.person = person;
-                this.oppdatering = oppdatering;
-                
-                actionListeners = new ArrayList<ActionListener>();
-                
-                /*actionListeners.add((lagreButton.getActionListeners())[0]);
-                actionListeners.add((avbrytButton.getActionListeners())[0]);
-                actionListeners.add((moteRadio.getActionListeners())[0]);
-                actionListeners.add((oppdaterMoterom.getActionListeners())[0]);*/
-                
-        //Layout
+        	
+		        this.database = database;
+		        this.person = person;
+		        this.oppdatering = oppdatering;
+		                
+		 //Layout
                 this.setLayout(new GridBagLayout());
                 GridBagConstraints c = new GridBagConstraints();
                 c.insets = new Insets(5,2,5,2);
@@ -106,12 +88,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.weightx = 1;
                 c.fill = GridBagConstraints.BOTH;
     
-        //Streker
-                /*c.gridx = 2;
-                c.gridy = 0;
-                c.gridheight = 20;
-                this.add(new JSeparator(JSeparator.VERTICAL),c);
-                */
+         //Streker
                 c.weightx = 0;
                 c.weighty = 0;
                 
@@ -121,21 +98,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridy = 1;
                 this.add(new JSeparator(JSeparator.HORIZONTAL),c);
                 c.gridwidth = 1;
-                
-                c.gridheight = 3;
-                c.gridwidth = 1;
-                c.gridx = 5;
-                c.gridy = 1;
-                this.add(new JSeparator(JSeparator.VERTICAL),c);
-                c.gridwidth = 1;
-                
-                c.gridheight = 7;
-                c.gridwidth = 1;
-                c.gridx = 8;
-                c.gridy = 1;
-                this.add(new JSeparator(JSeparator.VERTICAL),c);
-                c.gridwidth = 1;
-                c.gridheight = 1;
                 
                 c.gridheight = 1;
                 c.gridwidth = 9;
@@ -148,7 +110,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.gridheight = 1;
                 c.gridwidth = 11;
                 c.gridx = 0;
-                c.gridy = 7;
+                c.gridy = 5;
                 this.add(new JSeparator(JSeparator.HORIZONTAL),c);
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -163,10 +125,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 
                 c.weightx = 1;
                 c.weighty = 1;
+                
         //felt-objekter
-               /* ImageIcon iconHome = new ImageIcon(new ImageIcon(getClass().getResource("/res/home.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-                ImageIcon iconSave = new ImageIcon(new ImageIcon(getClass().getResource("/res/saveicon.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-                ImageIcon iconBack = new ImageIcon(new ImageIcon(getClass().getResource("/res/goback.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)); */
                 
                 c.fill = GridBagConstraints.VERTICAL;
                 
@@ -182,60 +142,59 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 c.weighty = 1;
                 
                 c.fill = GridBagConstraints.BOTH;
-        //dato og tidspunkt
-                c.weighty = 0;
-                datoLabel = new JLabel("Dato:");
-                c.gridx = 3;
-                c.gridy = 2;
-                this.add(datoLabel,c);
                 
-                datoText = new JTextField("dd-mm-yyyy");
-                c.gridx = 4;
-                c.gridy = 2;
-                this.add(datoText,c);
-                
-                starttidLabel = new JLabel("Starttid:");
-                c.gridx = 6;
-                c.gridy = 2;
-                this.add(starttidLabel,c);
-                
-                starttidText = new JTextField("hh:mm");
-                c.gridx = 7;
-                c.gridy = 2;
-                this.add(starttidText,c);
-                
-                sluttidLabel = new JLabel("Sluttid:");
-                c.gridx = 9;
-                c.gridy = 2;
-                this.add(sluttidLabel,c);
-                
-                sluttidText = new JTextField("hh:mm");
-                c.gridx = 10;
-                c.gridy = 2;
-                this.add(sluttidText,c);
-                
-        //tittel, sted, antall og radiobuttons
+        //tittel
                 
                 c.weighty = 0;
                 c.gridheight = 1;
-                tittelLabel = new JLabel("Tittel:");
                 c.gridx = 3;
-                c.gridy = 4;
-                this.add(tittelLabel,c);
+                c.gridy = 2;
+                this.add(new JLabel("Tittel:"),c);
                 
                 tittelText = new JTextField(10);
                 c.gridx = 4;
-                c.gridy = 4;
+                c.gridy = 2;
                 this.add(tittelText,c);
                 
-                stedLabel = new JLabel("Sted/rom:");
+        //dato og tidspunkt
+                
+                c.weighty = 0;
                 c.gridx = 3;
-                c.gridy = 5;
-                this.add(stedLabel,c);
+                c.gridy = 4;
+                this.add(new JLabel("Dato:"),c);
+                
+                datoText = new JTextField("dd-mm-yyyy");
+                c.gridx = 4;
+                c.gridy = 4;
+                this.add(datoText,c);
+                
+                c.gridx = 3;
+                c.gridy = 6;
+                this.add(new JLabel("Starttid:"),c);
+                
+                starttidText = new JTextField("hh:mm");
+                c.gridx = 4;
+                c.gridy = 6;
+                this.add(starttidText,c);
+                
+                c.gridx = 3;
+                c.gridy = 8;
+                this.add(new JLabel("Sluttid:"),c);
+                
+                sluttidText = new JTextField("hh:mm");
+                c.gridx = 4;
+                c.gridy = 8;
+                this.add(sluttidText,c);
+                
+        //sted, antall og radiobuttons
+                
+                c.gridx = 3;
+                c.gridy = 11;
+                this.add(new JLabel("Sted/rom:"),c);
                 
                 stedText = new JTextField(10);
                 c.gridx = 4;
-                c.gridy = 5;
+                c.gridy = 11;
                 this.add(stedText,c);
                 
                 c.anchor = GridBagConstraints.WEST;
@@ -244,66 +203,71 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 moteRadio.setName("moteRadio");
                 moteRadio.addActionListener(this);
 
-                c.gridx = 7;
-                c.gridy = 5;
+                c.gridx = 6;
+                c.gridy = 11;
                 this.add(moteRadio,c);
                 
-                antallAndreLabel = new JLabel("Inviter eksterne via e-post:");
+                c.gridx = 7;
+                c.gridy = 11;
+                this.add(new JLabel("Automatisk valg"), c);
+                
                 c.gridx = 3;
-                c.gridy = 6;
-                this.add(antallAndreLabel,c);
+                c.gridy = 13;
+                this.add(new JLabel("Inviter eksterne via e-post:"),c);
                 
-                //c.fill = GridBagConstraints.VERTICAL;
-                //c.fill = GridBagConstraints.BOTH;
-                
-                antallAndreText = new JTextField("0",3);
-                antallAndreText.setText("0");
-                antallAndreText.setEditable(false);
+                antallAndreText = new JTextField("");
+                antallAndreText.setText("");
+                antallAndreText.setEditable(true);
                 antallAndreText.getDocument().addDocumentListener((this));
                 c.gridx = 4;
-                c.gridy = 6;
+                c.gridy = 13;
                 this.add(antallAndreText,c);
                 
-                moteromLabel = new JLabel("Møterom:");
+                c.gridx = 3;
+                c.gridy = 15;
+                this.add(new JLabel("Møterom:"), c);
+                
                 oppdaterMoterom = new JButton("Oppdater møterom");
                 oppdaterMoterom.setName("oppdaterMoterom");
                 oppdaterMoterom.addActionListener(this);
-                c.gridx = 9;
-                c.gridy = 4;
+                c.gridx = 6;
+                c.gridy = 15;
                 this.add(oppdaterMoterom,c);
                 
                 moteromList = new LedigeMoterom();
                 c.gridheight = 2;
                 c.gridwidth = 2;
-                c.gridx = 9;
-                c.gridy = 5;
+                c.gridx = 4;
+                c.gridy = 15;
                 c.fill = GridBagConstraints.BOTH;
+                
+                String[] stringliste = {"en", "to", "tre", "fire"};
 
-                JList list = new JList((ListModel) moteromList);
+                JList liste = new JList(stringliste); //((ListModel) moteromList.hentListe());
                 
-                moteromScrollPane.add(list);
+                moteromScrollPane = new JScrollPane();
                 
-                moteromScrollPane.setVisible(false);
+                moteromScrollPane.add(liste);
+                
+                moteromScrollPane.setVisible(true);
                 moteromScrollPane.addMouseListener(this);
                 this.add(moteromScrollPane,c);
                 
         //Beskrivelse
                 c.weighty = 0;
-                beskrivelseLabel = new JLabel("Beskrivelse");
                 c.gridx = 3;
-                c.gridy = 8;
-                this.add(beskrivelseLabel,c);
+                c.gridy = 17;
+                this.add(new JLabel("Beskrivelse"),c);
                 
                 c.weighty = 1;
                 beskrivelseText = new JTextArea(3,30);
                 beskrivelseText.setEditable(true);
                 beskrivelseScroll = new JScrollPane(beskrivelseText);
                 
-                //beskrivelseScroll.add(beskrivelseText);
                 c.gridheight = 2;
                 c.gridwidth = 7;
-                c.gridx = 3;
-                c.gridy = 10;
+                c.gridx = 4;
+                c.gridy = 17;
                 this.add(beskrivelseScroll,c);
                 
                 c.fill = GridBagConstraints.VERTICAL;
@@ -314,7 +278,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 lagreButton.setName("lagre");
                 lagreButton.addActionListener(this);
                 c.gridx = 3;
-                c.gridy = 13;
+                c.gridy = 19;
 //              c.gridheight = 1;
 //              c.gridwidth = 1;
                 this.add(lagreButton,c);
@@ -323,8 +287,15 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 avbrytButton.setName("avbryt");
                 avbrytButton.addActionListener(this);
                 c.gridx = 4;
-                c.gridy = 13;
+                c.gridy = 19;
                 this.add(avbrytButton,c);
+                
+		        actionListeners = new ArrayList<ActionListener>();
+		                
+		        actionListeners.add((lagreButton.getActionListeners())[0]);
+		        actionListeners.add((avbrytButton.getActionListeners())[0]);
+		        actionListeners.add((moteRadio.getActionListeners())[0]);
+		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
                 
                 nullstillFelt();
                 setAutoOppforing();
@@ -349,9 +320,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                //tittelText.setText("m�te");
+                tittelText.setText("møte");
         }
-        
+        /*
         public void setAntallAnsatte(int antallAnsatte){
                 this.antallAnsatte = antallAnsatte;
                 setTotaltText();
@@ -360,7 +331,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 totaltAntall = antallAnsatte + antallAndre + 1;
                 totaltText.setText(""+totaltAntall);
         }
-        
+        */
         public Person getPerson(){
                 return this.person;
         }
@@ -388,11 +359,32 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         }
         
         public void lagre(){
-                feilmelding = "";
-                avtale.settOpprettetAv(person);
-                
+        	
+              feilmelding = "";
+              String avtaleTittel = tittelText.getText(); 
+              Person avtalePerson = person;
+              Dato avtaleDato = new Dato(starttidText.getText()); 
+              Tid avtaleStart = new Tid(starttidText.getText()); 
+              Tid avtaleSlutt = new Tid(sluttidText.getText()); 
+              Tid avtaleAltStart = new Tid(sluttidText.getText()); 
+              Moterom avtaleRom = new Moterom();
+              String avtaleBeskr = beskrivelseText.getText(); 
+              String avtaleEndret = "";
+              Respons avtaleResp = Respons.kanskje; 
+              ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
+              int avtaleAntDltkr = 0;
+              ArrayList<String> avtaleEksterne = new ArrayList<String>(); 
+              int avtaleEkstDltkr = 0;
+              
+              Avtale avtale2 = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+            		  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+              
+              
+              /*
               if(datoText.getText() != null){
                         try{
+                        		avtaleDato = new Dato(datoText.getText());
+                        	
                                 Dato datoen = new Dato(datoText.getText());
                                 avtale.settAvtaleDato(datoen);
                         }
@@ -404,6 +396,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 //             }
              if(starttidText.getText() != null){
                         try{
+                        		avtaleStart = new Tid(starttidText.getText());
+                        	
                                 String[] starttidTabell = starttidText.getText().split(":");
                                 int time = Integer.parseInt(starttidTabell[0]);
                                 int min = Integer.parseInt(starttidTabell[1]);
@@ -415,8 +409,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                                 feilmelding += "Starttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
                         }
 //              }
-//              if(sluttidText.getText() != null){
+              if(sluttidText.getText() != null){
                         try{
+                        		avtaleSlutt = new Tid(sluttidText.getText());
+                        	
                                 String[] sluttidTabell = sluttidText.getText().split(":");
                                 int time = Integer.parseInt(sluttidTabell[0]);
                                 int min = Integer.parseInt(sluttidTabell[1]);
@@ -436,9 +432,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         		feilmelding += "Klokkeslett: Sluttid skjer før starttid";
                         }
                 } catch (Exception e) {
-                }       
-                        
-//              }
+                }   
                 if(!tittelText.getText().equals("")){
                         avtale.settAvtaleNavn(tittelText.getText());
                 } 
@@ -447,7 +441,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 }
                 if(!stedText.getText().equals("")){
                        // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel p� et rom*/
-                        if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
+                    /*    if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
                                 ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
                         }
                 }
@@ -462,17 +456,18 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
           //   if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
                         if(avtale instanceof Avtale){
                                 try{
-                                if (Integer.parseInt(antallAndreText.getText()) < 0) throw new IllegalArgumentException();
-                                ((Avtale) avtale).settAntallEksterne(Integer.parseInt(antallAndreText.getText()));
+		                                if (Integer.parseInt(antallAndreText.getText()) < 0) 
+		                                		throw new IllegalArgumentException();
+		                                ((Avtale) avtale).settAntallEksterne(Integer.parseInt(antallAndreText.getText()));
                                 }
                                 catch (Exception e){
                                         feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
                                 }
                               
                         }
-             }
+             		}
               }
-        }
+        }*/
        //* public void sendTilDatabase(boolean oppdatering){
                 //Kaller på database og send oppforing
                // try {
@@ -488,7 +483,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                //         //TODO: feilmelding ?
               //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                // }
-      //  }
+        }
+        
         public Avtale getAvtale(){
                 return avtale;
         }
@@ -497,8 +493,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 setAutoOppforing();
                 tittelText.setText("");
                 stedText.setText("");
-                antallAndreText.setText("0");
-                totaltText.setText("0");
+                //antallAndreText.setText("");
+                //totaltText.setText("");
                 beskrivelseText.setText("");
         }
         
@@ -589,14 +585,14 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		public void insertUpdate(DocumentEvent e) {
 			for(int i = 0; i< antallAndreText.getText().length(); i++){
                 if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                        antallAndre = 0;
+                        //antallAndre = 0;
                         antallAndreText.setText("0");
-                        setTotaltText();
+                        //setTotaltText();
                         return;
                 }
         }
-        antallAndre = Integer.parseInt(antallAndreText.getText());
-        setTotaltText();
+        //antallAndre = Integer.parseInt(antallAndreText.getText());
+        //setTotaltText();
 			
 		}
 
@@ -605,18 +601,18 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 			if(antallAndreText.getText().length() != 0){
                 for(int i = 0; i< antallAndreText.getText().length(); i++){
                         if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                                antallAndre = 0;
+                                //antallAndre = 0;
                                 antallAndreText.setText("0");
-                                setTotaltText();
+                                //setTotaltText();
                                 return;
                         }
                 }
-                antallAndre = Integer.parseInt(antallAndreText.getText());
-                setTotaltText();
+                //antallAndre = Integer.parseInt(antallAndreText.getText());
+                //setTotaltText();
         }
         else {
-                antallAndre = 0;
-                setTotaltText();
+                //antallAndre = 0;
+                //setTotaltText();
                 return;
         
         }
@@ -667,11 +663,11 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		
 		public static void main(String[] args)
 		{
-			NyHendelse hendelse = new NyHendelse(new DatabaseKommunikator(), new Person(1, "Blabla"), true);
-			/*JFrame frame = new JFrame();
-			frame.setSize(1000, 1000);
-			frame.setVisible(true);*/
-			
+			NyHendelse hendelse = new NyHendelse(new DatabaseKommunikator(), new Person(1, "blabla"), true);
+			JFrame frame = new JFrame();
+			frame.setSize(1000,800);
+			frame.add(hendelse);
+			frame.setVisible(true);
 		}
 			
 }

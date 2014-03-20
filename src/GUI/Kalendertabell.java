@@ -2,11 +2,13 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -21,12 +23,12 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	private HvitCelle hvit;
 	private JFrame ramme;
 	
-	public Kalendertabell(){
+	public Kalendertabell(kalender.Kalender k){
 		ramme = new JFrame();
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
-		lagTabell();
+		lagTabell(k);
 		settInnUkedag();
 		settInnKlokkeslett();
 		
@@ -56,15 +58,18 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	}
 	
 	//Lager selve tabellen og legger til ListSelectionListener.
-	public void lagTabell(){
+	public void lagTabell(kalender.Kalender k){
 		tabell = new JTable[25];
 		
 		for(int i=0; i<tabell.length; i++){
-		tabell[i]=new JTable(1, 8);
-		tabell[i].setRowSelectionAllowed(false);
-		tabell[i].setGridColor(Color.black);
-		tabell[i].getSelectionModel().addListSelectionListener(this);
-		add(tabell[i]);
+			tabell[i]=new JTable(1, 8);
+			tabell[i].setRowSelectionAllowed(false);
+			tabell[i].setGridColor(Color.black);
+			tabell[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tabell[i].getSelectionModel().addListSelectionListener(this);
+			
+			
+			add(tabell[i]);
 		}
 		//Gjør øverste rad ikke fokuserbar.
 		tabell[0].setFocusable(false);
@@ -72,24 +77,24 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	
 	//Setter farge på avtaleområde.
 	public void settFarge(int dagnr, int fraklokke, int tilklokke, int fargenr, String motenavn){
-		tabell[fraklokke].setValueAt(motenavn, 0, dagnr);
+		tabell[fraklokke+1].setValueAt(motenavn, 0, dagnr);
 		int antall = tilklokke-fraklokke;
 		
 		if(fargenr==1){
 		for (int i = 0; i<=antall; i++)
-            tabell[fraklokke+i].getColumnModel().getColumn(dagnr).setCellRenderer(gronn);
+            tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(gronn);
 		}
 		else if(fargenr==2){
 			for (int i = 0; i<=antall; i++)
-				tabell[fraklokke+i].getColumnModel().getColumn(dagnr).setCellRenderer(blaa);
+				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(blaa);
 		}
 		else if(fargenr==3){
 			for (int i = 0; i<=antall; i++)
-				tabell[fraklokke+i].getColumnModel().getColumn(dagnr).setCellRenderer(gul);
+				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(gul);
 		}
 		else if(fargenr==4){
 			for (int i = 0; i<=antall; i++)
-				tabell[fraklokke+i].getColumnModel().getColumn(dagnr).setCellRenderer(hvit);
+				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(hvit);
 		}
 		
 	}
@@ -116,7 +121,7 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	public class BlaaCelle extends DefaultTableCellRenderer {
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	        Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	        cellComponent.setBackground(Color.blue);
+	        cellComponent.setBackground(new Color(150,150, 255));
 	        return cellComponent;
 	    }
 	}
@@ -158,6 +163,9 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	//Åpner avtaleboks.
 	public void valueChanged(ListSelectionEvent e) {
 		System.out.println("Valgt celle");
-		
+		for(int i=0; i<tabell.length; i++){
+			System.out.println(tabell[i].getSelectedColumn());
+			tabell[i].remove
+		}
 	}
 }

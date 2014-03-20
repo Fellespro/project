@@ -17,8 +17,8 @@ public class Lister extends JPanel implements ListSelectionListener{
 	private JScrollPane pane;
 	
 	public Lister(){
-		db=new DatabaseKommunikator();
-		db.kobleOpp();
+//		db=new DatabaseKommunikator();
+//		db.kobleOpp();
 //		personer=db.hentPersoner();
 //		personer2=new Person[personer.size()];
 //		personer2=personer.toArray(personer2);
@@ -27,6 +27,8 @@ public class Lister extends JPanel implements ListSelectionListener{
 //		add(liste);
 	}
 	public void personListe(){
+		db=new DatabaseKommunikator();
+		db.kobleOpp();
 		lagListe(db.hentPersoner().toArray());
 	}
 	/*public void gruppeListe(){
@@ -43,8 +45,11 @@ public class Lister extends JPanel implements ListSelectionListener{
 		pane.setMaximumSize(new Dimension(140,160));
 		add(pane);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		db.lukk();
 	}
 	public void romListe(){
+		db=new DatabaseKommunikator();
+		db.kobleOpp();
 		lagRomListe(db.hentMoterom().toArray());
 	}
 	private void lagRomListe(Object[] listen){

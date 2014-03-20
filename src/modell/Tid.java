@@ -1,28 +1,45 @@
 package modell;
 
 public class Tid {
-	private int hour;
-	private int minute;
-	private int second;
+	private int time;
+	private int min;
+	private int sec;
 	
 	public Tid(){
-		hour = 13;
-		minute = 30;
-		second = 0;
+		time = 13;
+		min = 30;
+		sec = 0;
 		
 	}
 	public Tid(int h, int m, int s){
-		hour = h;
-		minute = m;
-		second = s;
+		time = h;
+		min = m;
+		sec = s;
 	}
-	
+	public int hentTime(){
+		return time;
+	}
+	public int hentMin(){
+		return min;
+	}
+	public int hentSek(){
+		return sec;
+	}
 	public Tid(String tid){
 		
 	}
+	public void setTime(int time){
+		this.time=time;
+	}
+	public void setMin(int min){
+		this.min=min;
+	}
+	public void setSek(int sec){
+		this.sec=sec;
+	}
 	
 	public String toString(){
-		String out = "'"+hour+":"+minute+":"+second+"'";
+		String out = "'"+time+":"+min+":"+sec+"'";
 		return out;
 	}
 

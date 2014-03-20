@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
@@ -13,7 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class Kalendertabell extends JPanel implements ListSelectionListener{
+public class Kalendertabell extends JPanel implements MouseListener{
 	
 	private JTable[] tabell;
 	private String[] kolonnenavn, radnavn;
@@ -65,8 +66,9 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 			tabell[i]=new JTable(1, 8);
 			tabell[i].setRowSelectionAllowed(false);
 			tabell[i].setGridColor(Color.black);
-			tabell[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			tabell[i].getSelectionModel().addListSelectionListener(this);
+			//tabell[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tabell[i].setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tabell[i].addMouseListener(this);
 			
 			
 			add(tabell[i]);
@@ -159,7 +161,7 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 	      return comp;  
 	    }  
 	  } 
-
+/*
 	//Åpner avtaleboks.
 	public void valueChanged(ListSelectionEvent e) {
 		System.out.println("Valgt celle");
@@ -167,5 +169,39 @@ public class Kalendertabell extends JPanel implements ListSelectionListener{
 			System.out.println(tabell[i].getSelectedColumn());
 			tabell[i].remove
 		}
+	
+	}
+	*/
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		for(int i=1; i<tabell.length; i++){
+			if(tabell[i].getSelectedColumn()!=-1){
+				System.out.print(i);
+				//int col = tabell[i].columnAtPoint(e.getPoint());
+				//System.out.println("Kolonne: "+col+", Rad: "+i);
+				//break;
+			}
+		}
+		System.out.println("");
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

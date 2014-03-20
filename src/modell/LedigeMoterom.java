@@ -11,12 +11,19 @@ public class LedigeMoterom extends DefaultListModel{
 	private ArrayList<Moterom> rom;
 	private ArrayList<Avtale> avtaler;
 	
-	public void ledigeRom(Dato dato,Tid start, Tid slutt){
+
+	public LedigeMoterom(){
 		DatabaseKommunikator database=new DatabaseKommunikator();
 		database.kobleOpp();
 		rom=database.hentMoterom();
 		avtaler=database.hentAlleAvtaler(database.hentPersoner(), rom);
 		database.lukk();
+	}
+	public void ledigeRom(Dato dato,Tid start, Tid slutt){
+		ArrayList<Moterom> rom=new ArrayList<Moterom>(this.rom);
+		ArrayList<Avtale> avtaler=new ArrayList<Avtale>(this.avtaler);
+		//fjerner alle avtaler som har ikke kræsjer med fastsatt tid.
+		//teller neddover fordi når det fjernes noe fra et arrayList så flyttes alt som er etter
 		//fjerner alle avtaler som har ikke krï¿½sjer med fastsatt tid.
 		//teller neddover fordi nï¿½r det fjernes noe fra et arrayList sï¿½ flyttes alt som er etter
 		//en plass fremm, og da ville vi hoppet over plasser hvis vi gikk oppover.

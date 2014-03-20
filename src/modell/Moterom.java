@@ -49,6 +49,10 @@ public class Moterom {
 	}
 	
 	public String toString(){
-		return ""+romid;
+		if(navn.length()>3){
+			return navn;
+		}else{
+			return ""+romid;
+		}
 	}
 }

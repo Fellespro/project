@@ -232,7 +232,7 @@ public class Avtale {
 				timer--;
 				minutter=60-minutter;
 			}
-			int sekunder = slutt.hentSec() - start.hentSec();
+			int sekunder = slutt.hentSek() - start.hentSek();
 			if(sekunder<0){
 				minutter--;
 				sekunder=60-sekunder;
@@ -252,7 +252,7 @@ public class Avtale {
 				timer--;
 				minutter=60-minutter;
 			}
-			int sekunder = starttid.hentSec() + varighet.hentSec();
+			int sekunder = starttid.hentSek() + varighet.hentSek();
 			if(sekunder<0){
 				minutter--;
 				sekunder=60-sekunder;

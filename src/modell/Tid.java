@@ -22,7 +22,7 @@ public class Tid {
 	public int hentMin(){
 		return min;
 	}
-	public int hentSec(){
+	public int hentSek(){
 		return sec;
 	}
 	public Tid(String tid){
@@ -34,7 +34,7 @@ public class Tid {
 	public void setMin(int min){
 		this.min=min;
 	}
-	public void setSec(int sec){
+	public void setSek(int sec){
 		this.sec=sec;
 	}
 	

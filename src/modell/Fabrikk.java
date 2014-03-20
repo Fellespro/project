@@ -26,9 +26,9 @@ public class Fabrikk {
 			String starts = rs.getString(4);
 			String slutts = rs.getString(5);
 			String altstarts = rs.getString(6);
-			Time start = hentTime(starts);
-			Time slutt = hentTime(slutts);
-			Time alt_start = hentTime(altstarts);
+			Tid start = hentTime(starts);
+			Tid slutt = hentTime(slutts);
+			Tid alt_start = hentTime(altstarts);
 			String beskrivelse = rs.getString(7); 
 			String sist_endret = rs.getString(8);
 			int antallDeltakere = rs.getInt(9);
@@ -90,15 +90,15 @@ public class Fabrikk {
 		return null;
 	}
 	
-	public static Time hentTime(String s){
+	public static Tid hentTime(String s){
 		if(s==null){
-			return new Time(0,0,0);
+			return new Tid(0,0,0);
 		}
 		int h = 10*(s.charAt(0)-'0')+(s.charAt(1)-'0');
 		int m = 10*(s.charAt(3)-'0')+(s.charAt(4)-'0');
 		int sek = 10*(s.charAt(6)-'0')+(s.charAt(7)-'0');
 		@SuppressWarnings("deprecation")
-		Time t = new Time(h, m, sek);
+		Tid t = new Tid(h, m, sek);
 		return t;
 	}
 

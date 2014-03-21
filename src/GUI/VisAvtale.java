@@ -21,15 +21,15 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import kalender.Kalender;
 import modell.Avtale;
 import modell.Tid;
-
 import modell.Avtale;
 import modell.Dato;
 import modell.Person;
 import modell.Tid;
 
-public class VisAvtale extends JPanel implements ActionListener{
+public class VisAvtale extends JPanel{
 
         /**
          * @param args
@@ -62,12 +62,8 @@ public class VisAvtale extends JPanel implements ActionListener{
         
         private JFrame frame;
         
-        private List<ActionListener> actionListeners;
-        
         //Constructor
-        public VisAvtale(){
-                
-                actionListeners = new ArrayList<ActionListener>();
+        public VisAvtale(Kalender k){
         //Layout
                 this.setLayout(new GridBagLayout());
                 GridBagConstraints c = new GridBagConstraints();
@@ -121,7 +117,7 @@ public class VisAvtale extends JPanel implements ActionListener{
                 c.gridheight = 1;
 
                 hjem = new JButton("Hjem");
-                hjem.addActionListener(this);
+                hjem.addActionListener(k);
                 hjem.setName("hjem");
                 c.gridx = 0;
                 c.gridy = 0;
@@ -174,7 +170,7 @@ public class VisAvtale extends JPanel implements ActionListener{
                 c.gridy = 4;
                 this.add(tittelText,c);
                 
-                motelederLabel = new JLabel("MÀteleder:");
+                motelederLabel = new JLabel("Mï¿½teleder:");
                 c.gridx = 0;
                 c.gridy = 5;
                 this.add(motelederLabel,c);
@@ -216,21 +212,21 @@ public class VisAvtale extends JPanel implements ActionListener{
                 
         //Lagre og avbrytbuttons
                 endre = new JButton("Endre");
-                endre.addActionListener(this);
+                endre.addActionListener(k);
                 endre.setName("endre");
                 c.gridx = 3;
                 c.gridy = 11;
                 this.add(endre,c);
                 
                 slett = new JButton("Slett");
-                slett.addActionListener(this);
+                slett.addActionListener(k);
                 slett.setName("slett");
                 c.gridx = 4;
                 c.gridy = 11;
                 this.add(slett,c);
                 
                 avbryt = new JButton("Avbryt");
-                avbryt.addActionListener(this);
+                avbryt.addActionListener(k);
                 avbryt.setName("avbryt");
                 c.gridx = 6;
                 c.gridy = 11;
@@ -238,7 +234,7 @@ public class VisAvtale extends JPanel implements ActionListener{
                 
                 
         
-                frame = new JFrame("Legg til avtale/mÌüte");
+                frame = new JFrame("Legg til avtale/mï¿½ï¿½te");
                 frame.add(this);
                 frame.setVisible(true);
                 frame.pack();
@@ -267,38 +263,23 @@ public class VisAvtale extends JPanel implements ActionListener{
                 slett.doClick();
         }
         
-        public void addActionListener(ActionListener listener) {
-                this.actionListeners.add(listener);
+        public JButton hentHjemKnapp(){
+        	return hjem;
         }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == hjem){
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-                else if(e.getSource() == endre){
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-                else if(e.getSource() == slett){
-                        
-                        Object[] options ={"OK","Avbryt"};
-                        int n = JOptionPane.showOptionDialog(frame, "Er du sikker pÎ at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                        if(n == JOptionPane.OK_OPTION){
-                                for (ActionListener l : this.actionListeners) {
-                                        l.actionPerformed(e);
-                                }
-                        }
-                }
-                else if(e.getSource() == avbryt){
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-                }
-                
+        public JButton hentEndreKnapp(){
+        	return endre;
+        }
+        public JButton hentSlettKnapp(){
+        	return slett;
+        }
+        public JButton hentAvbrytKnapp(){
+        	return avbryt;
+        }
+        public JFrame hentRamme(){
+        	return frame;
+        }
+        public void fjernRamme(){
+        	frame.dispose();
         }
 /*
       public static void main(){

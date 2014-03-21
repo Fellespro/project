@@ -14,7 +14,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class Kalendertabell extends JPanel implements MouseListener{
+import modell.Person;
+
+public class Kalendertabell extends JPanel{
 	
 	private JTable[] tabell;
 	private String[] kolonnenavn, radnavn;
@@ -23,11 +25,16 @@ public class Kalendertabell extends JPanel implements MouseListener{
 	private GulCelle gul;
 	private HvitCelle hvit;
 	private JFrame ramme;
+	private ToppPanel tp;
 	
-	public Kalendertabell(kalender.Kalender k){
+	public Kalendertabell(kalender.Kalender k, Person p){
 		ramme = new JFrame();
 		
+		tp = new ToppPanel(p.getNavn(), k);
+		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		add(tp);
 		
 		lagTabell(k);
 		settInnUkedag();
@@ -68,7 +75,7 @@ public class Kalendertabell extends JPanel implements MouseListener{
 			tabell[i].setGridColor(Color.black);
 			//tabell[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			tabell[i].setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			tabell[i].addMouseListener(this);
+			tabell[i].addMouseListener(k);
 			
 			
 			add(tabell[i]);
@@ -172,36 +179,28 @@ public class Kalendertabell extends JPanel implements MouseListener{
 	
 	}
 	*/
-	@Override
-	public void mouseClicked(MouseEvent e) {
+	public int hentRad() {
 		for(int i=1; i<tabell.length; i++){
-			if(tabell[i].getSelectedColumn()!=-1){
-				System.out.print(i);
-				//int col = tabell[i].columnAtPoint(e.getPoint());
-				//System.out.println("Kolonne: "+col+", Rad: "+i);
-				//break;
+			if(tabell[i].getSelectedColumn()!=-1){	
+				return i;
+				
 			}
 		}
-		System.out.println("");
+		return -1;
 	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public int hentKolonne() {
+		for(int i=1; i<tabell.length; i++){
+			if(tabell[i].getSelectedColumn()!=-1){	
+				return tabell[i].getSelectedColumn();
+			}
+		}
+		return -1;
+	}
+	public void fjernSeleksjon() {
+		for(int i=1; i<tabell.length; i++){
+			tabell[i].clearSelection();
+		}
 		
 	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }

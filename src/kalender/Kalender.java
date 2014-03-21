@@ -21,7 +21,7 @@ import database.*;
 import GUI.*;
 import modell.*;
 
-public class Kalender implements ActionListener {
+public class Kalender implements ActionListener, MouseListener {
 
 	private Person kalenderEier;	//Person sin kalender skal vises
 	private Login login;
@@ -38,7 +38,6 @@ public class Kalender implements ActionListener {
 		dk = new DatabaseKommunikator();
 		kalenderEier = new Person();
 		mkalender = new modell.Kalender();
-		ktabell = new Kalendertabell(this);
 
 		//Vis loginskjermen. this som parameter slik at this kan settes som actinolistener p� login
 		login = new Login(this);
@@ -73,8 +72,11 @@ public class Kalender implements ActionListener {
 	}
 
 	private void visKalender() {
+		ktabell = new Kalendertabell(this, kalenderEier);
 		ktabell.visTabell();
 		ArrayList<Avtale> ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+		mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
+		mkalender.setPerson(kalenderEier);
 		System.out.println("Antall ukeavtaler[kkalender] " +ukeAvtalerListe.size());
 		for(int i=0; i<ukeAvtalerListe.size(); i++){
 			Avtale a = ukeAvtalerListe.get(i);
@@ -82,6 +84,35 @@ public class Kalender implements ActionListener {
 			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int rad = ktabell.hentRad();
+		int kolonne = ktabell.hentKolonne();
+		ktabell.fjernSeleksjon();
+		
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -11,24 +11,35 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import utilities.Utilities;
+
 import kalender.Kalender;
 
 
 public class ToppPanel extends JPanel implements ActionListener  {
 	private JLabel ukeTekst, ukeNrTekst, brukernavnTekst, brukernavn;
-	private JButton knapp;
+	private JButton loggUtknapp, nyAvtaleKnapp;
 	private BasicArrowButton venstrePil, hoyrePil;
 	private int ukeNr; //getter og setter
 	
 	
 	
 	public ToppPanel(String brukernavnEkstern, Kalender k) {
-		// 7 deler. fra venstre mot høyre 
+		// 8 deler. fra venstre mot høyre 
+		
+		//0. NyAvtaleknapp 
+		nyAvtaleKnapp = new JButton();
+		nyAvtaleKnapp.setName("nyAvtale");
+		nyAvtaleKnapp.setText("Ny avtale"); 
+		nyAvtaleKnapp.addActionListener(k); //kalender lytter på whatsuuup
+		add(nyAvtaleKnapp);
+
 		
 		//1
 		ukeTekst = new JLabel();
 		ukeTekst.setName("ukeTekst");
 		ukeTekst.setText("Ukenummer: ");
+		ukeTekst.setHorizontalAlignment(JLabel.CENTER);
 		add(ukeTekst);  
 		
 		//2 venstre
@@ -37,8 +48,9 @@ public class ToppPanel extends JPanel implements ActionListener  {
 		add(venstrePil);
 		
 		//3 ....ukenr: feks uke 8
-		ukeNr = 1; //lage begrensning? 
+		ukeNr = Utilities.getCurrentWeek(); //lage begrensning? 
 		ukeNrTekst = new JLabel();
+		ukeNrTekst.setHorizontalAlignment(JLabel.CENTER);
 		ukeNrTekst.setName("ukeNrTekst");
 		ukeNrTekst.setText(String.valueOf(ukeNr)); //denne må endres
 		add(ukeNrTekst);
@@ -52,23 +64,25 @@ public class ToppPanel extends JPanel implements ActionListener  {
 	    // 5.........du er logget inn med med brukernavn:
 		brukernavnTekst = new JLabel();
 		brukernavnTekst.setName("brukernavnTekst");
-		brukernavnTekst.setText("Du er logget inn med brukernavn: ");
+		brukernavnTekst.setText("Logget inn med: ");
+		brukernavnTekst.setHorizontalAlignment(JLabel.RIGHT);
 		add(brukernavnTekst);
 	    
 	    //6 .......  brukernavnet
 		brukernavn = new JLabel();
 		brukernavn.setName("brukernavn");
 		brukernavn.setText(brukernavnEkstern); //noe sånt?
+		brukernavn.setHorizontalAlignment(JLabel.LEFT);
 		add(brukernavn);
 	    
-	    //7 loggutknapp 
-	    knapp = new JButton();
-	    knapp.setName("loggUt");
-	    knapp.setText("Logg ut"); 
-	    knapp.addActionListener(k); //kalender lytter på whatsuuup
-	    add(knapp);
+	    //7 loggUtknapp 
+	    loggUtknapp = new JButton();
+	    loggUtknapp.setName("loggUt");
+	    loggUtknapp.setText("Logg ut"); 
+	    loggUtknapp.addActionListener(k); //kalender lytter på whatsuuup
+	    add(loggUtknapp);
 	    
-	    setLayout(new GridLayout(0,7));
+	    setLayout(new GridLayout(0,8));
 	}
 	
 	
@@ -104,7 +118,7 @@ public void actionPerformed(ActionEvent e) {
 		System.out.println(ukeNr);
 		ukeNrTekst.setText(String.valueOf(ukeNr));
 	}
-	if (e.getSource() == knapp) {
+	if (e.getSource() == loggUtknapp) {
 		System.out.println("logg ut");
 		
 	}

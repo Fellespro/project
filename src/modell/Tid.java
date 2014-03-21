@@ -1,14 +1,18 @@
 package modell;
 
+import java.sql.Time;
+
 public class Tid {
 	private int time;
 	private int min;
 	private int sec;
 	
 	public Tid(){
-		time = 13;
-		min = 30;
-		sec = 0;
+		Time h = new Time(0);
+		
+		time = h.getHours();
+		min = h.getMinutes();
+		sec = h.getSeconds();
 		
 	}
 	public Tid(int h, int m, int s){

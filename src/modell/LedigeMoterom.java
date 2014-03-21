@@ -18,7 +18,6 @@ public class LedigeMoterom extends DefaultListModel{
 		rom.add(new Moterom(1,5,"Rill"));
 		rom.add(new Moterom(2, 10, "Rall"));
 		lRom = new ArrayList<Moterom>();
-		lRom.add(rom.get(0));
 		/*DatabaseKommunikator database=new DatabaseKommunikator();
 		database.kobleOpp();
 		rom=database.hentMoterom();
@@ -26,6 +25,7 @@ public class LedigeMoterom extends DefaultListModel{
 		database.lukk();*/
 	}
 	public void ledigeRom(Dato dato,Tid start, Tid slutt){
+		lRom.add(rom.get(0));
 		/*lRom=new ArrayList<Moterom>(rom);
 		ArrayList<Avtale> avtaler=new ArrayList<Avtale>(this.avtaler);
 		//fjerner alle avtaler som har ikke kr�sjer med fastsatt tid.

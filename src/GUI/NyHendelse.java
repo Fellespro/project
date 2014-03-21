@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
 import database.DatabaseKommunikator;
 import modell.*;
 
-public class NyHendelse extends JPanel /*implements ActionListener, ListSelectionListener, DocumentListener, MouseListener*/ {
+public class NyHendelse extends JPanel implements ActionListener/*, ListSelectionListener, DocumentListener, MouseListener*/ {
   
 		//Opprette alle knappene som trengs
 		private JButton hjemButton;
@@ -85,6 +85,10 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
 		        this.oppdatering = oppdatering;
 
 		        hjemButton = new JButton("Hjem");
+                oppdaterMoterom = new JButton("Oppdater romliste");
+                moteRadio = new JRadioButton("Automatisk valg");
+                avbrytButton = new JButton("Avbryt");
+                lagreButton = new JButton("Lagre");
 		        
                 tittelText = new JTextField(10);
                 datoText = new JTextField(5);
@@ -110,18 +114,7 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
                 beskrivelseScroll = new JScrollPane(beskrivelseText);
                 beskrivelseScroll.setHorizontalScrollBar(null);
                 beskrivelseScroll.setVerticalScrollBar(beskrivelseScroll.createVerticalScrollBar());
-                
-                oppdaterMoterom = new JButton("Oppdater møterom");
-                moteRadio = new JRadioButton();
-                JLabel autovalg = new JLabel("      Automatisk valg");
-                JPanel autovalgpanel = new JPanel();
-                autovalgpanel.add(moteRadio);
-                autovalgpanel.add(autovalg);
-                autovalgpanel.setSize(10, 5);
-
-                avbrytButton = new JButton("Avbryt");
-                lagreButton = new JButton("Lagre");
-                
+                                
                 JLabel tittel = new JLabel("Tittel:");
                 JLabel dato = new JLabel("Dato:");
                 JLabel starttid = new JLabel("Starttid:");
@@ -133,6 +126,7 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
                 JLabel beskrivelse = new JLabel("Beskrivelse:");
 		        
 		        GroupLayout layout = new GroupLayout(this);
+		        layout.setAutoCreateGaps(true);
 		        
 		        layout.setHorizontalGroup(
 		        		layout.createSequentialGroup()
@@ -156,10 +150,8 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
 	        					.addComponent(sluttidText)
 	        					.addComponent(inviterteScrollPane)
 	        					.addComponent(andreText)
-	        					.addGroup(layout.createParallelGroup()
-	        						.addComponent(moteRadio)
-	        						.addComponent(autovalg)
-	        					)
+	        					.addComponent(moteRadio)
+        						.addComponent(oppdaterMoterom)
 	        					.addComponent(moteromScrollPane)
 	        					.addComponent(beskrivelseScroll)
 	        					.addComponent(avbrytButton)
@@ -200,12 +192,16 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
 			        		)
 			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 			        			.addComponent(sted)
-			        			.addComponent(moteRadio)
-			        			.addComponent(autovalg)
+			        			.addGroup(layout.createParallelGroup()
+			        				.addComponent(moteRadio)
+			        			)
 			        		)
 			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(moteromScrollPane)
-			        		)
+					        		.addComponent(oppdaterMoterom)
+				        		)
+			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				        			.addComponent(moteromScrollPane)
+				        		)
 			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				        		.addComponent(beskrivelse)
 				        		.addComponent(beskrivelseScroll)
@@ -217,6 +213,24 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
 		        );
 		        
 		        this.setLayout(layout);
+		        
+		        actionListeners = new ArrayList<ActionListener>();
+
+                avbrytButton.addActionListener(this);
+                lagreButton.addActionListener(this);
+                hjemButton.addActionListener(this);
+                oppdaterMoterom.addActionListener(this);
+                moteRadio.addActionListener(this);
+                //moteromScrollPane.addMouseListener(this);
+                //antallAndreText.getDocument().addDocumentListener((this));
+		                
+		        actionListeners.add((lagreButton.getActionListeners())[0]);
+		        actionListeners.add((avbrytButton.getActionListeners())[0]);
+		        actionListeners.add((moteRadio.getActionListeners())[0]);
+		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
+                
+                nullstillFelt();
+                setAutoOppforing();
 		        
 
                 /*
@@ -485,7 +499,7 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                tittelText.setText("møte");
+                tittelText.setText("Nytt møte");
         }
         
         /*
@@ -654,7 +668,7 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
         public Avtale getAvtale(){
                 return avtale;
         }
-        
+        */
         public void nullstillFelt(){
                 setAutoOppforing();
                 tittelText.setText("");
@@ -663,7 +677,7 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
                 //totaltText.setText("");
                 beskrivelseText.setText("");
         }
-        
+        /*
         public void setAvtale(Avtale avtale){
                 if (oppdatering) 
                 		this.avtale = avtale;
@@ -680,12 +694,6 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
                 }
         
 }
-
-		@Override
-		public void changedUpdate(DocumentEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -826,5 +834,36 @@ public class NyHendelse extends JPanel /*implements ActionListener, ListSelectio
 			// TODO Auto-generated method stub
 			
 		}*/
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch(e.getActionCommand())
+			{
+			case "Avbryt":
+				System.out.println("Button Avbryt pressed");
+				System.exit(0);
+				break;
+			case "Lagre":
+				System.out.println("Button Lagre pressed");
+				break;
+			case "Hjem":
+				System.out.println("Button Hjem pressed");
+				break;
+			case "Oppdater romliste":
+				System.out.println("Button Oppdater romliste pressed");
+            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+				break;
+			case "Automatisk valg":
+				System.out.println("Button Automatisk valg pressed");
+            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+            	if(!moteromListe.isSelectionEmpty())
+            	{
+            		//velg første rom i liste
+            	}
+				break;
+			default:
+				break;
+			}
+		}
 			
 }

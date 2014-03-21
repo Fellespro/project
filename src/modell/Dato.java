@@ -9,9 +9,11 @@ public class Dato {
 	private int aar;
 	
 	public Dato(){
-		dag= 1;
-		mnd = 1;
-		aar = 2000;
+		Calendar c = Calendar.getInstance();
+		
+		aar = c.getTime().getYear();
+		mnd = c.getTime().getMonth();
+		dag = c.getTime().getDate();
 		
 	}
 	

@@ -21,12 +21,10 @@ public class Tid {
 		sec = s;
 	}
 	public Tid(String tidspunkt){
-		String[] del1 = tidspunkt.split(":");
-		String[] del2 = del1[1].split(":");
-		System.out.println(del1[0] + del2[0] + del2[1]);
-		time = Integer.parseInt(del1[0]);
-		min = Integer.parseInt(del2[0]);
-		sec = Integer.parseInt(del2[1]);
+		String[] resultat = tidspunkt.split("\\:");
+		time = Integer.parseInt(resultat[0]);
+		min = Integer.parseInt(resultat[1]);
+		sec = Integer.parseInt(resultat[2]);
 	}
 	public int hentTime(){
 		return time;
@@ -48,7 +46,7 @@ public class Tid {
 	}
 	
 	public String toString(){
-		String out = "'"+time+":"+min+":"+sec+"'";
+		String out = time+":"+min+":"+sec;
 		return out;
 	}
 

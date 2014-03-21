@@ -29,6 +29,7 @@ public class Kalender implements ActionListener, MouseListener {
 	private DatabaseKommunikator dk;
 	private modell.Kalender mkalender;
 	private Kalendertabell ktabell;
+	private VisAvtale visavtale;
 
 	//main - for � kunne kj�re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
@@ -92,14 +93,27 @@ public class Kalender implements ActionListener, MouseListener {
 		int rad = ktabell.hentRad();
 		int kolonne = ktabell.hentKolonne();
 		ktabell.fjernSeleksjon();
-		/**
-		 * 
-		 * TODO : Finn dato!!
-		 * 
-		 */
 		
-		VisAvtale visavtale = new VisAvtale();
-		visavtale.setOppforing(mkalender.getPersonUkeAvtaler().get(0));
+		Dato d = Utilities.hentDato(mkalender.getPersonUkeAvtaler());
+		
+		if(!(d==null)){
+			int dag = kolonne+d.getDag()-1;
+			int time = rad-1;
+
+			System.out.println(dag+" "+time);
+			
+			//Finn avtalen som skal vises
+			for(int i=0; i<mkalender.getPersonUkeAvtaler().size(); i++){
+				Avtale a = mkalender.getPersonUkeAvtaler().get(i);
+				if(dag==a.hentAvtaleDato().getDag()){
+					if(time==a.hentStarttid().hentTime()){
+						visavtale = new VisAvtale();
+						visavtale.setOppforing(a);
+						break;
+					}
+				}
+			}
+		}
 		
 	}
 	@Override

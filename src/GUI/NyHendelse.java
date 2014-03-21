@@ -1,46 +1,29 @@
 package GUI;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.mail.MessagingException;
-import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import database.DatabaseKommunikator;
 import modell.*;
 
-public class NyHendelse extends JPanel implements ActionListener/*, ListSelectionListener, DocumentListener, MouseListener*/ {
+public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, PropertyChangeListener/*, DocumentListener, MouseListener*/ {
   
-		//Opprette alle knappene som trengs
 		private JButton hjemButton;
 		
         private JTextField tittelText;
@@ -49,7 +32,8 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         private JTextField starttidText;
         private JTextField sluttidText;
         
-        private PersonListe inviterte;
+        private PersonListe invitertListe;
+        private JList invitertJListe;
         private JScrollPane inviterteScrollPane;
 
         private JTextField andreText;
@@ -59,6 +43,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         private JRadioButton moteRadio;
         
         private LedigeMoterom moteromListe;
+        private JList moteromJListe;
         private JScrollPane moteromScrollPane;
         private JButton oppdaterMoterom;
         
@@ -68,6 +53,8 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         private JButton lagreButton;
         private JButton avbrytButton;
         
+        private List<ActionListener> actionListeners;
+        
         //private DatabaseKommunikator database;
         private Person person;
         private Avtale avtale;
@@ -76,7 +63,6 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         private boolean oppdatering;
         
         
-        //trenger en oppdatering med cascade i modell
         public NyHendelse(kalender.Kalender k, Person person, boolean oppdatering){
         	
 		        //this.database = database;
@@ -96,15 +82,15 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 		        stedText = new JTextField(5);
 		        andreText = new JTextField(5);
 		        
-		        inviterte = new PersonListe();
-		        JList invitertListe = new JList(inviterte.hentListe().toArray());
-                inviterteScrollPane = new JScrollPane(invitertListe);
+		        invitertListe = new PersonListe();
+		        invitertJListe = new JList(invitertListe.hentListe().toArray());
+                inviterteScrollPane = new JScrollPane(invitertJListe);
                 inviterteScrollPane.setHorizontalScrollBar(null);
                 inviterteScrollPane.setVerticalScrollBar(inviterteScrollPane.createVerticalScrollBar());
                 
                 moteromListe = new LedigeMoterom();
-                JList liste = new JList(moteromListe.hentListe().toArray());
-                moteromScrollPane = new JScrollPane(liste);
+                moteromJListe = new JList(moteromListe.hentListe().toArray());
+                moteromScrollPane = new JScrollPane(moteromJListe);
                 moteromScrollPane.setHorizontalScrollBar(null);
                 moteromScrollPane.setVerticalScrollBar(moteromScrollPane.createVerticalScrollBar());
 		        
@@ -212,35 +198,28 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 		        );
 		        
 		        this.setLayout(layout);
+		        
+		        actionListeners = new ArrayList<ActionListener>();
 
                 avbrytButton.addActionListener(this);
                 lagreButton.addActionListener(k);
                 hjemButton.addActionListener(this);
                 oppdaterMoterom.addActionListener(this);
                 moteRadio.addActionListener(this);
+                invitertJListe.addPropertyChangeListener(this);
+                invitertJListe.addListSelectionListener(this);
+                moteromJListe.addListSelectionListener(this);
                 //moteromScrollPane.addMouseListener(this);
                 //antallAndreText.getDocument().addDocumentListener((this));
+
+		        actionListeners.add((avbrytButton.getActionListeners())[0]);
+		        actionListeners.add((lagreButton.getActionListeners())[0]);
+		        actionListeners.add((hjemButton.getActionListeners())[0]);
+		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
+		        actionListeners.add((moteRadio.getActionListeners())[0]);
                 
                 nullstillFelt();
                 setAutoOppforing();
-
-                        
-        }
-        /*
-        public NyHendelse(Avtale a){
-        	this(a.hentOpprettetAv(), true);
-        	tittelText.setText(a.hentAvtaleNavn());
-            datoText.setText(a.hentAvtaleDato());
-            starttidText.setText(a.hentAvtaleNavn());
-            sluttidText;
-        }*/
-        
-        public void setOppdatering(boolean oppdatering) {
-                this.oppdatering = oppdatering;
-        }
-        
-        public boolean getOppdatering() {
-                return oppdatering;
         }
         
         public void setAutoOppforing(){
@@ -253,22 +232,102 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                tittelText.setText("Nytt m������te");
+                tittelText.setText("Nytt møte");
+        }
+
+        public void nullstillFelt(){
+                setAutoOppforing();
+                tittelText.setText("");
+                stedText.setText("");
+                beskrivelseText.setText("");
         }
         
+        public Avtale lagre(){
+	            String avtaleTittel = tittelText.getText(); 
+	            Person avtalePerson = person;
+	            Dato avtaleDato = new Dato(datoText.getText()); 
+	            Tid avtaleStart = new Tid(starttidText.getText()); 
+	            Tid avtaleSlutt = new Tid(sluttidText.getText()); 
+	            Tid avtaleAltStart = new Tid(sluttidText.getText()); 
+	            Moterom avtaleRom = new Moterom();
+	            String avtaleBeskr = beskrivelseText.getText(); 
+	            String avtaleEndret = "";
+	            Respons avtaleResp = Respons.kanskje; 
+	            ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
+	            int avtaleAntDltkr = 0;
+	            
+	            ArrayList<String> avtaleEksterne = new ArrayList<String>();
+	            String ekst = andreText.getText();
+	            String[] resultat = ekst.split("\\;");
+	            for(int i=0;i<resultat.length; i++){
+	            		if(resultat[i].length()>0){
+	            				avtaleEksterne.add(resultat[i]);
+	            		}
+	            }
+	          	  
+	            int avtaleEkstDltkr = avtaleEksterne.size();
+	            
+	            return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+          		  			  	  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+        }
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+				switch(e.getActionCommand())
+				{
+				case "Avbryt":
+						System.out.println("Button Avbryt pressed");
+						System.exit(0);
+						break;
+				case "Hjem":
+						System.out.println("Button Hjem pressed (skjer ikke noe enda)");
+						break;
+				case "Oppdater romliste":
+						System.out.println("Button Oppdater romliste pressed");
+		            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+		            	moteromJListe = new JList(moteromListe.hentListe().toArray());
+		            	if(!moteromListe.isSelectionEmpty())
+			      		{
+			            		//velg første rom i liste
+			            }
+			            else
+			            {
+			            		System.out.println("Ingen ledige møterom");
+		            	}
+						break;
+				case "Automatisk valg":
+						System.out.println("Button Automatisk valg pressed (må legge til at første rom i liste velges)");
+		            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
+		            	moteromJListe = new JList(moteromListe.hentListe().toArray());
+		            	if(((JRadioButton)e.getSource()).isSelected())
+		            	{
+			            		if(!moteromListe.isSelectionEmpty())
+			            		{
+			            				//velg første rom i liste
+			            		}
+			            		else
+			            		{
+			            				System.out.println("Ingen ledige møterom");
+			            		}
+		            	}
+						break;
+				default:
+						break;
+				}
+		}
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+				System.out.println("ListSelectionListener");
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent e) {
+				System.out.println("PropertyChangeListener");
+		}
+        
         /*
-        public void setAntallAnsatte(int antallAnsatte){
-                this.antallAnsatte = antallAnsatte;
-                setTotaltText();
-        }
-        public void setTotaltText(){
-                totaltAntall = antallAnsatte + antallAndre + 1;
-                totaltText.setText(""+totaltAntall);
-        }
-       
-        public Person getPerson(){
-                return this.person;
-        }
+         
         public void setInviterte(PersonListe inviterte){
                 PersonListe pListe = new PersonListe();
                 for(int i=0; i<inviterte.antallPersoner();i++){
@@ -280,78 +339,36 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
            				avtale.leggTilDeltaker(pListe.hentPerson(i));
            		}
         }
+        
         public PersonListe getInviterte(){
         		PersonListe personListe = new PersonListe();
         		if(avtale instanceof Avtale){
         				for(int i = 0;i < avtale.hentAntallInterne();i++)
         				{
-        					personListe.leggTilPerson(avtale.hentPerson(i));
+        						personListe.leggTilPerson(avtale.hentPerson(i));
         				}
         				return personListe;
         		}
         		return null;
         }
-        */
-        public Avtale lagre(){
-        	
-              feilmelding = "";
-              String avtaleTittel = tittelText.getText(); 
-              Person avtalePerson = person;
-              Dato avtaleDato = new Dato(datoText.getText()); 
-              Tid avtaleStart = new Tid(starttidText.getText()); 
-              Tid avtaleSlutt = new Tid(sluttidText.getText()); 
-              Tid avtaleAltStart = new Tid(sluttidText.getText()); 
-              Moterom avtaleRom = new Moterom();
-              String avtaleBeskr = beskrivelseText.getText(); 
-              String avtaleEndret = "";
-              Respons avtaleResp = Respons.kanskje; 
-              ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
-              int avtaleAntDltkr = 0;
-              
-              ArrayList<String> avtaleEksterne = new ArrayList<String>();
-              String ekst = andreText.getText();
-              String[] resultat = ekst.split("\\;");
-              for(int i=0;i<resultat.length; i++){
-            	  if(resultat[i].length()>0){
-            		  avtaleEksterne.add(resultat[i]);
-            	  }
-              }
-            	  
-              int avtaleEkstDltkr = avtaleEksterne.size();
-              
-              return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
-            		  			  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
-        }
-              
-        /*public void sendTilDatabase(boolean oppdatering){
-                //Kaller p������ database og send oppforing
-               // try {
-                 //       if (!oppdatering) {
-                   //            	avtale.settOpprettetAv(getPerson());
-                     //           database.leggInnAvtale(avtale);
-                       // } else {
-                        //		 m��������� lage oppdaterAvtale-funksjon i databasen
-                         //       database.endreAvtale(getPerson(), avtale);
-                       // }
-                        
-              //  } catch (SQLException e) {
-               //         //TODO: feilmelding ?
-              //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
-               // }
-        }*/
         
-        /*
-        public Avtale getAvtale(){
-                return avtale;
+		public void sendTilDatabase(boolean oppdatering){
+                Kaller på database og send oppforing
+                try {
+                        if (!oppdatering) {
+                               	avtale.settOpprettetAv(getPerson());
+                                database.leggInnAvtale(avtale);
+                        } else {
+                        		// m� lage oppdaterAvtale-funksjon i databasen
+                                database.endreAvtale(getPerson(), avtale);
+                        }
+                        
+                } catch (SQLException e) {
+                        //TODO: feilmelding ?
+                        Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
+                }
         }
-        */
-        public void nullstillFelt(){
-                setAutoOppforing();
-                tittelText.setText("");
-                stedText.setText("");
-                beskrivelseText.setText("");
-        }
-        /*
+        
         public void settAvtale(Avtale avtale){
                 if (oppdatering) 
                 		this.avtale = avtale;
@@ -367,68 +384,8 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                         moteRadio.doClick();
                 }
         
-}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == hjemButton){
-                moteRadio.doClick();
-                for (ActionListener l : this.actionListeners) {
-                        l.actionPerformed(e);
-                }
-	        }
-	        else if(e.getSource() == oppdaterMoterom){
-	               
-	        		moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-	                
-	        /*}
-	  
-	        else if(e.getSource() == moteRadio){
-	                if(moteRadio.isSelected()){
-	                        if(datoText.getText() != "dd-mm-yyyy" && starttidText.getText() != "hh:mm" && sluttidText.getText() != "hh:mm"){
-	                        	moteromList.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-	                      /*  }
-	                        moteromScrollPane.setVisible(true);
-	                        oppdaterMoterom.setEnabled(true);
-	                        antallAndreText.setEditable(true);
-	                        antallAndreText.setText("0");
-	                }
-	                for (ActionListener l : this.actionListeners) {
-	                        l.actionPerformed(e);
-	                }
-	        }
-	        else if(e.getSource() == lagreButton){
-	                if (!oppdatering) {
-	                        if(moteRadio.isSelected()){
-	                                avtale = new Avtale(person, new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-	                        }
-                        
-	                }
-	                //Lagrer verdier i objektet avtale
-                lagre();
-                
-                if (feilmelding.equals("")){
-
-                        //La CalendarSystem lytte for ������ skifte view
-                        for (ActionListener l : this.actionListeners) {
-                                l.actionPerformed(e);
-                        }
-        
-                        //Lagre oppforing i databasen
-             //           sendTilDatabase(oppdatering);
-              //  } else {
-             //           System.out.println(feilmelding);
-             //           Feilmelding.visFeilmelding(this, feilmelding, Feilmelding.FEIL_UGYLDIG_UTFYLLING);
-                }
-        }
-        else if(e.getSource() == avbrytButton){
-                moteRadio.doClick();
-                for (ActionListener l : this.actionListeners) {
-                        l.actionPerformed(e);
-                }
-        }
-}
-
+		}
+		
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			for(int i = 0; i< antallAndreText.getText().length(); i++){
@@ -446,62 +403,24 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			if(antallAndreText.getText().length() != 0){
-                for(int i = 0; i< antallAndreText.getText().length(); i++){
-                        if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                                //antallAndre = 0;
-                                antallAndreText.setText("0");
-                                //setTotaltText();
-                                return;
-                        }
-                }
-                //antallAndre = Integer.parseInt(antallAndreText.getText());
-                //setTotaltText();
-        }
-        else {
-                //antallAndre = 0;
-                //setTotaltText();
-                return;
-        
-        }
-}
-
-*/
-
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			switch(e.getActionCommand())
-			{
-			case "Avbryt":
-				System.out.println("Button Avbryt pressed");
-				System.exit(0);
-				break;
-			case "Hjem":
-				System.out.println("Button Hjem pressed (skjer ikke noe enda)");
-				break;
-			case "Oppdater romliste":
-				System.out.println("Button Oppdater romliste pressed");
-            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-				break;
-			case "Automatisk valg":
-				System.out.println("Button Automatisk valg pressed (m������ legge til at f������rste rom i liste velges)");
-            	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-            	if(((JRadioButton)e.getSource()).isSelected())
-            	{
-            		if(!moteromListe.isSelectionEmpty())
-            		{
-            			//velg f������rste rom i liste
-            		}
-            		else
-            		{
-            			System.out.println("Ingen ledige m������terom");
-            		}
-            	}
-				break;
-			default:
-				break;
-			}
-		}
+				if(antallAndreText.getText().length() != 0){
+                		for(int i = 0; i< antallAndreText.getText().length(); i++){
+                        		if(!Character.isDigit(antallAndreText.getText().charAt(i))){
+		                                //antallAndre = 0;
+		                                antallAndreText.setText("0");
+		                                //setTotaltText();
+		                                return;
+                        		}
+                		}
+		                //antallAndre = Integer.parseInt(antallAndreText.getText());
+		                //setTotaltText();
+        		}
+		        else {
+		                //antallAndre = 0;
+		                //setTotaltText();
+		                return;
+		        
+		        }
+		}*/
 			
 }

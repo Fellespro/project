@@ -237,14 +237,14 @@ public class VisAvtale extends JPanel implements ActionListener{
                 this.add(avbryt,c);
                 
                 
-        //Ramme
-        /*      frame = new JFrame("Legg til avtale/mÌüte");
+        
+                frame = new JFrame("Legg til avtale/mÌüte");
                 frame.add(this);
                 frame.setVisible(true);
                 frame.pack();
                 frame.setSize(700,500);
                 frame.setLocationRelativeTo(null);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         
         public void setOppforing(Avtale avtale) {
@@ -300,14 +300,14 @@ public class VisAvtale extends JPanel implements ActionListener{
                 }
                 
         }
-
-      /*  public static void main(String [] args){
-        	Avtale a = new Avtale(new Person(1, "Linn"), new Dato(), new Tid(), new Tid(11,0,0));
+/*
+      public static void main(){
         	JFrame frame = new JFrame();
         	VisAvtale avtale = new VisAvtale();
         	frame.add(avtale);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.pack();
-        } */
+        }
+        */
 }

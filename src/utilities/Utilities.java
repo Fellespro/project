@@ -14,13 +14,13 @@ import modell.Dato;
 
 public class Utilities {
 	/*
-	 * Denne klassen inneholder diverse funksjoner for å uføre diverse kodesnutter.
-	 * F.eks.	- hente nåværende tidspunkt som YYYY-MM-DD-HH:MM:SS
+	 * Denne klassen inneholder diverse funksjoner for ï¿½ ufï¿½re diverse kodesnutter.
+	 * F.eks.	- hente nï¿½vï¿½rende tidspunkt som YYYY-MM-DD-HH:MM:SS
 	 * 			- regne ut stuff
 	 * 			- whatnot..
 	 */
 	
-	//main blir brukt til å teste at ting funker. Blir slettet når alt funker/er ferdig
+	//main blir brukt til ï¿½ teste at ting funker. Blir slettet nï¿½r alt funker/er ferdig
 	public static void main(String[] args){
 		
 	}
@@ -72,7 +72,7 @@ public class Utilities {
 		}
 		else{
 			//Sikkert my unodvendig arbeid her...
-			Avtale a = personUkeAvtaler.get(1);
+			Avtale a = personUkeAvtaler.get(0);
 			Dato d = a.hentAvtaleDato();
 			Calendar avtaleC = Calendar.getInstance(Locale.GERMANY);
 			avtaleC.setFirstDayOfWeek(Calendar.MONDAY);

@@ -231,253 +231,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 
                 nullstillFelt();
                 setAutoOppforing();
-		        
 
-                /*
-                this.add(new JLabel("Tittel:"));
-                this.add(tittelText);
-		        this.add(stedText);
-                this.add(new JLabel("Sted/rom:"));
-                this.add(sluttidText);
-                this.add(new JLabel("Sluttid:"));
-                this.add(starttidText);
-                this.add(new JLabel("Starttid:"));
-                this.add(hjemButton);
-                this.add(new JLabel("Dato:"));
-                this.add(datoText);
-                this.add(avbrytButton);
-                this.add(lagreButton);
-                this.add(beskrivelseScroll);
-                this.add(new JLabel("Beskrivelse"));
-                this.add(moteromScrollPane);
-                this.add(oppdaterMoterom);
-                this.add(new JLabel("Møterom:"));
-                this.add(antallAndreText);
-                this.add(new JLabel("Inviter eksterne via e-post:"));
-                this.add(new JLabel("Automatisk valg"));
-                this.add(moteRadio);*/
-		                
-		 //Layout
-                /*this.setLayout(new GridBagLayout());
-                GridBagConstraints c = new GridBagConstraints();
-                c.insets = new Insets(5,2,5,2);
-                c.weighty = 1;
-                c.weightx = 1;
-                c.fill = GridBagConstraints.BOTH;
-    
-         //Streker
-                c.weightx = 0;
-                c.weighty = 0;
-                
-                c.gridheight = 1;
-                c.gridwidth = 11;
-                c.gridx = 0;
-                c.gridy = 1;
-                this.add(new JSeparator(JSeparator.HORIZONTAL),c);
-                c.gridwidth = 1;
-                
-                c.gridheight = 1;
-                c.gridwidth = 9;
-                c.gridx = 2;
-                c.gridy = 3;
-                this.add(new JSeparator(JSeparator.HORIZONTAL),c);
-                c.gridwidth = 1;
-                c.gridheight = 1;
-                
-                c.gridheight = 1;
-                c.gridwidth = 11;
-                c.gridx = 0;
-                c.gridy = 5;
-                this.add(new JSeparator(JSeparator.HORIZONTAL),c);
-                c.gridwidth = 1;
-                c.gridheight = 1;
-                
-                c.gridheight = 1;
-                c.gridwidth = 9;
-                c.gridx = 2;
-                c.gridy = 12;
-                this.add(new JSeparator(JSeparator.HORIZONTAL),c);
-                c.gridwidth = 1;
-                c.gridheight = 1;
-                
-                c.weightx = 1;
-                c.weighty = 1;
-                
-        //felt-objekter
-                
-               // c.fill = GridBagConstraints.VERTICAL;
-                
-                hjemButton = new JButton("Hjem");
-                
-                c.gridx = 3;
-                c.gridy = 0;
-                c.weightx = 0;
-                c.weighty = 0;
-                this.add(hjemButton);//,c);         
-                c.weightx = 1;
-                c.weighty = 1;
-                
-                c.fill = GridBagConstraints.BOTH;
-                
-        //tittel
-                
-                c.weighty = 0;
-                c.gridheight = 1;
-                c.gridx = 3;
-                c.gridy = 2;
-                this.add(new JLabel("Tittel:"),c);
-                
-                tittelText = new JTextField(10);
-                c.gridx = 4;
-                c.gridy = 2;
-                this.add(tittelText);
-                
-        //dato og tidspunkt
-                
-                c.weighty = 0;
-                c.gridx = 3;
-                c.gridy = 4;
-                this.add(new JLabel("Dato:"),c);
-                
-                datoText = new JTextField("dd-mm-yyyy");
-                c.gridx = 4;
-                c.gridy = 4;
-                this.add(datoText,c);
-                
-                c.gridx = 3;
-                c.gridy = 6;
-                this.add(new JLabel("Starttid:"),c);
-                
-                starttidText = new JTextField("hh:mm");
-                c.gridx = 4;
-                c.gridy = 6;
-                this.add(starttidText,c);
-                
-                c.gridx = 3;
-                c.gridy = 8;
-                this.add(new JLabel("Sluttid:"),c);
-                
-                sluttidText = new JTextField("hh:mm");
-                c.gridx = 4;
-                c.gridy = 8;
-                this.add(sluttidText,c);
-                
-        //sted, antall og radiobuttons
-                
-                c.gridx = 3;
-                c.gridy = 11;
-                this.add(new JLabel("Sted/rom:"),c);
-                
-                stedText = new JTextField(10);
-                c.gridx = 4;
-                c.gridy = 11;
-                this.add(stedText,c);
-                
-                c.anchor = GridBagConstraints.WEST;
-                
-                moteRadio = new JRadioButton();
-                moteRadio.setName("moteRadio");
-
-                c.gridx = 6;
-                c.gridy = 11;
-                this.add(moteRadio,c);
-                
-                c.gridx = 7;
-                c.gridy = 11;
-                this.add(new JLabel("Automatisk valg"), c);
-                
-                c.gridx = 3;
-                c.gridy = 13;
-                this.add(new JLabel("Inviter eksterne via e-post:"),c);
-                
-                antallAndreText = new JTextField("");
-                antallAndreText.setText("");
-                antallAndreText.setEditable(true);
-                c.gridx = 4;
-                c.gridy = 13;
-                this.add(antallAndreText,c);
-                
-                c.gridx = 3;
-                c.gridy = 15;
-                this.add(new JLabel("Møterom:"), c);
-                
-                oppdaterMoterom = new JButton("Oppdater møterom");
-                oppdaterMoterom.setName("oppdaterMoterom");
-                c.gridx = 6;
-                c.gridy = 15;
-                this.add(oppdaterMoterom,c);
-                
-                moteromListe = new LedigeMoterom();
-                c.gridheight = 2;
-                c.gridwidth = 2;
-                c.gridx = 4;
-                c.gridy = 15;
-                c.fill = GridBagConstraints.BOTH;
-
-                JList liste = new JList(moteromListe.hentListe().toArray());
-                
-                moteromScrollPane = new JScrollPane();
-                
-                moteromScrollPane.add(liste);
-                
-                moteromScrollPane.setVisible(true);
-                this.add(moteromScrollPane,c);
-                
-        //Beskrivelse
-            
-                c.weighty = 0;
-                c.gridx = 3;
-                c.gridy = 17;
-                this.add(new JLabel("Beskrivelse"),c);
-                
-                c.weighty = 1;
-                beskrivelseText = new JTextArea(3,30);
-                beskrivelseText.setEditable(true);
-                beskrivelseScroll = new JScrollPane(beskrivelseText);
-                
-                c.gridheight = 2;
-                c.gridwidth = 7;
-                c.gridx = 4;
-                c.gridy = 17;
-                this.add(beskrivelseScroll,c);
-                
-                c.fill = GridBagConstraints.VERTICAL;
-                
-        //Lagre og avbrytbuttons
-                c.weighty = 0;
-                lagreButton = new JButton("Lagre");
-                lagreButton.setName("lagre");
-                c.gridx = 8;
-                c.gridy = 19;
-//              c.gridheight = 1;
-//              c.gridwidth = 1;
-                this.add(lagreButton,c);
-                
-                avbrytButton = new JButton("Avbryt");
-                avbrytButton.setName("avbryt");
-                c.gridx = 3;
-                c.gridy = 19;
-                this.add(avbrytButton,c);
-                
-                */
-                /*
-		        actionListeners = new ArrayList<ActionListener>();
-
-                avbrytButton.addActionListener(this);
-                lagreButton.addActionListener(this);
-                moteromScrollPane.addMouseListener(this);
-                oppdaterMoterom.addActionListener(this);
-                antallAndreText.getDocument().addDocumentListener((this));
-                hjemButton.addActionListener(this);
-                moteRadio.addActionListener(this);
-		                
-		        actionListeners.add((lagreButton.getActionListeners())[0]);
-		        actionListeners.add((avbrytButton.getActionListeners())[0]);
-		        actionListeners.add((moteRadio.getActionListeners())[0]);
-		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
-                /*
-                //nullstillFelt();
-                //setAutoOppforing();*/
                         
         }
         
@@ -511,7 +265,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 totaltAntall = antallAnsatte + antallAndre + 1;
                 totaltText.setText(""+totaltAntall);
         }
-        *//*
+       
         public Person getPerson(){
                 return this.person;
         }
@@ -537,13 +291,13 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         		}
         		return null;
         }
-        
+        */
         public void lagre(){
         	
               feilmelding = "";
-             /* String avtaleTittel = tittelText.getText(); 
+              String avtaleTittel = tittelText.getText(); 
               Person avtalePerson = person;
-              Dato avtaleDato = new Dato(starttidText.getText()); 
+              Dato avtaleDato = new Dato(datoText.getText()); 
               Tid avtaleStart = new Tid(starttidText.getText()); 
               Tid avtaleSlutt = new Tid(sluttidText.getText()); 
               Tid avtaleAltStart = new Tid(sluttidText.getText()); 
@@ -554,108 +308,20 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
               ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
               int avtaleAntDltkr = 0;
               ArrayList<String> avtaleEksterne = new ArrayList<String>(); 
-              int avtaleEkstDltkr = 0;*/
+              int avtaleEkstDltkr = 0;
               
-              //Avtale avtale2 = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
-            		  					 // avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+              avtale = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+            		  			  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+        }
               
-              
-              /*
-              if(datoText.getText() != null){
-                        try{
-                        		avtaleDato = new Dato(datoText.getText());
-                        	
-                                Dato datoen = new Dato(datoText.getText());
-                                avtale.settAvtaleDato(datoen);
-                        }
-                        catch(Exception e){
-                                //TODO: lag dialog
-                                feilmelding += "Dato: Feil format eller ugyldig dato. Husk å skrive på formatet dd-mm-yyyy \n";
-                        }
-                        
-//             }
-             if(starttidText.getText() != null){
-                        try{
-                        		avtaleStart = new Tid(starttidText.getText());
-                        	
-                                String[] starttidTabell = starttidText.getText().split(":");
-                                int time = Integer.parseInt(starttidTabell[0]);
-                                int min = Integer.parseInt(starttidTabell[1]);
-                                @SuppressWarnings("deprecation")
-								Tid tid = new Tid(time, min, 0);
-                                avtale.settStarttid(tid);
-                        }
-                        catch(Exception e){
-                                feilmelding += "Starttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
-                        }
-//              }
-              if(sluttidText.getText() != null){
-                        try{
-                        		avtaleSlutt = new Tid(sluttidText.getText());
-                        	
-                                String[] sluttidTabell = sluttidText.getText().split(":");
-                                int time = Integer.parseInt(sluttidTabell[0]);
-                                int min = Integer.parseInt(sluttidTabell[1]);
-                                Tid tid = new Tid(time, min, 0);
-                                avtale.settSluttid(tid);
-                        }
-                        catch(Exception e){
-                                feilmelding += "Sluttid: Ugyldig tidspunkt. Skriv på formatet hh:mm \n";
-                        }
-                        
-                try {
-                        if (!(avtale.hentStarttid().hentTime() < avtale.hentSluttid().hentTime()))
-                                feilmelding += "Klokkeslett: Sluttid skjer før starttid";
-                        else if(avtale.hentStarttid().hentTime() == avtale.hentSluttid().hentTime() &&
-                        		!(avtale.hentStarttid().hentMin() < avtale.hentSluttid().hentMin()))
-                        {
-                        		feilmelding += "Klokkeslett: Sluttid skjer før starttid";
-                        }
-                } catch (Exception e) {
-                }   
-                if(!tittelText.getText().equals("")){
-                        avtale.settAvtaleNavn(tittelText.getText());
-                } 
-                else{
-                        feilmelding += "Tittel: Mangler tittel \n";
-                }
-                if(!stedText.getText().equals("")){
-                       // avtale.settRom(stedText.getText()); /*sett sted tar inn et rom, ikke en tittel p� et rom*/
-                    /*    if(avtale instanceof Avtale && !moteromList.isSelectionEmpty()){
-                                ((Avtale)avtale).settRom((Moterom)moteromList.getSelectedValue());
-                        }
-                }
-                else{
-                        feilmelding += "Sted: Mangler sted \n";
-                }
-                if(!beskrivelseText.getText().equals(null)){
-                        avtale.settBeskrivelse(beskrivelseText.getText());
-                } 
-                
-                
-          //   if(antallAndreText.getText() != null || antallAndreText.getText() != ""){
-                        if(avtale instanceof Avtale){
-                                try{
-		                                if (Integer.parseInt(antallAndreText.getText()) < 0) 
-		                                		throw new IllegalArgumentException();
-		                                ((Avtale) avtale).settAntallEksterne(Integer.parseInt(antallAndreText.getText()));
-                                }
-                                catch (Exception e){
-                                        feilmelding += "AntallAndre: Ugyldig format, bruk positive tall \n";
-                                }
-                              
-                        }
-             		}
-              }
-        }*/
-       //* public void sendTilDatabase(boolean oppdatering){
+        /*public void sendTilDatabase(boolean oppdatering){
                 //Kaller på database og send oppforing
                // try {
                  //       if (!oppdatering) {
                    //            	avtale.settOpprettetAv(getPerson());
                      //           database.leggInnAvtale(avtale);
                        // } else {
-                        //		/* m� lage oppdaterAvtale-funksjon i databasen*/
+                        //		 m� lage oppdaterAvtale-funksjon i databasen
                          //       database.endreAvtale(getPerson(), avtale);
                        // }
                         
@@ -663,7 +329,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                //         //TODO: feilmelding ?
               //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                // }
-       /* }*/
+        }*/
         /*
         public Avtale getAvtale(){
                 return avtale;
@@ -673,12 +339,10 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 setAutoOppforing();
                 tittelText.setText("");
                 stedText.setText("");
-                //antallAndreText.setText("");
-                //totaltText.setText("");
                 beskrivelseText.setText("");
         }
         /*
-        public void setAvtale(Avtale avtale){
+        public void settAvtale(Avtale avtale){
                 if (oppdatering) 
                 		this.avtale = avtale;
                 if(avtale instanceof Avtale){
@@ -844,21 +508,30 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 				System.exit(0);
 				break;
 			case "Lagre":
-				System.out.println("Button Lagre pressed");
+				System.out.println("Button Lagre pressed (lagrer registrert informasjon i klassevariabelen avtale)");
+				lagre();
+				//send til database
 				break;
 			case "Hjem":
-				System.out.println("Button Hjem pressed");
+				System.out.println("Button Hjem pressed (skjer ikke noe enda)");
 				break;
 			case "Oppdater romliste":
 				System.out.println("Button Oppdater romliste pressed");
             	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
 				break;
 			case "Automatisk valg":
-				System.out.println("Button Automatisk valg pressed");
+				System.out.println("Button Automatisk valg pressed (må legge til at første rom i liste velges)");
             	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
-            	if(!moteromListe.isSelectionEmpty())
+            	if(((JRadioButton)e.getSource()).isSelected())
             	{
-            		//velg første rom i liste
+            		if(!moteromListe.isSelectionEmpty())
+            		{
+            			//velg første rom i liste
+            		}
+            		else
+            		{
+            			System.out.println("Ingen ledige møterom");
+            		}
             	}
 				break;
 			default:

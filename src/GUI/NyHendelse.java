@@ -330,6 +330,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
               //          Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                // }
         }*/
+        
         /*
         public Avtale getAvtale(){
                 return avtale;

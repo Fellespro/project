@@ -17,7 +17,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import utilities.Utilities;
-
 import database.*;
 import GUI.*;
 import modell.*;
@@ -29,6 +28,7 @@ public class Kalender implements ActionListener, MouseListener {
 	private DatabaseKommunikator dk;
 	private modell.Kalender mkalender;
 	private Kalendertabell ktabell;
+	private VisAvtale visavtale;
 
 	//main - for � kunne kj�re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
@@ -69,6 +69,23 @@ public class Kalender implements ActionListener, MouseListener {
 			}
 			dk.lukk();
 		}
+		else if(e.getSource() == visavtale.hentHjemKnapp()){
+        	System.out.println("hjem");
+        }
+        else if(e.getSource() == visavtale.hentEndreKnapp()){
+        	System.out.println("endre");
+        }
+        else if(e.getSource() == visavtale.hentSlettKnapp()){
+                
+               	Object[] options ={"OK","Avbryt"};
+                int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                if(n == JOptionPane.OK_OPTION){
+                	System.out.println("slett");
+                }
+        }
+        else if(e.getSource() == visavtale.hentAvbrytKnapp()){
+        	visavtale.fjernRamme();
+        }
 
 	}
 
@@ -98,7 +115,7 @@ public class Kalender implements ActionListener, MouseListener {
 		 * 
 		 */
 		
-		VisAvtale visavtale = new VisAvtale();
+		visavtale = new VisAvtale(this);
 		visavtale.setOppforing(mkalender.getPersonUkeAvtaler().get(0));
 		
 	}

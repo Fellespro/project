@@ -31,7 +31,7 @@ public class Dato {
 			aar=0;
 		}
 		else{
-			String[] resultat = dato.split("\\.");
+			String[] resultat = dato.split("\\-");
 			aar = Integer.parseInt(resultat[0]);
 			mnd = Integer.parseInt(resultat[1]);
 			dag = Integer.parseInt(resultat[2]);

@@ -29,6 +29,8 @@ public class Kalender implements ActionListener, MouseListener {
 	private modell.Kalender mkalender;
 	private Kalendertabell ktabell;
 	private VisAvtale visavtale;
+	private Avtale a;
+	private ArrayList<Avtale> ukeAvtalerListe;
 
 	//main - for � kunne kj�re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
@@ -69,9 +71,6 @@ public class Kalender implements ActionListener, MouseListener {
 			}
 			dk.lukk();
 		}
-		else if(e.getSource() == visavtale.hentHjemKnapp()){
-        	System.out.println("hjem");
-        }
         else if(e.getSource() == visavtale.hentEndreKnapp()){
         	System.out.println("endre");
         }
@@ -80,7 +79,15 @@ public class Kalender implements ActionListener, MouseListener {
                	Object[] options ={"OK","Avbryt"};
                 int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                 if(n == JOptionPane.OK_OPTION){
-                	System.out.println("slett");
+                	for(int i=0;i<ukeAvtalerListe.size(); i++){
+                		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
+                			ukeAvtalerListe.remove(i);
+                			break;
+                		}
+                	}
+                	ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 4, "");
+                	visavtale.fjernRamme();
+                	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
                 }
         }
         else if(e.getSource() == visavtale.hentAvbrytKnapp()){
@@ -89,15 +96,14 @@ public class Kalender implements ActionListener, MouseListener {
 
 	}
 
-	private void visKalender() {
+	public void visKalender() {
 		ktabell = new Kalendertabell(this, kalenderEier);
 		ktabell.visTabell();
-		ArrayList<Avtale> ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+		ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
 		mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
 		mkalender.setPerson(kalenderEier);
-		System.out.println("Antall ukeavtaler[kkalender] " +ukeAvtalerListe.size());
 		for(int i=0; i<ukeAvtalerListe.size(); i++){
-			Avtale a = ukeAvtalerListe.get(i);
+			a = ukeAvtalerListe.get(i);
 			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
@@ -120,7 +126,7 @@ public class Kalender implements ActionListener, MouseListener {
 			
 			//Finn avtalen som skal vises
 			for(int i=0; i<mkalender.getPersonUkeAvtaler().size(); i++){
-				Avtale a = mkalender.getPersonUkeAvtaler().get(i);
+				a = mkalender.getPersonUkeAvtaler().get(i);
 				if(dag==a.hentAvtaleDato().getDag()){
 					if(time==a.hentStarttid().hentTime()){
 						visavtale = new VisAvtale(this);

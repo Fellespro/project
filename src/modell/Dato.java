@@ -31,9 +31,11 @@ public class Dato {
 			aar=0;
 		}
 		else{
-			this.aar = Integer.parseInt(dato.substring(0, 4));
-			this.mnd = Integer.parseInt(dato.substring(5, 7));
-			this.dag = Integer.parseInt(dato.substring(8, 10));
+			String[] resultat = dato.split("\\.");
+			aar = Integer.parseInt(resultat[0]);
+			mnd = Integer.parseInt(resultat[1]);
+			dag = Integer.parseInt(resultat[2]);
+			
 		}
 		
 	}

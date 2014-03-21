@@ -71,13 +71,11 @@ public class Kalender{
 
 	public ArrayList<Avtale> hentPersonAvtaler(Person ansatt, int aar, int ukenr)
 	{
-		System.out.println(avtaleliste.size());
 		ArrayList<Avtale> personAvtaler = new ArrayList<Avtale>();
 		for(int i = 0;i < avtaleliste.size();i++){
 			if(erPersonIAvtale(avtaleliste.get(i),ansatt)==true)
 				personAvtaler.add(avtaleliste.get(i));
 		}
-		System.out.println(personAvtaler.size());
 		return personAvtaler;
 	}
 	
@@ -96,8 +94,11 @@ public class Kalender{
 	public boolean erPersonIAvtale(Avtale avtale, Person ansatt){
 		ArrayList<Person> tempPersonListe = avtale.hentInterneDeltakere();
 		for(int i = 0; i<tempPersonListe.size(); i++){
-			if(ansatt.getPersonId()==tempPersonListe.get(i).getPersonId())
+			if(ansatt.getNavn().equals(tempPersonListe.get(i).getNavn())){
+				System.out.println("Logget inn som: "+ansatt.getNavn());
+				System.out.println("Sjekket: " +tempPersonListe.get(i).getNavn());
 				return true;
+			}
 		}
 		return false;
 	}

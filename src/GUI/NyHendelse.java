@@ -67,8 +67,6 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         private JButton lagreButton;
         private JButton avbrytButton;
         
-        private List<ActionListener> actionListeners;
-        
         //private DatabaseKommunikator database;
         private Person person;
         private Avtale avtale;
@@ -213,8 +211,6 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 		        );
 		        
 		        this.setLayout(layout);
-		        
-		        actionListeners = new ArrayList<ActionListener>();
 
                 avbrytButton.addActionListener(this);
                 lagreButton.addActionListener(this);
@@ -223,16 +219,19 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 moteRadio.addActionListener(this);
                 //moteromScrollPane.addMouseListener(this);
                 //antallAndreText.getDocument().addDocumentListener((this));
-		                
-		        actionListeners.add((lagreButton.getActionListeners())[0]);
-		        actionListeners.add((avbrytButton.getActionListeners())[0]);
-		        actionListeners.add((moteRadio.getActionListeners())[0]);
-		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
                 
                 nullstillFelt();
                 setAutoOppforing();
 
                         
+        }
+        
+        public NyHendelse(Avtale a){
+        	this(a.hentOpprettetAv(), true);
+        	tittelText.setText(a.hentAvtaleNavn());
+            /*datoText.setText(a.hentAvtaleDato());
+            starttidText.setText(a.hentAvtaleNavn());
+            sluttidText;*/
         }
         
         public void setOppdatering(boolean oppdatering) {
@@ -253,7 +252,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 datoText.setText(dato.toString());
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
-                tittelText.setText("Nytt møte");
+                tittelText.setText("Nytt m������te");
         }
         
         /*
@@ -315,13 +314,13 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         }
               
         /*public void sendTilDatabase(boolean oppdatering){
-                //Kaller på database og send oppforing
+                //Kaller p������ database og send oppforing
                // try {
                  //       if (!oppdatering) {
                    //            	avtale.settOpprettetAv(getPerson());
                      //           database.leggInnAvtale(avtale);
                        // } else {
-                        //		 m� lage oppdaterAvtale-funksjon i databasen
+                        //		 m��������� lage oppdaterAvtale-funksjon i databasen
                          //       database.endreAvtale(getPerson(), avtale);
                        // }
                         
@@ -400,7 +399,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
                 
                 if (feilmelding.equals("")){
 
-                        //La CalendarSystem lytte for å skifte view
+                        //La CalendarSystem lytte for ������ skifte view
                         for (ActionListener l : this.actionListeners) {
                                 l.actionPerformed(e);
                         }
@@ -521,17 +520,17 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
             	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
 				break;
 			case "Automatisk valg":
-				System.out.println("Button Automatisk valg pressed (må legge til at første rom i liste velges)");
+				System.out.println("Button Automatisk valg pressed (m������ legge til at f������rste rom i liste velges)");
             	moteromListe.ledigeRom(new Dato(datoText.getText()), new Tid(starttidText.getText()), new Tid(sluttidText.getText()));
             	if(((JRadioButton)e.getSource()).isSelected())
             	{
             		if(!moteromListe.isSelectionEmpty())
             		{
-            			//velg første rom i liste
+            			//velg f������rste rom i liste
             		}
             		else
             		{
-            			System.out.println("Ingen ledige møterom");
+            			System.out.println("Ingen ledige m������terom");
             		}
             	}
 				break;

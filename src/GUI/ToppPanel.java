@@ -17,16 +17,30 @@ import kalender.Kalender;
 
 
 public class ToppPanel extends JPanel implements ActionListener  {
+	
+	
+	public BasicArrowButton getVenstrePil() {
+		return venstrePil;
+	}
+
+
+	public BasicArrowButton getHoyrePil() {
+		return hoyrePil;
+	}
+
+
+
 	private JLabel ukeTekst, ukeNrTekst, brukernavnTekst, brukernavn;
 	private JButton loggUtknapp, nyAvtaleKnapp;
 	private BasicArrowButton venstrePil, hoyrePil;
 	private int ukeNr; //getter og setter
+	private Kalender kalender;
 	
 	
 	
 	public ToppPanel(String brukernavnEkstern, Kalender k) {
 		// 8 deler. fra venstre mot høyre 
-		
+		this.kalender= k;
 		//0. NyAvtaleknapp 
 		nyAvtaleKnapp = new JButton();
 		nyAvtaleKnapp.setName("nyAvtale");
@@ -44,7 +58,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 		
 		//2 venstre
 		venstrePil = new BasicArrowButton(BasicArrowButton.WEST);
-		venstrePil.addActionListener(this);
+		venstrePil.addActionListener(k);
 		add(venstrePil);
 		
 		//3 ....ukenr: feks uke 8
@@ -54,10 +68,12 @@ public class ToppPanel extends JPanel implements ActionListener  {
 		ukeNrTekst.setName("ukeNrTekst");
 		ukeNrTekst.setText(String.valueOf(ukeNr)); //denne må endres
 		add(ukeNrTekst);
+		
+		
 				
 		//4 hoyre
 		hoyrePil = new BasicArrowButton(BasicArrowButton.EAST);
-		hoyrePil.addActionListener(this);
+		hoyrePil.addActionListener(k);
 		add(hoyrePil);
 	    
 		
@@ -109,19 +125,28 @@ public class ToppPanel extends JPanel implements ActionListener  {
 public void actionPerformed(ActionEvent e) {
 	// TODO Auto-generated method stub
 	if (e.getSource() == venstrePil) {
-		ukeNr--;
+		this.ukeNr--;
 		System.out.println(ukeNr);
 		ukeNrTekst.setText(String.valueOf(ukeNr));
+		this.kalender.setWeek(ukeNr);
 	}
 	if (e.getSource() == hoyrePil) {
 		ukeNr++;
 		System.out.println(ukeNr);
 		ukeNrTekst.setText(String.valueOf(ukeNr));
+		this.kalender.setWeek(ukeNr);
 	}
 	if (e.getSource() == loggUtknapp) {
 		System.out.println("logg ut");
 		
 	}
+}
+
+
+public void increment() {
+	this.ukeNr++;
+	this.ukeNrTekst.setText(String.valueOf(ukeNr));
+	
 }
 
 }

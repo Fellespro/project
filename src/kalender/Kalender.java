@@ -54,6 +54,8 @@ public class Kalender implements ActionListener, MouseListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		System.out.println(e.getActionCommand());
+				
+		
 		//Cancel
 		if(e.getActionCommand().equals("Cancel")){
 			System.exit(0);
@@ -109,28 +111,40 @@ public class Kalender implements ActionListener, MouseListener {
 		}
 		else if(e.getActionCommand().equals("Logg ut")){
 			System.exit(0);
+        }		
+		else if(visavtale !=null){
+			
+        	if(e.getSource() == visavtale.hentEndreKnapp()){
+            	System.out.println("endre");
+            }
+            else if(e.getSource() == visavtale.hentSlettKnapp()){
+                    
+                   	Object[] options ={"OK","Avbryt"};
+                    int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    if(n == JOptionPane.OK_OPTION){
+                    	for(int i=0;i<ukeAvtalerListe.size(); i++){
+                    		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
+                    			ukeAvtalerListe.remove(i);
+                    			break;
+                    		}
+                    	}
+                    	ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 4, "");
+                    	visavtale.fjernRamme();
+                    	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
+                    }
+            }
+            else if(e.getSource() == visavtale.hentAvbrytKnapp()){
+            	visavtale.fjernRamme();
+            }
         }
-        else if(e.getSource() == visavtale.hentEndreKnapp()){
-        	System.out.println("endre");
-        }
-        else if(e.getSource() == visavtale.hentSlettKnapp()){
-                
-               	Object[] options ={"OK","Avbryt"};
-                int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                if(n == JOptionPane.OK_OPTION){
-                	for(int i=0;i<ukeAvtalerListe.size(); i++){
-                		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
-                			ukeAvtalerListe.remove(i);
-                			break;
-                		}
-                	}
-                	ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 4, "");
-                	visavtale.fjernRamme();
-                	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
-                }
-        }
-        else if(e.getSource() == visavtale.hentAvbrytKnapp()){
-        	visavtale.fjernRamme();
+		
+        else if (e.getSource() == ktabell.getTP().getVenstrePil()) {
+			System.out.println("venstre");
+		}
+		
+        else if (e.getSource() == ktabell.getTP().getHoyrePil()) {
+			System.out.println("hoyre");
+			ktabell.getTP().increment();
         }
 
 	}
@@ -146,11 +160,16 @@ public class Kalender implements ActionListener, MouseListener {
 			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			System.out.println("hei");
 		}
 	}
+	
+	//oppdater ukenr. 
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
 		int rad = ktabell.hentRad();
 		int kolonne = ktabell.hentKolonne();
 		ktabell.fjernSeleksjon();
@@ -193,6 +212,11 @@ public class Kalender implements ActionListener, MouseListener {
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setWeek(int ukeNr) {
 		// TODO Auto-generated method stub
 		
 	}

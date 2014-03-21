@@ -61,4 +61,9 @@ public class PersonListe implements Iterable<Person>{
                 return personListe.size();
         }
         
+        public List<Person> hentListe()
+        {
+        	return personListe;
+        }
+        
 }

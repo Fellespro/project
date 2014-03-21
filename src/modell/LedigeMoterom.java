@@ -14,17 +14,22 @@ public class LedigeMoterom extends DefaultListModel{
 	
 
 	public LedigeMoterom(){
-		DatabaseKommunikator database=new DatabaseKommunikator();
+		rom = new ArrayList<Moterom>();
+		rom.add(new Moterom(1,5,"Rill"));
+		rom.add(new Moterom(2, 10, "Rall"));
+		lRom = new ArrayList<Moterom>();
+		lRom.add(rom.get(0));
+		/*DatabaseKommunikator database=new DatabaseKommunikator();
 		database.kobleOpp();
 		rom=database.hentMoterom();
 		avtaler=database.hentAlleAvtaler(database.hentPersoner(), rom);
-		database.lukk();
+		database.lukk();*/
 	}
 	public void ledigeRom(Dato dato,Tid start, Tid slutt){
-		lRom=new ArrayList<Moterom>(rom);
+		/*lRom=new ArrayList<Moterom>(rom);
 		ArrayList<Avtale> avtaler=new ArrayList<Avtale>(this.avtaler);
-		//fjerner alle avtaler som har ikke kræsjer med fastsatt tid.
-		//teller neddover fordi når det fjernes noe fra et arrayList så flyttes alt som er etter
+		//fjerner alle avtaler som har ikke krï¿½sjer med fastsatt tid.
+		//teller neddover fordi nï¿½r det fjernes noe fra et arrayList sï¿½ flyttes alt som er etter
 		//en plass fremm, og da ville vi hoppet over plasser hvis vi gikk oppover.
 		for (int i=avtaler.size()-1;i>=0;i--){
 			//tester for dato
@@ -60,7 +65,7 @@ public class LedigeMoterom extends DefaultListModel{
 			}else{
 				avtaler.remove(i);
 			}
-		}
+		}*/
 	}
 	
 	public ArrayList<Moterom> hentListe()

@@ -7,6 +7,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -91,7 +92,14 @@ public class Kalender implements ActionListener, MouseListener {
 		int rad = ktabell.hentRad();
 		int kolonne = ktabell.hentKolonne();
 		ktabell.fjernSeleksjon();
+		/**
+		 * 
+		 * TODO : Finn dato!!
+		 * 
+		 */
 		
+		VisAvtale visavtale = new VisAvtale();
+		visavtale.setOppforing(mkalender.getPersonUkeAvtaler().get(0));
 		
 	}
 	@Override

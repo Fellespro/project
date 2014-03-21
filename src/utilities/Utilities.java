@@ -2,6 +2,7 @@ package utilities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -61,6 +62,15 @@ public class Utilities {
 		int c = 6;
 		out = (d + m + y + y/4 + c )%7;
 		return out;
+	}
+
+	public static int getDay(ArrayList<Avtale> personUkeAvtaler) {
+		if(personUkeAvtaler.size()==0){
+			return -1;
+		}
+		else{
+			return personUkeAvtaler.get(0).hentAvtaleDato().getDag()-getDayOfWeek(personUkeAvtaler.get(0))+2;
+		}
 	}
 
 }

@@ -27,6 +27,10 @@ public class Kalendertabell extends JPanel{
 	private JFrame ramme;
 	private ToppPanel tp;
 	
+	public ToppPanel getTP() {
+		return tp;
+	}
+	
 	public Kalendertabell(kalender.Kalender k, Person p){
 		ramme = new JFrame();
 		

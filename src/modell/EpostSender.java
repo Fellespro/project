@@ -24,7 +24,7 @@ public class EpostSender {
 	private MimeMessage epost;
 	
 		
-	EpostSender() throws MessagingException
+	public EpostSender() throws MessagingException
 	{
 		bruker = "invitasjon.firmax";
 		passord = "bartesam";

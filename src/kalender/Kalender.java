@@ -9,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.mail.MessagingException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
@@ -29,8 +31,10 @@ public class Kalender implements ActionListener, MouseListener {
 	private modell.Kalender mkalender;
 	private Kalendertabell ktabell;
 	private VisAvtale visavtale;
+	private NyHendelse nyhendelse;
 	private Avtale a;
 	private ArrayList<Avtale> ukeAvtalerListe;
+
 
 	//main - for � kunne kj�re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
@@ -48,6 +52,10 @@ public class Kalender implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		System.out.println(e.getActionCommand());
+				
+		
 		//Cancel
 		if(e.getActionCommand().equals("Cancel")){
 			System.exit(0);
@@ -71,27 +79,74 @@ public class Kalender implements ActionListener, MouseListener {
 			}
 			dk.lukk();
 		}
-        else if(e.getSource() == visavtale.hentEndreKnapp()){
+		else if(e.getActionCommand().equals("Ny avtale")){
+			nyhendelse = new NyHendelse(this, kalenderEier, true);
+			nyhendelse.setAutoOppforing();
+			JFrame frame = new JFrame();
+			frame.setSize(400,600);
+			frame.add(nyhendelse);
+			frame.setVisible(true);
+			
+		}
+		else if(e.getActionCommand().equals("Lagre")){
+			System.out.println("Button Lagre pressed (lagrer registrert informasjon i klassevariabelen avtale)");
+			Avtale a = nyhendelse.lagre();
+			if(a.hentAntallEksterne()>0){
+				EpostSender es;
+				try {
+					es = new EpostSender();
+					es.kobleOpp();
+					es.sendMelding(a);
+					es.kobleFra();
+				} catch (MessagingException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			//TODO: legg avtalen til i avtalelistene
+			//TODO: vis avtalen i kalendertabell!
+			
+			
+			//TODO: lagre til db
+		}
+		else if(e.getActionCommand().equals("Logg ut")){
+			System.exit(0);
+        }		
+		else if(visavtale !=null){
+			
+        	if(e.getSource() == visavtale.hentEndreKnapp()){
+            	System.out.println("endre");
+            }
+            else if(e.getSource() == visavtale.hentSlettKnapp()){
+                    
+                   	Object[] options ={"OK","Avbryt"};
+                    int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    if(n == JOptionPane.OK_OPTION){
+                    	for(int i=0;i<ukeAvtalerListe.size(); i++){
+                    		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
+                    			ukeAvtalerListe.remove(i);
+                    			break;
+                    		}
+                    	}
+                    	ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 4, "");
+                    	visavtale.fjernRamme();
+                    	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
+                    }
+            }
+            else if(e.getSource() == visavtale.hentAvbrytKnapp()){
+            	visavtale.fjernRamme();
+            }
         	
         }
-        else if(e.getSource() == visavtale.hentSlettKnapp()){
-                
-               	Object[] options ={"OK","Avbryt"};
-                int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                if(n == JOptionPane.OK_OPTION){
-                	for(int i=0;i<ukeAvtalerListe.size(); i++){
-                		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
-                			ukeAvtalerListe.remove(i);
-                			break;
-                		}
-                	}
-                	ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 4, "");
-                	visavtale.fjernRamme();
-                	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
-                }
-        }
-        else if(e.getSource() == visavtale.hentAvbrytKnapp()){
-        	visavtale.fjernRamme();
+		
+        else if (e.getSource() == ktabell.getTP().getVenstrePil()) {
+			System.out.println("venstre");
+			ktabell.getTP().decrease();
+		}
+		
+        else if (e.getSource() == ktabell.getTP().getHoyrePil()) {
+			System.out.println("hoyre");
+			ktabell.getTP().increment();
         }
 
 	}
@@ -107,11 +162,30 @@ public class Kalender implements ActionListener, MouseListener {
 			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
 			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			System.out.println("hei");
 		}
 	}
+	
+	public void oppdaterKalender(int ukeNrYO) {
+		ktabell = new Kalendertabell(this, kalenderEier);
+		ktabell.visTabell();
+		ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, ukeNrYO), 2014, ukeNrYO);
+		mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
+		mkalender.setPerson(kalenderEier);
+		for(int i=0; i<ukeAvtalerListe.size(); i++){
+			a = ukeAvtalerListe.get(i);
+			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			System.out.println("hei");
+		}
+		
+	}
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
 		int rad = ktabell.hentRad();
 		int kolonne = ktabell.hentKolonne();
 		ktabell.fjernSeleksjon();
@@ -122,7 +196,6 @@ public class Kalender implements ActionListener, MouseListener {
 			int dag = kolonne+d.getDag()-1;
 			int time = rad-1;
 
-			System.out.println(dag+" "+time);
 			
 			//Finn avtalen som skal vises
 			for(int i=0; i<mkalender.getPersonUkeAvtaler().size(); i++){
@@ -155,6 +228,11 @@ public class Kalender implements ActionListener, MouseListener {
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setWeek(int ukeNr) {
 		// TODO Auto-generated method stub
 		
 	}

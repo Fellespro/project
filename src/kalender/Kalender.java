@@ -140,6 +140,7 @@ public class Kalender implements ActionListener, MouseListener {
 		
         else if (e.getSource() == ktabell.getTP().getVenstrePil()) {
 			System.out.println("venstre");
+			ktabell.getTP().decrease();
 		}
 		
         else if (e.getSource() == ktabell.getTP().getHoyrePil()) {
@@ -164,7 +165,21 @@ public class Kalender implements ActionListener, MouseListener {
 		}
 	}
 	
-	//oppdater ukenr. 
+	public void oppdaterKalender(int ukeNrYO) {
+		ktabell = new Kalendertabell(this, kalenderEier);
+		ktabell.visTabell();
+		ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, ukeNrYO), 2014, ukeNrYO);
+		mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
+		mkalender.setPerson(kalenderEier);
+		for(int i=0; i<ukeAvtalerListe.size(); i++){
+			a = ukeAvtalerListe.get(i);
+			ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+			//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+			//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			System.out.println("hei");
+		}
+		
+	}
 	
 
 	@Override

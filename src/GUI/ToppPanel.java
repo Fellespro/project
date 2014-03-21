@@ -146,7 +146,14 @@ public void actionPerformed(ActionEvent e) {
 public void increment() {
 	this.ukeNr++;
 	this.ukeNrTekst.setText(String.valueOf(ukeNr));
-	
+	kalender.oppdaterKalender(ukeNr);
+}
+
+
+public void decrease() {
+	this.ukeNr--;
+	this.ukeNrTekst.setText(String.valueOf(ukeNr));
+	kalender.oppdaterKalender(ukeNr);
 }
 
 }

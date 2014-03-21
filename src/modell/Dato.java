@@ -70,7 +70,7 @@ public class Dato {
 	}
 
 	public String toString(){
-		return dag+ "." + mnd + "." + aar;
+		return dag+ "-" + mnd + "-" + aar;
 	}
 	
 		

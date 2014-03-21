@@ -18,6 +18,8 @@ public class Kalender{
 	private ArrayList<Gruppe> gruppeliste;
 	private ArrayList<Moterom> moteromliste;
 	private DatabaseKommunikator dk;
+	private Person person;
+	private ArrayList<Avtale> personUkeAvtaler;
 	
 
 	public Kalender(){
@@ -126,9 +128,29 @@ public class Kalender{
 	}
 	*/
 	
-	public void leggTilAvtale(Avtale a){}
+	public void leggTilAvtale(Avtale a){
+		//TODO
+	}
 	
-	public void fjernAvtale(Avtale a){}
+	public void fjernAvtale(Avtale a){
+		//TODO
+	}
+	
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+
+	public ArrayList<Avtale> getPersonUkeAvtaler() {
+		return personUkeAvtaler;
+	}
+
+	public void setPersonUkeAvtaler(ArrayList<Avtale> personUkeAvtaler) {
+		this.personUkeAvtaler = personUkeAvtaler;
+	}
 	/*
 	public static void main(String[] args)
 	{}

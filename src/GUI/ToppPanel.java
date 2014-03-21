@@ -11,6 +11,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import utilities.Utilities;
+
 import kalender.Kalender;
 
 
@@ -37,7 +39,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 		add(venstrePil);
 		
 		//3 ....ukenr: feks uke 8
-		ukeNr = 1; //lage begrensning? 
+		ukeNr = Utilities.getCurrentWeek(); //lage begrensning? 
 		ukeNrTekst = new JLabel();
 		ukeNrTekst.setName("ukeNrTekst");
 		ukeNrTekst.setText(String.valueOf(ukeNr)); //denne må endres

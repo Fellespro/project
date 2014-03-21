@@ -72,7 +72,7 @@ public class Kalender implements ActionListener, MouseListener {
 			dk.lukk();
 		}
         else if(e.getSource() == visavtale.hentEndreKnapp()){
-        	System.out.println("endre");
+        	
         }
         else if(e.getSource() == visavtale.hentSlettKnapp()){
                 

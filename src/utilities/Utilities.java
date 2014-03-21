@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import modell.Avtale;
+import modell.Dato;
 
 public class Utilities {
 	/*
@@ -64,12 +66,30 @@ public class Utilities {
 		return out;
 	}
 
-	public static int getDay(ArrayList<Avtale> personUkeAvtaler) {
+	public static Dato hentDato(ArrayList<Avtale> personUkeAvtaler) {
 		if(personUkeAvtaler.size()==0){
-			return -1;
+			return null;
 		}
 		else{
-			return personUkeAvtaler.get(0).hentAvtaleDato().getDag()-getDayOfWeek(personUkeAvtaler.get(0))+2;
+			//Sikkert my unodvendig arbeid her...
+			Avtale a = personUkeAvtaler.get(1);
+			Dato d = a.hentAvtaleDato();
+			Calendar avtaleC = Calendar.getInstance(Locale.GERMANY);
+			avtaleC.setFirstDayOfWeek(Calendar.MONDAY);
+			avtaleC.set(Calendar.YEAR, d.getAar());
+			avtaleC.set(Calendar.MONTH, d.getMnd()-1);
+			avtaleC.set(Calendar.DAY_OF_MONTH, d.getDag());
+			
+			Calendar ukeC = Calendar.getInstance(Locale.GERMANY);
+			ukeC.set(Calendar.YEAR, d.getAar());
+			ukeC.set(Calendar.WEEK_OF_YEAR, avtaleC.get(Calendar.WEEK_OF_YEAR));
+			ukeC.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			
+			System.out.println(ukeC.get(Calendar.DAY_OF_MONTH));
+			System.out.println(ukeC.get(Calendar.MONTH));
+			System.out.println(ukeC.get(Calendar.YEAR));
+			
+			return new Dato(ukeC.get(Calendar.DAY_OF_MONTH), ukeC.get(Calendar.MONTH), ukeC.get(Calendar.YEAR));
 		}
 	}
 

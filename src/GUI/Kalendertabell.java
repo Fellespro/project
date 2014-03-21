@@ -86,6 +86,7 @@ public class Kalendertabell extends JPanel{
 	
 	//Setter farge på avtaleområde.
 	public void settFarge(int dagnr, int fraklokke, int tilklokke, int fargenr, String motenavn){
+		dagnr--;
 		tabell[fraklokke+1].setValueAt(motenavn, 0, dagnr);
 		int antall = tilklokke-fraklokke;
 		

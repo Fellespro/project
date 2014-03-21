@@ -34,8 +34,7 @@ public class Kalender{
 		personliste = dk.hentPersoner();
 		gruppeliste = dk.hentGrupper(personliste);
 		moteromliste = dk.hentMoterom();
-		avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);
-		System.out.println("Antall avtaler i databasen[mkalender]: "+avtaleliste.size());	
+		avtaleliste = dk.hentAlleAvtaler(personliste, moteromliste);	
 		dk.lukk();
 	}
 	

@@ -34,7 +34,6 @@ public class VisAvtale extends JPanel{
         /**
          * @param args
          */
-        private JButton hjem;
         
         private JLabel datoLabel;
         private JTextField datoText;
@@ -115,13 +114,6 @@ public class VisAvtale extends JPanel{
                 this.add(new JSeparator(JSeparator.VERTICAL),c);
                 c.gridwidth = 1;
                 c.gridheight = 1;
-
-                hjem = new JButton("Hjem");
-                hjem.addActionListener(k);
-                hjem.setName("hjem");
-                c.gridx = 0;
-                c.gridy = 0;
-                this.add(hjem,c);
                 
                 
         //dato og tidspunkt
@@ -263,9 +255,6 @@ public class VisAvtale extends JPanel{
                 slett.doClick();
         }
         
-        public JButton hentHjemKnapp(){
-        	return hjem;
-        }
         public JButton hentEndreKnapp(){
         	return endre;
         }

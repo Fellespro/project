@@ -9,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.mail.MessagingException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
@@ -29,8 +31,10 @@ public class Kalender implements ActionListener, MouseListener {
 	private modell.Kalender mkalender;
 	private Kalendertabell ktabell;
 	private VisAvtale visavtale;
+	private NyHendelse nyhendelse;
 	private Avtale a;
 	private ArrayList<Avtale> ukeAvtalerListe;
+
 
 	//main - for � kunne kj�re applikasjonen
 	public static void main(String[] args) throws InterruptedException{
@@ -48,6 +52,8 @@ public class Kalender implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		System.out.println(e.getActionCommand());
 		//Cancel
 		if(e.getActionCommand().equals("Cancel")){
 			System.exit(0);
@@ -71,6 +77,39 @@ public class Kalender implements ActionListener, MouseListener {
 			}
 			dk.lukk();
 		}
+		else if(e.getActionCommand().equals("Ny avtale")){
+			nyhendelse = new NyHendelse(this, kalenderEier, true);
+			nyhendelse.setAutoOppforing();
+			JFrame frame = new JFrame();
+			frame.setSize(400,600);
+			frame.add(nyhendelse);
+			frame.setVisible(true);
+			
+		}
+		else if(e.getActionCommand().equals("Lagre")){
+			System.out.println("Button Lagre pressed (lagrer registrert informasjon i klassevariabelen avtale)");
+			Avtale a = nyhendelse.lagre();
+			if(a.hentAntallEksterne()>0){
+				EpostSender es;
+				try {
+					es = new EpostSender();
+					es.kobleOpp();
+					es.sendMelding(a);
+					es.kobleFra();
+				} catch (MessagingException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			//TODO: legg avtalen til i avtalelistene
+			//TODO: vis avtalen i kalendertabell!
+			
+			
+			//TODO: lagre til db
+		}
+		else if(e.getActionCommand().equals("Logg ut")){
+			System.exit(0);
+        }
         else if(e.getSource() == visavtale.hentEndreKnapp()){
         	System.out.println("endre");
         }
@@ -122,7 +161,6 @@ public class Kalender implements ActionListener, MouseListener {
 			int dag = kolonne+d.getDag()-1;
 			int time = rad-1;
 
-			System.out.println(dag+" "+time);
 			
 			//Finn avtalen som skal vises
 			for(int i=0; i<mkalender.getPersonUkeAvtaler().size(); i++){

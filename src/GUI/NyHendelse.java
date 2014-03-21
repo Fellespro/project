@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -78,7 +79,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         
         
         //trenger en oppdatering med cascade i modell
-        public NyHendelse(/*DatabaseKommunikator database, */Person person, boolean oppdatering){
+        public NyHendelse(kalender.Kalender k, Person person, boolean oppdatering){
         	
 		        //this.database = database;
 		        this.person = person;
@@ -217,7 +218,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 		        actionListeners = new ArrayList<ActionListener>();
 
                 avbrytButton.addActionListener(this);
-                lagreButton.addActionListener(this);
+                lagreButton.addActionListener(k);
                 hjemButton.addActionListener(this);
                 oppdaterMoterom.addActionListener(this);
                 moteRadio.addActionListener(this);
@@ -292,7 +293,7 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         		return null;
         }
         */
-        public void lagre(){
+        public Avtale lagre(){
         	
               feilmelding = "";
               String avtaleTittel = tittelText.getText(); 
@@ -307,10 +308,19 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
               Respons avtaleResp = Respons.kanskje; 
               ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
               int avtaleAntDltkr = 0;
-              ArrayList<String> avtaleEksterne = new ArrayList<String>(); 
-              int avtaleEkstDltkr = 0;
               
-              avtale = new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+              ArrayList<String> avtaleEksterne = new ArrayList<String>();
+              String ekst = andreText.getText();
+              String[] resultat = ekst.split("\\;");
+              for(int i=0;i<resultat.length; i++){
+            	  if(resultat[i].length()>0){
+            		  avtaleEksterne.add(resultat[i]);
+            	  }
+              }
+            	  
+              int avtaleEkstDltkr = avtaleEksterne.size();
+              
+              return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
             		  			  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
         }
               
@@ -457,48 +467,8 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
         }
 }
 
-		@Override
-		public void valueChanged(ListSelectionEvent e) {
-				if(e.getSource() == moteromList){
-		                try {
-		                       // Moterom m = (Moterom)moteromList.getSelectedValue();
-		                        //stedText.setText(m.hentNavn());
-		                } catch (NullPointerException e1) {
-		                		
-		                }
-				}
-			
-		}
+*/
 
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}*/
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -507,11 +477,6 @@ public class NyHendelse extends JPanel implements ActionListener/*, ListSelectio
 			case "Avbryt":
 				System.out.println("Button Avbryt pressed");
 				System.exit(0);
-				break;
-			case "Lagre":
-				System.out.println("Button Lagre pressed (lagrer registrert informasjon i klassevariabelen avtale)");
-				lagre();
-				//send til database
 				break;
 			case "Hjem":
 				System.out.println("Button Hjem pressed (skjer ikke noe enda)");

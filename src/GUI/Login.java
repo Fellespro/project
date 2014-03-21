@@ -44,7 +44,6 @@ public class Login{
 
 		userText = new JTextField(20);
 		userText.setBounds(100, 10, 160, 25);
-		userText.setText("abdull");
 		panel.add(userText);
 
 		JLabel passwordLabel = new JLabel("Passord");
@@ -52,7 +51,6 @@ public class Login{
 		panel.add(passwordLabel);
 
 		passwordText = new JPasswordField(20);
-		passwordText.setText("abcd");
 		passwordText.setBounds(100, 40, 160, 25);
 		panel.add(passwordText);
 

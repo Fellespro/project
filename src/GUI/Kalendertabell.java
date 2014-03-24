@@ -95,20 +95,32 @@ public class Kalendertabell extends JPanel{
 		int antall = tilklokke-fraklokke;
 		
 		if(fargenr==1){
-		for (int i = 0; i<=antall; i++)
-            tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(gronn);
+			for (int i = 0; i<=antall; i++){
+				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(gronn);
+				tabell[fraklokke+i+1].selectAll();
+				tabell[fraklokke+i+1].clearSelection();
+			}
 		}
 		else if(fargenr==2){
-			for (int i = 0; i<=antall; i++)
+			for (int i = 0; i<=antall; i++){
 				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(blaa);
+				tabell[fraklokke+i+1].selectAll();
+				tabell[fraklokke+i+1].clearSelection();
+			}
 		}
 		else if(fargenr==3){
-			for (int i = 0; i<=antall; i++)
+			for (int i = 0; i<=antall; i++){
 				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(gul);
+			tabell[fraklokke+i+1].selectAll();
+			tabell[fraklokke+i+1].clearSelection();
+			}
 		}
 		else if(fargenr==4){
-			for (int i = 0; i<=antall; i++)
+			for (int i = 0; i<=antall; i++){
 				tabell[fraklokke+i+1].getColumnModel().getColumn(dagnr).setCellRenderer(hvit);
+				tabell[fraklokke+i+1].selectAll();
+				tabell[fraklokke+i+1].clearSelection();
+			}
 		}
 		
 	}

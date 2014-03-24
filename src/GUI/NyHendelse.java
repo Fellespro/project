@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -88,12 +89,14 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		        
 		        invitertListe = new PersonListe();
 		        invitertJListe = new JList(invitertListe.hentListe().toArray());
+                invitertJListe.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 inviterteScrollPane = new JScrollPane(invitertJListe);
                 inviterteScrollPane.setHorizontalScrollBar(null);
                 inviterteScrollPane.setVerticalScrollBar(inviterteScrollPane.createVerticalScrollBar());
                 
                 moteromListe = new LedigeMoterom();
                 moteromJListe = new JList(moteromListe.hentListe().toArray());
+                moteromJListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 moteromScrollPane = new JScrollPane(moteromJListe);
                 moteromScrollPane.setHorizontalScrollBar(null);
                 moteromScrollPane.setVerticalScrollBar(moteromScrollPane.createVerticalScrollBar());
@@ -202,8 +205,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		        );
 		        
 		        this.setLayout(layout);
-		        
-		        actionListeners = new ArrayList<ActionListener>();
 
                 avbrytButton.addActionListener(this);
                 lagreButton.addActionListener(k);
@@ -212,17 +213,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 moteRadio.addActionListener(this);
                 invitertJListe.addPropertyChangeListener(this);
                 invitertJListe.addListSelectionListener(this);
+                moteromJListe.addPropertyChangeListener(this);
                 moteromJListe.addListSelectionListener(this);
-                //moteromScrollPane.addMouseListener(this);
-                //antallAndreText.getDocument().addDocumentListener((this));
-
-		        actionListeners.add((avbrytButton.getActionListeners())[0]);
-		        actionListeners.add((lagreButton.getActionListeners())[0]);
-		        actionListeners.add((hjemButton.getActionListeners())[0]);
-		        actionListeners.add((oppdaterMoterom.getActionListeners())[0]);
-		        actionListeners.add((moteRadio.getActionListeners())[0]);
+                moteromScrollPane.addPropertyChangeListener(this);
                 
-                nullstillFelt();
                 setAutoOppforing();
         }
         
@@ -237,12 +231,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 starttidText.setText(startTid.toString());
                 sluttidText.setText(sluttTid.toString());
                 tittelText.setText("Nytt møte");
-        }
-
-        public void nullstillFelt(){
-                setAutoOppforing();
-                tittelText.setText("");
-                stedText.setText("");
                 beskrivelseText.setText("");
         }
         
@@ -258,7 +246,12 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            String avtaleEndret = "";
 	            Respons avtaleResp = Respons.kanskje; 
 	            ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
-	            int avtaleAntDltkr = 0;
+	            PersonListe personListe = getInviterte();
+	            int avtaleIntDltkr = personListe.antallPersoner();
+	            for(int i = 0;i < personListe.antallPersoner();i++)
+	            {
+	            	avtaleInterne.add(new PersonListeElement(personListe.hentPerson(i)));
+	            }
 	            
 	            ArrayList<String> avtaleEksterne = new ArrayList<String>();
 	            String ekst = andreText.getText();
@@ -271,8 +264,86 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	          	  
 	            int avtaleEkstDltkr = avtaleEksterne.size();
 	            
-	            return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
-          		  			  	  avtaleEndret, avtaleResp, avtaleInterne, avtaleAntDltkr, avtaleEksterne, avtaleEkstDltkr);
+	            if(!oppdatering)
+	            {
+		            return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
+	          		  			  	  avtaleEndret, avtaleResp, avtaleInterne, avtaleIntDltkr, avtaleEksterne, avtaleEkstDltkr);
+	            }
+	            else
+	            {
+	            	avtale.settAvtaleNavn(avtaleTittel);
+	            	avtale.settAvtaleDato(avtaleDato);
+	            	avtale.settStarttid(avtaleStart);
+	            	avtale.settSluttid(avtaleSlutt);
+	            	avtale.settAlternativStarttid(avtaleAltStart);
+	            	avtale.settRom(avtaleRom);
+	            	avtale.settBeskrivelse(avtaleBeskr);
+	            	avtale.settSistEndret(avtaleEndret);
+	            	avtale.settStatus(avtaleResp);
+	            	avtale.settInterneDeltakere(avtaleInterne);
+	            	avtale.settAntallInterne(avtaleIntDltkr);
+	            	avtale.settEksterneDeltakere(avtaleEksterne);
+	            	avtale.settAntallEksterne(avtaleEkstDltkr);
+	            	return avtale;
+	            }
+        }
+        
+        public void settAvtale(Avtale avtale){
+                if (oppdatering) 
+                		this.avtale = avtale;
+                if(avtale instanceof Avtale){
+                        tittelText.setText(avtale.hentAvtaleNavn());
+                        datoText.setText(avtale.hentAvtaleDato().toString());
+                        starttidText.setText(avtale.hentStarttid().toString());
+                        sluttidText.setText(avtale.hentSluttid().toString());
+                        settInviterte();
+                        String eksterne = "";
+                        for(int i = 0;i < avtale.hentAntallEksterne();i++)
+                        {
+                        	if(i == 0)
+                        	{
+                        		eksterne += avtale.hentEmail(i);
+                        	}
+                        	else
+                        	{
+                        		eksterne += ";" + avtale.hentEmail(i);
+                        	}
+                        }
+                        andreText.setText(eksterne);
+                        //huk av moterom
+                        beskrivelseText.setText(avtale.hentBeskrivelse());
+                        moteRadio.doClick();
+                }
+		}
+        
+        public void settInviterte(){
+        		PersonListe inviterte = new PersonListe();
+        		for(int i = 0;i < avtale.hentAntallInterne();i++)
+        		{
+        				inviterte.leggTilPerson(avtale.hentPerson(i));
+        		}
+                for(int i=0; i < inviterte.antallPersoner();i++){
+                        for(int j = 0;j < invitertListe.antallPersoner();i++)
+                        {
+	                        	if(inviterte.hentPerson(i) == invitertListe.hentPerson(j))
+	                        	{
+	                        			invitertJListe.setSelectedIndex(j);
+	                        	}
+                        }
+                }
+        }
+        
+        public PersonListe getInviterte(){
+        		PersonListe personListe = new PersonListe();
+        		if(avtale instanceof Avtale){
+        				for(int i = 0;i < invitertListe.antallPersoner();i++)
+        				{
+        						/*if(invitertJListe.isSelected(i))
+        						personListe.leggTilPerson(invitertJListe.getElement(i));*/
+        				}
+        				return personListe;
+        		}
+        		return null;
         }
 
 		@Override
@@ -284,7 +355,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 						frame.dispose();
 						break;
 				case "Hjem":
-						System.out.println("Button Hjem pressed (skjer ikke noe enda)");
+						System.out.println("Button Hjem pressed");
+						frame.dispose();
 						break;
 				case "Oppdater romliste":
 						System.out.println("Button Oppdater romliste pressed");
@@ -292,10 +364,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		            	moteromJListe = new JList(moteromListe.hentListe().toArray());
 		            	if(!moteromListe.isSelectionEmpty())
 			      		{
-			            		//velg første rom i liste
-			            }
-			            else
-			            {
 			            		System.out.println("Ingen ledige møterom");
 		            	}
 						break;
@@ -307,7 +375,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		            	{
 			            		if(!moteromListe.isSelectionEmpty())
 			            		{
-			            				//velg første rom i liste
+			            				moteromJListe.setSelectedIndex(0);
 			            		}
 			            		else
 			            		{
@@ -327,43 +395,16 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
-				System.out.println("PropertyChangeListener");
+				System.out.println("PropertyChangeListener: " + ", e.getPropertyName(): " + e.getPropertyName());
 		}
-        
+		
         /*
-         
-        public void setInviterte(PersonListe inviterte){
-                PersonListe pListe = new PersonListe();
-                for(int i=0; i<inviterte.antallPersoner();i++){
-                        Person p = (Person)inviterte.hentPerson(i);
-                        pListe.leggTilPerson(p);
-                }
-                for(int i = 0;i < pListe.antallPersoner();i++)
-           		{
-           				avtale.leggTilDeltaker(pListe.hentPerson(i));
-           		}
-        }
-        
-        public PersonListe getInviterte(){
-        		PersonListe personListe = new PersonListe();
-        		if(avtale instanceof Avtale){
-        				for(int i = 0;i < avtale.hentAntallInterne();i++)
-        				{
-        						personListe.leggTilPerson(avtale.hentPerson(i));
-        				}
-        				return personListe;
-        		}
-        		return null;
-        }
-        
 		public void sendTilDatabase(boolean oppdatering){
-                Kaller på database og send oppforing
+                //Kaller på database og sender oppforing
                 try {
                         if (!oppdatering) {
-                               	avtale.settOpprettetAv(getPerson());
                                 database.leggInnAvtale(avtale);
                         } else {
-                        		// m� lage oppdaterAvtale-funksjon i databasen
                                 database.endreAvtale(getPerson(), avtale);
                         }
                         
@@ -371,60 +412,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         //TODO: feilmelding ?
                         Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                 }
-        }
+        }*/
         
-        public void settAvtale(Avtale avtale){
-                if (oppdatering) 
-                		this.avtale = avtale;
-                if(avtale instanceof Avtale){
-                        datoText.setText(avtale.hentAvtaleDato().toString());
-                        starttidText.setText(avtale.hentStarttid().toString());
-                        sluttidText.setText(avtale.hentSluttid().toString());
-                        tittelText.setText(avtale.hentAvtaleNavn());
-                        stedText.setText(avtale.hentRom().hentNavn());
-                        antallAndreText.setText(""+(avtale).hentAntallEksterne());
-                        totaltText.setText(""+(avtale).hentAntallDeltakere());
-                        beskrivelseText.setText(avtale.hentBeskrivelse());
-                        moteRadio.doClick();
-                }
-        
-		}
-		
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			for(int i = 0; i< antallAndreText.getText().length(); i++){
-                if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-                        //antallAndre = 0;
-                        antallAndreText.setText("0");
-                        //setTotaltText();
-                        return;
-                }
-        }
-        //antallAndre = Integer.parseInt(antallAndreText.getText());
-        //setTotaltText();
-			
-		}
-
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-				if(antallAndreText.getText().length() != 0){
-                		for(int i = 0; i< antallAndreText.getText().length(); i++){
-                        		if(!Character.isDigit(antallAndreText.getText().charAt(i))){
-		                                //antallAndre = 0;
-		                                antallAndreText.setText("0");
-		                                //setTotaltText();
-		                                return;
-                        		}
-                		}
-		                //antallAndre = Integer.parseInt(antallAndreText.getText());
-		                //setTotaltText();
-        		}
-		        else {
-		                //antallAndre = 0;
-		                //setTotaltText();
-		                return;
-		        
-		        }
-		}*/
 			
 }

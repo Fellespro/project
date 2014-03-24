@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -24,6 +25,8 @@ import modell.*;
 
 public class NyHendelse extends JPanel implements ActionListener, ListSelectionListener, PropertyChangeListener/*, DocumentListener, MouseListener*/ {
   
+		private JFrame frame;
+	
 		private JButton hjemButton;
 		
         private JTextField tittelText;
@@ -63,9 +66,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private boolean oppdatering;
         
         
-        public NyHendelse(kalender.Kalender k, Person person, boolean oppdatering){
+        public NyHendelse(JFrame frame, kalender.Kalender k, Person person, boolean oppdatering){
         	
 		        //this.database = database;
+        		this.frame = frame;
 		        this.person = person;
 		        this.oppdatering = oppdatering;
 
@@ -277,7 +281,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 				{
 				case "Avbryt":
 						System.out.println("Button Avbryt pressed");
-						System.exit(0);
+						frame.dispose();
 						break;
 				case "Hjem":
 						System.out.println("Button Hjem pressed (skjer ikke noe enda)");

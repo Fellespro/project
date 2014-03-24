@@ -1,0 +1,52 @@
+CREATE TABLE Ansatt (
+	brukernavn CHAR(6) NOT NULL,	
+	passord TEXT,	
+	navn TEXT,
+	constraint Ansatt_pk primary key (brukernavn));
+
+CREATE TABLE Gruppe (
+	gruppeid INT NOT NULL AUTO_INCREMENT,	
+	gruppenavn varchar(20),
+	constraint Gruppe_pk primary key (gruppeid));
+
+CREATE TABLE Moterom (
+	romid INT NOT NULL AUTO_INCREMENT, 
+	kapasitet INT,
+	constraint Moterom_pk primary key (romid));
+
+CREATE TABLE Avtale (
+	avtaleid INT NOT NULL AUTO_INCREMENT,	
+	dato DATE, 
+	starttidspunkt TIME,	
+	sluttidspunkt TIME,	
+	alternativtid TIME,	
+	beskrivelse TEXT,	
+	sistendret DATETIME,	
+	antalldeltagere INT, 
+	admin char(6), 
+	rom INT, 
+	constraint Avtale_pk primary key (avtaleid),
+	constraint Avtale_fk1 foreign key (admin) references Ansatt(brukernavn),
+	constraint Avtalek_fk2 foreign key (rom) references Moterom(romid));
+
+CREATE TABLE Gruppemedlemmer (	
+	brukernavn char(6) NOT NULL, 
+	gruppeid INT NOT NULL, 
+	constraint Gruppemedlemmer_pk PRIMARY KEY(brukernavn, gruppeid), 
+	constraint Gruppemedlemmer_fk1 FOREIGN KEY (brukernavn) REFERENCES Ansatt(brukernavn),
+	constraint Gruppemedlemmer_fk2 FOREIGN KEY (gruppeid) REFERENCES Gruppe(gruppeid));
+
+
+CREATE TABLE Undergruppe ( 
+	gruppeid INT NOT NULL, 
+	supergruppe INT NOT NULL, 
+	constraint Undergruppe_pk PRIMARY KEY(gruppeid, supergruppe), 
+	constraint Undergruppe_fk1 FOREIGN KEY (gruppeid) REFERENCES Gruppe(gruppeID), 
+	constraint Undergruppe_fk2 FOREIGN KEY(supergruppe) REFERENCES Gruppe(gruppeID));
+
+CREATE TABLE Inviterte ( 
+	brukernavn char(6) NOT NULL, 
+	avtaleid INT NOT NULL, 
+	constraint Inviterte_pk PRIMARY KEY(brukernavn, avtaleid), 
+	constraint Inviterte_fk1 FOREIGN KEY(brukernavn) REFERENCES Ansatt(brukernavn),
+	constraint Inviterte_fk2 FOREIGN KEY(avtaleid) REFERENCES Avtale(avtaleID));

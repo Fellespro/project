@@ -80,11 +80,12 @@ public class Kalender implements ActionListener, MouseListener {
 			dk.lukk();
 		}
 		else if(e.getActionCommand().equals("Ny avtale")){
-			nyhendelse = new NyHendelse(this, kalenderEier, true);
-			nyhendelse.setAutoOppforing();
 			JFrame frame = new JFrame();
+			nyhendelse = new NyHendelse(frame, this, kalenderEier, true);
+			nyhendelse.setAutoOppforing();
 			frame.setSize(400,600);
 			frame.add(nyhendelse);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
 			
 		}

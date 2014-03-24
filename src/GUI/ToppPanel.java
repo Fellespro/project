@@ -16,7 +16,7 @@ import utilities.Utilities;
 import kalender.Kalender;
 
 
-public class ToppPanel extends JPanel implements ActionListener  {
+public class ToppPanel extends JPanel{
 	
 	
 	public BasicArrowButton getVenstrePil() {
@@ -39,13 +39,13 @@ public class ToppPanel extends JPanel implements ActionListener  {
 	
 	
 	public ToppPanel(String brukernavnEkstern, Kalender k) {
-		// 8 deler. fra venstre mot høyre 
+		// 8 deler. fra venstre mot hï¿½yre 
 		this.kalender= k;
 		//0. NyAvtaleknapp 
 		nyAvtaleKnapp = new JButton();
 		nyAvtaleKnapp.setName("nyAvtale");
 		nyAvtaleKnapp.setText("Ny avtale"); 
-		nyAvtaleKnapp.addActionListener(k); //kalender lytter på whatsuuup
+		nyAvtaleKnapp.addActionListener(k); //kalender lytter pï¿½ whatsuuup
 		add(nyAvtaleKnapp);
 
 		
@@ -66,7 +66,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 		ukeNrTekst = new JLabel();
 		ukeNrTekst.setHorizontalAlignment(JLabel.CENTER);
 		ukeNrTekst.setName("ukeNrTekst");
-		ukeNrTekst.setText(String.valueOf(ukeNr)); //denne må endres
+		ukeNrTekst.setText(String.valueOf(ukeNr)); //denne mï¿½ endres
 		add(ukeNrTekst);
 		
 		
@@ -87,7 +87,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 	    //6 .......  brukernavnet
 		brukernavn = new JLabel();
 		brukernavn.setName("brukernavn");
-		brukernavn.setText(brukernavnEkstern); //noe sånt?
+		brukernavn.setText(brukernavnEkstern); //noe sï¿½nt?
 		brukernavn.setHorizontalAlignment(JLabel.LEFT);
 		add(brukernavn);
 	    
@@ -95,7 +95,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 	    loggUtknapp = new JButton();
 	    loggUtknapp.setName("loggUt");
 	    loggUtknapp.setText("Logg ut"); 
-	    loggUtknapp.addActionListener(k); //kalender lytter på whatsuuup
+	    loggUtknapp.addActionListener(k); //kalender lytter pï¿½ whatsuuup
 	    add(loggUtknapp);
 	    
 	    setLayout(new GridLayout(0,8));
@@ -104,7 +104,7 @@ public class ToppPanel extends JPanel implements ActionListener  {
 	
 	
 //public static void main(String[] args) {
-//		JFrame frame = new JFrame(); //frame ligger øverst for å kunne ha panel. knapper på panel.
+//		JFrame frame = new JFrame(); //frame ligger ï¿½verst for ï¿½ kunne ha panel. knapper pï¿½ panel.
 //		JPanel panel = new ToppPanel("sybolt");
 //		
 //		
@@ -120,29 +120,6 @@ public class ToppPanel extends JPanel implements ActionListener  {
 //	}
 
 
-
-@Override
-public void actionPerformed(ActionEvent e) {
-	// TODO Auto-generated method stub
-	if (e.getSource() == venstrePil) {
-		this.ukeNr--;
-		System.out.println(ukeNr);
-		ukeNrTekst.setText(String.valueOf(ukeNr));
-		this.kalender.setWeek(ukeNr);
-	}
-	if (e.getSource() == hoyrePil) {
-		ukeNr++;
-		System.out.println(ukeNr);
-		ukeNrTekst.setText(String.valueOf(ukeNr));
-		this.kalender.setWeek(ukeNr);
-	}
-	if (e.getSource() == loggUtknapp) {
-		System.out.println("logg ut");
-		
-	}
-}
-
-
 public void increment() {
 	this.ukeNr++;
 	this.ukeNrTekst.setText(String.valueOf(ukeNr));
@@ -156,4 +133,7 @@ public void decrease() {
 	kalender.oppdaterKalender(ukeNr);
 }
 
+public int hentUkenr(){
+	return ukeNr;
+}
 }

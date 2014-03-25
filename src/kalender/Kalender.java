@@ -137,7 +137,7 @@ public class Kalender implements ActionListener, MouseListener {
             else if(e.getSource() == visavtale.hentAvbrytKnapp()){
             	visavtale.fjernRamme();
             }
-        	
+        	visavtale=null;
         }
 		
         else if (e.getSource() == ktabell.getTP().getVenstrePil()) {

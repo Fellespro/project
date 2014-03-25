@@ -46,7 +46,8 @@ CREATE TABLE Undergruppe (
 
 CREATE TABLE Inviterte ( 
 	brukernavn char(6) NOT NULL, 
-	avtaleid INT NOT NULL, 
+	avtaleid INT NOT NULL,
+	deltagelse INT, 
 	constraint Inviterte_pk PRIMARY KEY(brukernavn, avtaleid), 
 	constraint Inviterte_fk1 FOREIGN KEY(brukernavn) REFERENCES Ansatt(brukernavn),
 	constraint Inviterte_fk2 FOREIGN KEY(avtaleid) REFERENCES Avtale(avtaleID));

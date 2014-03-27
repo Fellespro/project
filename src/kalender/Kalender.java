@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -105,11 +106,25 @@ public class Kalender implements ActionListener, MouseListener {
 				}
 			}
 			
-			//TODO: legg avtalen til i avtalelistene
-			//TODO: vis avtalen i kalendertabell!
+			dk.kobleOpp();
+			dk.leggInnAvtale(a);
+			dk.lukk();
+			mkalender.leggTilAvtale(a);
+			
+			mkalender = new modell.Kalender();
+			ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+			mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
+			mkalender.setPerson(kalenderEier);
+			for(int i=0; i<ukeAvtalerListe.size(); i++){
+				a = ukeAvtalerListe.get(i);
+				ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+				//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+				//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			}
+			
+			nyhendelse.lukk();	
 			
 			
-			//TODO: lagre til db
 		}
 		else if(e.getActionCommand().equals("Logg ut")){
 			System.exit(0);
@@ -135,6 +150,13 @@ public class Kalender implements ActionListener, MouseListener {
                     		if(a.hentAvtaleID()==templiste.get(i).hentAvtaleID()){
                     			templiste.remove(i);
                     			mkalender.settAvtaleliste(templiste);
+                    			dk.kobleOpp();
+                    			try {
+									dk.slettAvtale(a);
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+                    			dk.lukk();
                     			break;
                     		}
                     	}
@@ -246,6 +268,14 @@ public class Kalender implements ActionListener, MouseListener {
 	public void setWeek(int ukeNr) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public PersonListe hentPersonliste() {
+		return mkalender.hentPersonListe();
+	}
+
+	public LedigeMoterom hentMoteromListe() {
+		return mkalender.hentMoteromListe();
 	}
 
 }

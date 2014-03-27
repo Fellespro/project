@@ -76,7 +76,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         		this.frame = frame;
 		        this.person = person;
 		        this.oppdatering = false;
-
+		        
 		        this.setupGUI();
 
                 avbrytButton.addActionListener(this);
@@ -150,6 +150,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            Tid avtaleSlutt = new Tid(sluttidText.getText()); 
 	            Tid avtaleAltStart = new Tid(sluttidText.getText()); 
 	            Moterom avtaleRom = new Moterom();
+	            int romid = moteromListe.hentListe().get(moteromJListe.getSelectedIndex()).hentRomID();
+	            System.out.println("RomID: " + romid);
+	            avtaleRom.settRomid(romid);
 	            String avtaleBeskr = beskrivelseText.getText(); 
 	            String avtaleEndret = "";
 	            Respons avtaleResp = Respons.kanskje; 
@@ -421,6 +424,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	        );
 	        
 	        this.setLayout(layout);
+		}
+
+		public void lukk() {
+			frame.dispose();
 		}
 			
 }

@@ -219,5 +219,9 @@ public class Kalendertabell extends JPanel{
 		}
 		
 	}
+	
+	public void lukk(){
+		ramme.dispose();
+	}
 
 }

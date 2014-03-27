@@ -124,9 +124,11 @@ public class Kalender implements ActionListener, MouseListener {
                    	Object[] options ={"OK","Avbryt"};
                     int n = JOptionPane.showOptionDialog(visavtale.hentRamme(), "Er du sikker p� at du vil slette?\n", "Bekreft sletting", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                     if(n == JOptionPane.OK_OPTION){
-                    	for(int i=0;i<ukeAvtalerListe.size(); i++){
-                    		if(a.hentAvtaleID()==ukeAvtalerListe.get(i).hentAvtaleID()){
-                    			ukeAvtalerListe.remove(i);
+                    	ArrayList<Avtale> templiste = mkalender.hentAvtaleliste();
+                    	for(int i=0;i<templiste.size(); i++){
+                    		if(a.hentAvtaleID()==templiste.get(i).hentAvtaleID()){
+                    			templiste.remove(i);
+                    			mkalender.settAvtaleliste(templiste);
                     			break;
                     		}
                     	}
@@ -138,7 +140,7 @@ public class Kalender implements ActionListener, MouseListener {
             else if(e.getSource() == visavtale.hentAvbrytKnapp()){
             	visavtale.fjernRamme();
             }
-        	
+        	visavtale=null;
         }
 		
         else if (e.getSource() == ktabell.getTP().getVenstrePil()) {

@@ -56,6 +56,10 @@ public class Kalender{
 	public ArrayList<Avtale> hentAvtaleliste() {
 		return avtaleliste;
 	}
+	
+	public void settAvtaleliste(ArrayList<Avtale> avtaleliste){
+		this.avtaleliste=avtaleliste;
+	}
 
 	public ArrayList<Person> hentPersonliste() {
 		return personliste;

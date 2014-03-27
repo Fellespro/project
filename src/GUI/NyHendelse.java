@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import database.DatabaseKommunikator;
 
 import modell.*;
 
@@ -59,7 +62,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         private List<ActionListener> actionListeners;
         
-        //private DatabaseKommunikator database;
+        private DatabaseKommunikator database;
         private Person person;
         private Avtale avtale;
         
@@ -67,9 +70,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private boolean oppdatering;
         
         
-        public NyHendelse(JFrame frame, kalender.Kalender k, Person person, boolean oppdatering){
+        public NyHendelse(JFrame frame, DatabaseKommunikator database, kalender.Kalender k, Person person, boolean oppdatering){
         	
-		        //this.database = database;
+		        this.database = database;
         		this.frame = frame;
 		        this.person = person;
 		        this.oppdatering = oppdatering;
@@ -252,7 +255,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            ArrayList<PersonListeElement> avtaleInterne = new ArrayList<PersonListeElement>();
 	            PersonListe personListe = getInviterte();
 	            int avtaleIntDltkr = personListe.antallPersoner();
-	            for(int i = 0;i < personListe.antallPersoner();i++)
+	            for(int i = 0;i < avtaleIntDltkr;i++)
 	            {
 	            	avtaleInterne.add(new PersonListeElement(personListe.hentPerson(i)));
 	            }
@@ -268,15 +271,15 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	          	  
 	            int avtaleEkstDltkr = avtaleEksterne.size();
 	            
-	            if(!oppdatering)
-	            {
+	            /*if(!oppdatering)
+	            {*/
 		            return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
 	          		  			  	  avtaleEndret, avtaleResp, avtaleInterne, avtaleIntDltkr, avtaleEksterne, avtaleEkstDltkr);
-	            }
+	           /* }
 	            else
 	            {
-	            	avtale.settAvtaleNavn(avtaleTittel);
-	            	avtale.settAvtaleDato(avtaleDato);
+	            	//avtale.settAvtaleNavn(avtaleTittel);
+	            	/*avtale.settAvtaleDato(avtaleDato);
 	            	avtale.settStarttid(avtaleStart);
 	            	avtale.settSluttid(avtaleSlutt);
 	            	avtale.settAlternativStarttid(avtaleAltStart);
@@ -287,9 +290,23 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            	avtale.settInterneDeltakere(avtaleInterne);
 	            	avtale.settAntallInterne(avtaleIntDltkr);
 	            	avtale.settEksterneDeltakere(avtaleEksterne);
-	            	avtale.settAntallEksterne(avtaleEkstDltkr);
-	            	return avtale;
-	            }
+	            	avtale.settAntallEksterne(avtaleEkstDltkr);*/
+	            	/*return avtale;
+	            }*/
+        }
+		
+		public void sendTilDatabase(){
+                try {
+                        if (!oppdatering) {
+                                database.leggInnAvtale(avtale);
+                        } else {
+                                database.endreAvtale(avtale);
+                        }
+                        
+                } catch (SQLException e) {
+                        //TODO: feilmelding ?
+                        //Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
+                }
         }
         
         public void settAvtale(Avtale avtale){
@@ -339,13 +356,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         public PersonListe getInviterte(){
         		PersonListe personListe = new PersonListe();
-        		if(avtale instanceof Avtale){
-        				for(int i = 0;i < invitertListe.antallPersoner();i++)
-        				{
-        						/*if(invitertJListe.isSelected(i))
-        						personListe.leggTilPerson(invitertJListe.getElement(i));*/
-        				}
-        				return personListe;
+        		int indices[] = invitertJListe.getSelectedIndices();
+        		for(int i = 0;i < indices.length;i++)
+        		{
+        				personListe.leggTilPerson((Person)invitertJListe.getModel().getElementAt(indices[i]));
         		}
         		return personListe;
         }
@@ -405,22 +419,5 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		public void lukk() {
 			frame.dispose();
 		}
-		
-        /*
-		public void sendTilDatabase(boolean oppdatering){
-                //Kaller på database og sender oppforing
-                try {
-                        if (!oppdatering) {
-                                database.leggInnAvtale(avtale);
-                        } else {
-                                database.endreAvtale(getPerson(), avtale);
-                        }
-                        
-                } catch (SQLException e) {
-                        //TODO: feilmelding ?
-                        Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
-                }
-        }*/
-        
 			
 }

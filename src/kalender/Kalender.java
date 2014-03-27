@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -110,6 +111,7 @@ public class Kalender implements ActionListener, MouseListener {
 			dk.kobleOpp();
 			dk.leggInnAvtale(a);
 			dk.lukk();
+			mkalender.leggTilAvtale(a);
 			
 			
 			//TODO: legg til avtalen i kalendertabell og vis!
@@ -138,6 +140,13 @@ public class Kalender implements ActionListener, MouseListener {
                     		if(a.hentAvtaleID()==templiste.get(i).hentAvtaleID()){
                     			templiste.remove(i);
                     			mkalender.settAvtaleliste(templiste);
+                    			dk.kobleOpp();
+                    			try {
+									dk.slettAvtale(a);
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+                    			dk.lukk();
                     			break;
                     		}
                     	}

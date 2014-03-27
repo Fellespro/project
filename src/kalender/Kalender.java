@@ -113,12 +113,18 @@ public class Kalender implements ActionListener, MouseListener {
 			dk.lukk();
 			mkalender.leggTilAvtale(a);
 			
+			mkalender = new modell.Kalender();
+			ukeAvtalerListe = mkalender.hentUkeAvtaler(mkalender.hentPersonAvtaler(kalenderEier,2014, Utilities.getCurrentWeek()), 2014, Utilities.getCurrentWeek());
+			mkalender.setPersonUkeAvtaler(ukeAvtalerListe);
+			mkalender.setPerson(kalenderEier);
+			for(int i=0; i<ukeAvtalerListe.size(); i++){
+				a = ukeAvtalerListe.get(i);
+				ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+				//ktabell.settFarge(Utilities.getTodaysDayOfWeek(), a.hentStarttid().hentTime(), a.hentSluttid().hentTime(), 2, a.hentAvtaleNavn());
+				//ktabell.settFarge(Utilities.getDayOfWeek(a), a.hentStarttid().getHours(), a.hentSluttid().getHours(), 2, a.hentAvtaleNavn());
+			}
 			
-			//TODO: legg til avtalen i kalendertabell og vis!
-			
-			
-			nyhendelse.lukk();
-			
+			nyhendelse.lukk();	
 			
 			
 		}

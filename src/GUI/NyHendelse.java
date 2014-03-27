@@ -118,7 +118,8 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
             sluttidText.setText(avtale.hentSluttid().toString());
             beskrivelseText.setText(avtale.hentBeskrivelse());
             settInviterte();
-            String eksterne = "";
+            //eksterne er ikke lagra i databasen
+            /*String eksterne = "";
             for(int i = 0;i < avtale.hentAntallEksterne();i++)
             {
             	if(i != 0)
@@ -126,6 +127,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
             		eksterne += ";" + avtale.hentEmail(i);
             	}
             }
+            andreText.setText(eksterne);*/
         }
         
         public void setAutoOppforing(){
@@ -215,7 +217,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         
         public void settInviterte(){
         		PersonListe inviterte = new PersonListe();
-        		for(int i = 0;i < avtale.hentAntallInterne();i++)
+        		for(int i = 0;i < 0/*avtale.hentAntallInterne()*/;i++)
         		{
         				inviterte.leggTilPerson(avtale.hentPerson(i));
         		}

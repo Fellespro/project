@@ -81,7 +81,7 @@ public class Kalender implements ActionListener, MouseListener {
 		}
 		else if(e.getActionCommand().equals("Ny avtale")){
 			JFrame frame = new JFrame();
-			nyhendelse = new NyHendelse(frame, dk, this, kalenderEier, true);
+			nyhendelse = new NyHendelse(frame, dk, this, kalenderEier);
 			nyhendelse.setAutoOppforing();
 			frame.setSize(400,600);
 			frame.add(nyhendelse);
@@ -118,6 +118,12 @@ public class Kalender implements ActionListener, MouseListener {
 			
         	if(e.getSource() == visavtale.hentEndreKnapp()){
             	System.out.println("endre");
+            	JFrame frame = new JFrame();
+    			nyhendelse = new NyHendelse(frame, visavtale.getAvtale(), dk, this, kalenderEier);
+    			frame.setSize(400,600);
+    			frame.add(nyhendelse);
+    			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    			frame.setVisible(true);
             }
             else if(e.getSource() == visavtale.hentSlettKnapp()){
                     
@@ -136,11 +142,12 @@ public class Kalender implements ActionListener, MouseListener {
                     	visavtale.fjernRamme();
                     	//Husk å fjerne avtale i modell.Kalender.avtaleliste og i database
                     }
+                	visavtale=null;
             }
             else if(e.getSource() == visavtale.hentAvbrytKnapp()){
             	visavtale.fjernRamme();
+            	visavtale=null;
             }
-        	visavtale=null;
         }
 		
         else if (e.getSource() == ktabell.getTP().getVenstrePil()) {

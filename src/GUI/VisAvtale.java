@@ -232,7 +232,6 @@ public class VisAvtale extends JPanel{
                 frame.pack();
                 frame.setSize(700,500);
                 frame.setLocationRelativeTo(null);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         
         public void setOppforing(Avtale avtale) {

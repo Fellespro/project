@@ -70,144 +70,14 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         private boolean oppdatering;
         
         
-        public NyHendelse(JFrame frame, DatabaseKommunikator database, kalender.Kalender k, Person person, boolean oppdatering){
+        public NyHendelse(JFrame frame, DatabaseKommunikator database, kalender.Kalender k, Person person){
         	
 		        this.database = database;
         		this.frame = frame;
 		        this.person = person;
-		        this.oppdatering = oppdatering;
+		        this.oppdatering = false;
 
-		        hjemButton = new JButton("Hjem");
-                oppdaterMoterom = new JButton("Oppdater romliste");
-                moteRadio = new JRadioButton("Automatisk valg");
-                avbrytButton = new JButton("Avbryt");
-                lagreButton = new JButton("Lagre");
-		        
-                tittelText = new JTextField(10);
-                datoText = new JTextField(5);
-                starttidText = new JTextField(null, 1);
-                sluttidText = new JTextField(1);
-		        stedText = new JTextField(5);
-		        andreText = new JTextField(5);
-		        
-		        invitertListe = new PersonListe();
-		        invitertJListe = new JList(invitertListe.hentListe().toArray());
-                invitertJListe.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                inviterteScrollPane = new JScrollPane(invitertJListe);
-                inviterteScrollPane.setHorizontalScrollBar(null);
-                inviterteScrollPane.setVerticalScrollBar(inviterteScrollPane.createVerticalScrollBar());
-                
-                moteromListe = new LedigeMoterom();
-                moteromJListe = new JList(moteromListe.hentListe().toArray());
-                moteromJListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                moteromScrollPane = new JScrollPane(moteromJListe);
-                moteromScrollPane.setHorizontalScrollBar(null);
-                moteromScrollPane.setVerticalScrollBar(moteromScrollPane.createVerticalScrollBar());
-		        
-                beskrivelseText = new JTextArea(3,30);
-                beskrivelseText.setEditable(true);
-                beskrivelseScroll = new JScrollPane(beskrivelseText);
-                beskrivelseScroll.setHorizontalScrollBar(null);
-                beskrivelseScroll.setVerticalScrollBar(beskrivelseScroll.createVerticalScrollBar());
-                                
-                JLabel tittel = new JLabel("Tittel:");
-                JLabel dato = new JLabel("Dato:");
-                JLabel starttid = new JLabel("Starttid:");
-                JLabel sluttid = new JLabel("Sluttid:");
-                JLabel deltakere = new JLabel("Deltakere:");
-                JLabel interne = new JLabel("Interne:");
-                JLabel eksterne = new JLabel("Inviter via epost:");
-                JLabel sted = new JLabel("Sted:");
-                JLabel beskrivelse = new JLabel("Beskrivelse:");
-		        
-		        GroupLayout layout = new GroupLayout(this);
-		        layout.setAutoCreateGaps(true);
-		        
-		        layout.setHorizontalGroup(
-		        		layout.createSequentialGroup()
-	        				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        					.addComponent(hjemButton)
-		        				.addComponent(tittel)
-		        				.addComponent(dato)
-		        				.addComponent(starttid)
-		        				.addComponent(sluttid)
-		        				.addComponent(deltakere)
-		        				.addComponent(interne)
-		        				.addComponent(eksterne)
-		        				.addComponent(sted)
-		        				.addComponent(beskrivelse)
-	        					.addComponent(lagreButton)
-		        			)
-	        				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        					.addComponent(tittelText)
-	        					.addComponent(datoText)
-	        					.addComponent(starttidText)
-	        					.addComponent(sluttidText)
-	        					.addComponent(inviterteScrollPane)
-	        					.addComponent(andreText)
-	        					.addComponent(moteRadio)
-        						.addComponent(oppdaterMoterom)
-	        					.addComponent(moteromScrollPane)
-	        					.addComponent(beskrivelseScroll)
-	        					.addComponent(avbrytButton)
-		        			)
-		        );
-		        
-		        layout.setVerticalGroup(
-		        		layout.createSequentialGroup()
-		        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-		        				.addComponent(hjemButton)
-		        			)
-		        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-		        				.addComponent(tittel)
-		        				.addComponent(tittelText)
-		        			)
-		        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(dato)
-			        			.addComponent(datoText)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(starttid)
-			        			.addComponent(starttidText)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(sluttid)
-			        			.addComponent(sluttidText)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(deltakere)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(interne)
-			        			.addComponent(inviterteScrollPane)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(eksterne)
-			        			.addComponent(andreText)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			        			.addComponent(sted)
-			        			.addGroup(layout.createParallelGroup()
-			        				.addComponent(moteRadio)
-			        			)
-			        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					        		.addComponent(oppdaterMoterom)
-				        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-				        			.addComponent(moteromScrollPane)
-				        		)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-				        		.addComponent(beskrivelse)
-				        		.addComponent(beskrivelseScroll)
-				        	)
-			        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					        		.addComponent(lagreButton)
-			        				.addComponent(avbrytButton)
-					        )
-		        );
-		        
-		        this.setLayout(layout);
+		        this.setupGUI();
 
                 avbrytButton.addActionListener(this);
                 lagreButton.addActionListener(k);
@@ -219,8 +89,43 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                 moteromJListe.addPropertyChangeListener(this);
                 moteromJListe.addListSelectionListener(this);
                 moteromScrollPane.addPropertyChangeListener(this);
-                
-                setAutoOppforing();
+        }
+        
+        public NyHendelse(JFrame frame, Avtale avtale, DatabaseKommunikator database, kalender.Kalender k, Person person){
+        	
+	        this.database = database;
+    		this.frame = frame;
+	        this.person = person;
+	        this.avtale = avtale;
+	        this.oppdatering = true;
+
+	        this.setupGUI();
+
+            avbrytButton.addActionListener(this);
+            lagreButton.addActionListener(k);
+            hjemButton.addActionListener(this);
+            oppdaterMoterom.addActionListener(this);
+            moteRadio.addActionListener(this);
+            invitertJListe.addPropertyChangeListener(this);
+            invitertJListe.addListSelectionListener(this);
+            moteromJListe.addPropertyChangeListener(this);
+            moteromJListe.addListSelectionListener(this);
+            moteromScrollPane.addPropertyChangeListener(this);
+            
+            tittelText.setText(avtale.hentAvtaleNavn());
+            datoText.setText(avtale.hentAvtaleDato().toString());
+            starttidText.setText(avtale.hentStarttid().toString());
+            sluttidText.setText(avtale.hentSluttid().toString());
+            beskrivelseText.setText(avtale.hentBeskrivelse());
+            settInviterte();
+            String eksterne = "";
+            for(int i = 0;i < avtale.hentAntallEksterne();i++)
+            {
+            	if(i != 0)
+            	{
+            		eksterne += ";" + avtale.hentEmail(i);
+            	}
+            }
         }
         
         public void setAutoOppforing(){
@@ -267,15 +172,15 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	          	  
 	            int avtaleEkstDltkr = avtaleEksterne.size();
 	            
-	            /*if(!oppdatering)
-	            {*/
+	            if(!oppdatering)
+	            {
 		            return new Avtale(avtaleTittel, avtalePerson, avtaleDato, avtaleStart, avtaleSlutt, avtaleAltStart, avtaleRom, avtaleBeskr,
 	          		  			  	  avtaleEndret, avtaleResp, avtaleInterne, avtaleIntDltkr, avtaleEksterne, avtaleEkstDltkr);
-	           /* }
+	            }
 	            else
 	            {
-	            	//avtale.settAvtaleNavn(avtaleTittel);
-	            	/*avtale.settAvtaleDato(avtaleDato);
+	            	avtale.settAvtaleNavn(avtaleTittel);
+	            	avtale.settAvtaleDato(avtaleDato);
 	            	avtale.settStarttid(avtaleStart);
 	            	avtale.settSluttid(avtaleSlutt);
 	            	avtale.settAlternativStarttid(avtaleAltStart);
@@ -286,9 +191,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            	avtale.settInterneDeltakere(avtaleInterne);
 	            	avtale.settAntallInterne(avtaleIntDltkr);
 	            	avtale.settEksterneDeltakere(avtaleEksterne);
-	            	avtale.settAntallEksterne(avtaleEkstDltkr);*/
-	            	/*return avtale;
-	            }*/
+	            	avtale.settAntallEksterne(avtaleEkstDltkr);
+	            	return avtale;
+	            }
         }
 		
 		public void sendTilDatabase(){
@@ -304,34 +209,6 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
                         //Feilmelding.visFeilmelding(this, "Feil med database:\n" + e.getMessage(), Feilmelding.FEIL_DATABASEFEIL);
                 }
         }
-        
-        public void settAvtale(Avtale avtale){
-                if (oppdatering) 
-                		this.avtale = avtale;
-                if(avtale instanceof Avtale){
-                        tittelText.setText(avtale.hentAvtaleNavn());
-                        datoText.setText(avtale.hentAvtaleDato().toString());
-                        starttidText.setText(avtale.hentStarttid().toString());
-                        sluttidText.setText(avtale.hentSluttid().toString());
-                        settInviterte();
-                        String eksterne = "";
-                        for(int i = 0;i < avtale.hentAntallEksterne();i++)
-                        {
-                        	if(i == 0)
-                        	{
-                        		eksterne += avtale.hentEmail(i);
-                        	}
-                        	else
-                        	{
-                        		eksterne += ";" + avtale.hentEmail(i);
-                        	}
-                        }
-                        andreText.setText(eksterne);
-                        //huk av moterom
-                        beskrivelseText.setText(avtale.hentBeskrivelse());
-                        moteRadio.doClick();
-                }
-		}
         
         public void settInviterte(){
         		PersonListe inviterte = new PersonListe();
@@ -411,5 +288,139 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		public void propertyChange(PropertyChangeEvent e) {
 				System.out.println("PropertyChangeListener: " + ", e.getPropertyName(): " + e.getPropertyName());
 		}        
+		
+		void setupGUI() {
+			hjemButton = new JButton("Hjem");
+            oppdaterMoterom = new JButton("Oppdater romliste");
+            moteRadio = new JRadioButton("Automatisk valg");
+            avbrytButton = new JButton("Avbryt");
+            lagreButton = new JButton("Lagre");
+	        
+            tittelText = new JTextField(10);
+            datoText = new JTextField(5);
+            starttidText = new JTextField(null, 1);
+            sluttidText = new JTextField(1);
+	        stedText = new JTextField(5);
+	        andreText = new JTextField(5);
+	        
+	        invitertListe = new PersonListe();
+	        invitertJListe = new JList(invitertListe.hentListe().toArray());
+            invitertJListe.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            inviterteScrollPane = new JScrollPane(invitertJListe);
+            inviterteScrollPane.setHorizontalScrollBar(null);
+            inviterteScrollPane.setVerticalScrollBar(inviterteScrollPane.createVerticalScrollBar());
+            
+            moteromListe = new LedigeMoterom();
+            moteromJListe = new JList(moteromListe.hentListe().toArray());
+            moteromJListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            moteromScrollPane = new JScrollPane(moteromJListe);
+            moteromScrollPane.setHorizontalScrollBar(null);
+            moteromScrollPane.setVerticalScrollBar(moteromScrollPane.createVerticalScrollBar());
+	        
+            beskrivelseText = new JTextArea(3,30);
+            beskrivelseText.setEditable(true);
+            beskrivelseScroll = new JScrollPane(beskrivelseText);
+            beskrivelseScroll.setHorizontalScrollBar(null);
+            beskrivelseScroll.setVerticalScrollBar(beskrivelseScroll.createVerticalScrollBar());
+                            
+            JLabel tittel = new JLabel("Tittel:");
+            JLabel dato = new JLabel("Dato:");
+            JLabel starttid = new JLabel("Starttid:");
+            JLabel sluttid = new JLabel("Sluttid:");
+            JLabel deltakere = new JLabel("Deltakere:");
+            JLabel interne = new JLabel("Interne:");
+            JLabel eksterne = new JLabel("Inviter via epost:");
+            JLabel sted = new JLabel("Sted:");
+            JLabel beskrivelse = new JLabel("Beskrivelse:");
+	        
+	        GroupLayout layout = new GroupLayout(this);
+	        layout.setAutoCreateGaps(true);
+	        
+	        layout.setHorizontalGroup(
+	        		layout.createSequentialGroup()
+        				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        					.addComponent(hjemButton)
+	        				.addComponent(tittel)
+	        				.addComponent(dato)
+	        				.addComponent(starttid)
+	        				.addComponent(sluttid)
+	        				.addComponent(deltakere)
+	        				.addComponent(interne)
+	        				.addComponent(eksterne)
+	        				.addComponent(sted)
+	        				.addComponent(beskrivelse)
+        					.addComponent(lagreButton)
+	        			)
+        				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        					.addComponent(tittelText)
+        					.addComponent(datoText)
+        					.addComponent(starttidText)
+        					.addComponent(sluttidText)
+        					.addComponent(inviterteScrollPane)
+        					.addComponent(andreText)
+        					.addComponent(moteRadio)
+    						.addComponent(oppdaterMoterom)
+        					.addComponent(moteromScrollPane)
+        					.addComponent(beskrivelseScroll)
+        					.addComponent(avbrytButton)
+	        			)
+	        );
+	        
+	        layout.setVerticalGroup(
+	        		layout.createSequentialGroup()
+	        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+	        				.addComponent(hjemButton)
+	        			)
+	        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+	        				.addComponent(tittel)
+	        				.addComponent(tittelText)
+	        			)
+	        			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(dato)
+		        			.addComponent(datoText)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(starttid)
+		        			.addComponent(starttidText)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(sluttid)
+		        			.addComponent(sluttidText)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(deltakere)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(interne)
+		        			.addComponent(inviterteScrollPane)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(eksterne)
+		        			.addComponent(andreText)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+		        			.addComponent(sted)
+		        			.addGroup(layout.createParallelGroup()
+		        				.addComponent(moteRadio)
+		        			)
+		        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				        		.addComponent(oppdaterMoterom)
+			        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+			        			.addComponent(moteromScrollPane)
+			        		)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+			        		.addComponent(beskrivelse)
+			        		.addComponent(beskrivelseScroll)
+			        	)
+		        		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				        		.addComponent(lagreButton)
+		        				.addComponent(avbrytButton)
+				        )
+	        );
+	        
+	        this.setLayout(layout);
+		}
 			
 }

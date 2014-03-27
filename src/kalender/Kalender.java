@@ -81,7 +81,7 @@ public class Kalender implements ActionListener, MouseListener {
 		}
 		else if(e.getActionCommand().equals("Ny avtale")){
 			JFrame frame = new JFrame();
-			nyhendelse = new NyHendelse(frame, this, kalenderEier, true);
+			nyhendelse = new NyHendelse(frame, dk, this, kalenderEier, true);
 			nyhendelse.setAutoOppforing();
 			frame.setSize(400,600);
 			frame.add(nyhendelse);
@@ -92,6 +92,7 @@ public class Kalender implements ActionListener, MouseListener {
 		else if(e.getActionCommand().equals("Lagre")){
 			System.out.println("Button Lagre pressed (lagrer registrert informasjon i klassevariabelen avtale)");
 			Avtale a = nyhendelse.lagre();
+			//nyhendelse.sendTilDatabase();
 			if(a.hentAntallEksterne()>0){
 				EpostSender es;
 				try {

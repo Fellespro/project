@@ -81,7 +81,9 @@ public class Kalender implements ActionListener, MouseListener {
 		}
 		else if(e.getActionCommand().equals("Ny avtale")){
 			JFrame frame = new JFrame();
-			nyhendelse = new NyHendelse(frame, dk, this, kalenderEier, true);
+
+			nyhendelse = new NyHendelse(frame, dk, this, kalenderEier, false);
+
 			nyhendelse.setAutoOppforing();
 			frame.setSize(400,600);
 			frame.add(nyhendelse);
@@ -105,11 +107,18 @@ public class Kalender implements ActionListener, MouseListener {
 				}
 			}
 			
-			//TODO: legg avtalen til i avtalelistene
-			//TODO: vis avtalen i kalendertabell!
+			dk.kobleOpp();
+			dk.leggInnAvtale(a);
+			dk.lukk();
 			
 			
-			//TODO: lagre til db
+			//TODO: legg til avtalen i kalendertabell og vis!
+			
+			
+			nyhendelse.lukk();
+			
+			
+			
 		}
 		else if(e.getActionCommand().equals("Logg ut")){
 			System.exit(0);
@@ -239,6 +248,14 @@ public class Kalender implements ActionListener, MouseListener {
 	public void setWeek(int ukeNr) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public PersonListe hentPersonliste() {
+		return mkalender.hentPersonListe();
+	}
+
+	public LedigeMoterom hentMoteromListe() {
+		return mkalender.hentMoteromListe();
 	}
 
 }

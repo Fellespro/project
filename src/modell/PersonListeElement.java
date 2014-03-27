@@ -5,7 +5,7 @@ public class PersonListeElement {
 	private Person person;
 	private Respons respons;
 	
-	PersonListeElement(Person person)
+	public PersonListeElement(Person person)
 	{
 		this.person = person;
 		this.respons = Respons.kanskje;

@@ -68,6 +68,10 @@ public class LedigeMoterom extends DefaultListModel{
 		}*/
 	}
 	
+	public void leggTilRom(Moterom m){
+		lRom.add(m);
+	}
+	
 	public ArrayList<Moterom> hentListe()
 	{
 		return lRom;

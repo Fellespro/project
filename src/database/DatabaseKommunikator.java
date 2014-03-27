@@ -123,14 +123,20 @@ public class DatabaseKommunikator {
 	 * @param avtale
 	 * @throws SQLException 
 	 */
-	public void leggInnAvtale(Avtale avtale) throws SQLException{
+	public void leggInnAvtale(Avtale avtale){
 		String query = "INSERT INTO Avtale VALUES " +
 					"("+avtale.hentAvtaleID()+", '"+avtale.hentAvtaleNavn()+"', '" + avtale.hentAvtaleDato().toString() +"', '"+avtale.hentStarttid().toString()+"', '" +
 					avtale.hentSluttid().toString() +"', '" + avtale.hentAlternativStarttid() +"', '" +
 					avtale.hentBeskrivelse() + "', '" + Utilities.getCurrentDateTime() + "', "+ avtale.hentAntallDeltakere() +
-					", '" + avtale.hentOpprettetAv() + "', " + avtale.hentRom().hentRomID() +",'')";
+					", '" + avtale.hentOpprettetAv().getBrukernavn() + "', " + avtale.hentRom().hentRomID() +",'')";
+		System.out.println(query);
 		
-		makeSingleUpdate(query);
+		try {
+			makeSingleUpdate(query);
+		} catch (SQLException e) {
+			System.out.println("Kunne ikke lagre avtalen i databasen...");
+			e.printStackTrace();
+		}
 	}
 	
 	/**

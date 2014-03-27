@@ -47,6 +47,7 @@ public class Fabrikk {
 	private static ArrayList<PersonListeElement> hentInviterte(int id,
 			ResultSet inviterters, ArrayList<Person> personliste,
 			Person oppretter) throws SQLException {
+		
 		ArrayList<PersonListeElement> ple = new ArrayList<PersonListeElement>();
 		ple.add(new PersonListeElement(oppretter));
 		while(inviterters.next()){

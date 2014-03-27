@@ -64,6 +64,14 @@ public class Kalender{
 	public ArrayList<Person> hentPersonliste() {
 		return personliste;
 	}
+	
+	public PersonListe hentPersonListe(){
+		PersonListe pl = new PersonListe();
+		for(int i=0; i<personliste.size();i++){
+			pl.leggTilPerson(personliste.get(i));
+		}
+		return pl;
+	}
 
 	public ArrayList<Gruppe> hentGruppeliste() {
 		return gruppeliste;
@@ -71,6 +79,14 @@ public class Kalender{
 
 	public ArrayList<Moterom> hentMoteromliste() {
 		return moteromliste;
+	}
+	
+	public LedigeMoterom hentMoteromListe() {
+		LedigeMoterom lm = new LedigeMoterom();
+		for(int i=0; i<moteromliste.size(); i++){
+			lm.leggTilRom(moteromliste.get(i));
+		}
+		return lm;
 	}
 
 	public ArrayList<Avtale> hentPersonAvtaler(Person ansatt, int aar, int ukenr)
@@ -133,7 +149,7 @@ public class Kalender{
 	*/
 	
 	public void leggTilAvtale(Avtale a){
-		//TODO
+		avtaleliste.add(a);
 	}
 	
 	public void fjernAvtale(Avtale a){
@@ -159,5 +175,6 @@ public class Kalender{
 	public static void main(String[] args)
 	{}
 	*/
+
 	
 }

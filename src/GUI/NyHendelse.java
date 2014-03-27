@@ -87,14 +87,15 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		        stedText = new JTextField(5);
 		        andreText = new JTextField(5);
 		        
-		        invitertListe = new PersonListe();
+		        invitertListe = k.hentPersonliste();
 		        invitertJListe = new JList(invitertListe.hentListe().toArray());
                 invitertJListe.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 inviterteScrollPane = new JScrollPane(invitertJListe);
                 inviterteScrollPane.setHorizontalScrollBar(null);
                 inviterteScrollPane.setVerticalScrollBar(inviterteScrollPane.createVerticalScrollBar());
                 
-                moteromListe = new LedigeMoterom();
+                //TODO: Ta hensyn til om et rom er ledig eller ikke?
+                moteromListe = k.hentMoteromListe();
                 moteromJListe = new JList(moteromListe.hentListe().toArray());
                 moteromJListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 moteromScrollPane = new JScrollPane(moteromJListe);
@@ -242,6 +243,9 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 	            Tid avtaleSlutt = new Tid(sluttidText.getText()); 
 	            Tid avtaleAltStart = new Tid(sluttidText.getText()); 
 	            Moterom avtaleRom = new Moterom();
+	            int romid = moteromListe.hentListe().get(moteromJListe.getSelectedIndex()).hentRomID();
+	            System.out.println("RomID: " + romid);
+	            avtaleRom.settRomid(romid);
 	            String avtaleBeskr = beskrivelseText.getText(); 
 	            String avtaleEndret = "";
 	            Respons avtaleResp = Respons.kanskje; 
@@ -343,7 +347,7 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
         				}
         				return personListe;
         		}
-        		return null;
+        		return personListe;
         }
 
 		@Override
@@ -396,6 +400,10 @@ public class NyHendelse extends JPanel implements ActionListener, ListSelectionL
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 				System.out.println("PropertyChangeListener: " + ", e.getPropertyName(): " + e.getPropertyName());
+		}
+
+		public void lukk() {
+			frame.dispose();
 		}
 		
         /*
